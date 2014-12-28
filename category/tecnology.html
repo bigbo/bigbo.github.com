@@ -47,8 +47,56 @@
                 <h3>前言</h3>
 <p>对于github.io早有认识,但是趋于各种懒,至今才动手.想把这几年的一些自己总结的东西做些记录,匆匆那些年,也应该给自己做些积累了.</p>
 <p>那么问题来了,建立github page有各种框架,例如:<a href="http://jekyllrb.com/">jekyll</a>,<a href="https://github.com/Shopify/liquid/wiki/Liquid-for-Designers">liquid</a>,<a href="http://pelican-docs-zh-cn.readthedocs.org/en/latest/">Pelican</a>等等,本文采用后者Pelican,关于Pelican不做过多介绍,想了解的就去连接到的文档看吧.</p>
+<hr />
 <h3>搭建基础</h3>
 <p>Pelican基于Python,相比Wordpress等其他框架来说,它比较轻,另外有些自己的<a href="http://docs.getpelican.com/en/3.3.0/#features">特性</a>,再配合免费的github pages,非常棒!主要是在linux下进行搭建,过程中会涉及如下技术知识,不过都是很初级的使用,即使新手也可以很容易的上手.</p>
+<blockquote>
+<p><a href="https://github.com">github</a></p>
+<p><a href="https://pages.github.com">github pages</a></p>
+<p><a href="http://git-scm.com/blog/2010/06/09/pro-git-zh.html">git</a></p>
+<p><a href="http://www.python.org">python</a></p>
+<p><a href="https://pypi.python.org/pypi/pip">pip</a></p>
+<p><a href="http://pelican-docs-zh-cn.readthedocs.org/en/latest">pelican</a></p>
+<p><a href="http://wowubuntu.com/markdown/">markdown</a></p>
+</blockquote>
+<hr />
+<h3>下载安装</h3>
+<p>由于是linux环境,大部分依赖是有的,没有的话可以通过yum/apt-get去安装.win的话就请参照安装.</p>
+<blockquote>
+<ol>
+<li>安装python</li>
+<li>安装git</li>
+<li>安装pip</li>
+<li>安装pelican&amp;markdown    </li>
+</ol>
+</blockquote>
+<div class="highlight"><pre>pip install pelican
+pip install markdown
+</pre></div>
+
+
+<h4>框架初建</h4>
+<p>创建文件夹,执行以下命令</p>
+<div class="highlight"><pre>mkdir blog //注意命名
+cd blog
+pelican-quickstart
+</pre></div>
+
+
+<p>pelican-quickstart执行命令后,可以依照向导,输入相关配置项,怎么填写可以很随意,后续都可以在pelicanconf.py文件中进行更改.</p>
+<p>命令成功执行后,会出现pelican的框架,如下所示:</p>
+<div class="highlight"><pre>blog/
+|-- content             # 存放输入的markdown或RST源文件
+|-- output              # 存放最终生成的静态博客
+|-- pelicanconf.py      # 配置文件
+|-- develop_server.sh   # 测试服务器
+|-- Makefile            # 管理博客的Makefile
+`-- publishconf.py      # 发布文件，可删除
+</pre></div>
+
+
+<p>以上完成整体大的框架.</p>
+<h4>填写内容</h4>
         </article></aside><!-- /#featured -->
 </ol><!-- /#posts-list -->
 </section><!-- /#content -->
