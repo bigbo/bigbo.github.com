@@ -75,6 +75,7 @@ pip install markdown
 </pre></div>
 
 
+<hr />
 <h4>框架初建</h4>
 <p>创建文件夹,执行以下命令</p>
 <div class="highlight"><pre>mkdir blog //注意命名
@@ -96,7 +97,49 @@ pelican-quickstart
 
 
 <p>以上完成整体大的框架.</p>
+<hr />
 <h4>填写内容</h4>
+<p>至此,我们可以开始使用Markdown创建一个页面,进入content文件夹,创建一个.md文件.大致如:</p>
+<p><img alt="Alt text" src="/pictures/pic1.png" /></p>
+<p>可以通过截图看到我现在这个页面的Markdown版本的源文件,这里要说的是开头部分的<strong>Title,Category</strong>等重点字段.详情见<a href="http://pelican-docs-zh-cn.readthedocs.org/en/latest/getting_started.html#pelican">文档</a>,涵义如下:</p>
+<div class="highlight"><pre>Title: 文章标题
+Date: 创建日期
+Modified: 修改日期
+Category: 文章分类，标志本文处于该分类下
+Tags: 文章标签，标志本文处于该标签下
+Slug: URL中该文章的链接地址
+Author: 作者
+</pre></div>
+
+
+<p>可以简单的写个内容做测试,然后回到<strong>blog</strong>目录下.</p>
+<p>执行<strong>make html</strong>生成html</p>
+<div class="highlight"><pre>[jingbo.li@zero bigbo-blog]$ make html 
+pelican /home/jingbo.li/dev/bigbo-blog/content -o /home/jingbo.li/dev/bigbo-blog/output -s /home/jingbo.li/dev/bigbo-blog/pelicanconf.py 
+Done: Processed 1 article(s), 0 draft(s) and 1 page(s) in 0.83 seconds.
+</pre></div>
+
+
+<p>表示已经生成了html页面,可以去<strong>/blog/output</strong>目录下查看已经生成的html页面.</p>
+<p>接着执行<strong>make server</strong>开启服务,可以看到相关log</p>
+<div class="highlight"><pre>[jingbo.li@zero bigbo-blog]$ make serve 
+cd /home/jingbo.li/dev/bigbo-blog/output &amp;&amp; python -m pelican.server
+</pre></div>
+
+
+<p>即可可以用浏览器访问<strong>http://localhost:8000</strong>看到显示效果.</p>
+<p><strong>*AD:更多便捷命令</strong></p>
+<div class="highlight"><pre>make regenerate     #修改后自动创建静态界面(make html)
+make devserver      #相当于regenerate+serve
+make publish        #生成用于发布的html
+</pre></div>
+
+
+<p>文档中还有其他一些命令,请自行发掘.</p>
+<hr />
+<h3>设置相关</h3>
+<hr />
+<h4>主题选择</h4>
         </article></aside><!-- /#featured -->
 </ol><!-- /#posts-list -->
 </section><!-- /#content -->

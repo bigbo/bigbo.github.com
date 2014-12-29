@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>BigBo's blog</title><link href="/" rel="alternate"></link><link href="None/feeds/all.atom.xml" rel="self"></link><id>/</id><updated>2014-12-28T00:02:00+08:00</updated><entry><title>用Pelican&amp;GitHubPages搭建个人博客</title><link href="/pages/2014/12/28/create-blog/" rel="alternate"></link><updated>2014-12-28T00:02:00+08:00</updated><author><name>ljingb</name></author><id>tag:,2014-12-28:pages/2014/12/28/create-blog/</id><summary type="html">&lt;h3&gt;前言&lt;/h3&gt;
+&lt;p&gt;对于github.io早有认识,但是趋于各种懒,至今才动手.想把这几年的一些自己总结的东西做些记录,匆匆那些年,也应该给自己做些积累了.&lt;/p&gt;
+&lt;p&gt;那么问题来了,建立github page有各种框架,例如:&lt;a href="http://jekyllrb.com/"&gt;jekyll&lt;/a&gt;,&lt;a href="https://github.com/Shopify/liquid/wiki/Liquid-for-Designers"&gt;liquid&lt;/a&gt;,&lt;a href="http://pelican-docs-zh-cn.readthedocs.org/en/latest/"&gt;Pelican&lt;/a&gt;等等,本文采用后者Pelican,关于Pelican不做过多介绍,想了解的就去连接到的文档看吧.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;h3&gt;搭建基础&lt;/h3&gt;
+&lt;p&gt;Pelican基于Python,相比Wordpress等其他框架来说,它比较轻,另外有些自己的&lt;a href="http://docs.getpelican.com/en/3.3.0/#features"&gt;特性&lt;/a&gt;,再配合免费的github pages,非常棒!主要是在linux下进行搭建,过程中会涉及如下技术知识,不过都是很初级的使用,即使新手也可以很容易的上手.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;a href="https://github.com"&gt;github&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://pages.github.com"&gt;github pages&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="http://git-scm.com/blog/2010/06/09/pro-git-zh.html"&gt;git&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="http://www.python.org"&gt;python&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://pypi.python.org/pypi/pip"&gt;pip&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="http://pelican-docs-zh-cn.readthedocs.org/en/latest"&gt;pelican&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="http://wowubuntu.com/markdown/"&gt;markdown&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr /&gt;
+&lt;h3&gt;下载安装&lt;/h3&gt;
+&lt;p&gt;由于是linux环境,大部分依赖是有的,没有的话可以通过yum/apt-get去安装.win的话就请参照安装.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;ol&gt;
+&lt;li&gt;安装python&lt;/li&gt;
+&lt;li&gt;安装git&lt;/li&gt;
+&lt;li&gt;安装pip&lt;/li&gt;
+&lt;li&gt;安装pelican&amp;amp;markdown    &lt;/li&gt;
+&lt;/ol&gt;
+&lt;/blockquote&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;pip install pelican
+pip install markdown
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;hr /&gt;
+&lt;h4&gt;框架初建&lt;/h4&gt;
+&lt;p&gt;创建文件夹,执行以下命令&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;mkdir blog //注意命名
+cd blog
+pelican-quickstart
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;pelican-quickstart执行命令后,可以依照向导,输入相关配置项,怎么填写可以很随意,后续都可以在pelicanconf.py文件中进行更改.&lt;/p&gt;
+&lt;p&gt;命令成功执行后,会出现pelican的框架,如下所示:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;blog/
+|-- content             # 存放输入的markdown或RST源文件
+|-- output              # 存放最终生成的静态博客
+|-- pelicanconf.py      # 配置文件
+|-- develop_server.sh   # 测试服务器
+|-- Makefile            # 管理博客的Makefile
+`-- publishconf.py      # 发布文件，可删除
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;以上完成整体大的框架.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;h4&gt;填写内容&lt;/h4&gt;
+&lt;p&gt;至此,我们可以开始使用Markdown创建一个页面,进入content文件夹,创建一个.md文件.大致如:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Alt text" src="/pictures/pic1.png" /&gt;&lt;/p&gt;
+&lt;p&gt;可以通过截图看到我现在这个页面的Markdown版本的源文件,这里要说的是开头部分的&lt;strong&gt;Title,Category&lt;/strong&gt;等重点字段.详情见&lt;a href="http://pelican-docs-zh-cn.readthedocs.org/en/latest/getting_started.html#pelican"&gt;文档&lt;/a&gt;,涵义如下:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;Title: 文章标题
+Date: 创建日期
+Modified: 修改日期
+Category: 文章分类，标志本文处于该分类下
+Tags: 文章标签，标志本文处于该标签下
+Slug: URL中该文章的链接地址
+Author: 作者
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;可以简单的写个内容做测试,然后回到&lt;strong&gt;blog&lt;/strong&gt;目录下.&lt;/p&gt;
+&lt;p&gt;执行&lt;strong&gt;make html&lt;/strong&gt;生成html&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;[jingbo.li@zero bigbo-blog]$ make html 
+pelican /home/jingbo.li/dev/bigbo-blog/content -o /home/jingbo.li/dev/bigbo-blog/output -s /home/jingbo.li/dev/bigbo-blog/pelicanconf.py 
+Done: Processed 1 article(s), 0 draft(s) and 1 page(s) in 0.83 seconds.
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;表示已经生成了html页面,可以去&lt;strong&gt;/blog/output&lt;/strong&gt;目录下查看已经生成的html页面.&lt;/p&gt;
+&lt;p&gt;接着执行&lt;strong&gt;make server&lt;/strong&gt;开启服务,可以看到相关log&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;[jingbo.li@zero bigbo-blog]$ make serve 
+cd /home/jingbo.li/dev/bigbo-blog/output &amp;amp;&amp;amp; python -m pelican.server
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;即可可以用浏览器访问&lt;strong&gt;http://localhost:8000&lt;/strong&gt;看到显示效果.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;*AD:更多便捷命令&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;make regenerate     #修改后自动创建静态界面(make html)
+make devserver      #相当于regenerate+serve
+make publish        #生成用于发布的html
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;文档中还有其他一些命令,请自行发掘.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;h3&gt;设置相关&lt;/h3&gt;
+&lt;hr /&gt;
+&lt;h4&gt;主题选择&lt;/h4&gt;</summary></entry></feed>
