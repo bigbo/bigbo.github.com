@@ -31,7 +31,7 @@ pip install markdown
 
 
 &lt;hr /&gt;
-&lt;h4&gt;框架初建&lt;/h4&gt;
+&lt;h3&gt;框架初建&lt;/h3&gt;
 &lt;p&gt;创建文件夹,执行以下命令&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;mkdir blog //注意命名
 cd blog
@@ -94,4 +94,60 @@ make publish        #生成用于发布的html
 &lt;hr /&gt;
 &lt;h3&gt;设置相关&lt;/h3&gt;
 &lt;hr /&gt;
-&lt;h4&gt;主题选择&lt;/h4&gt;</summary></entry></feed>
+&lt;h4&gt;主题选择&lt;/h4&gt;
+&lt;p&gt;如果你能到这一步,那么恭喜你,你已经搭建完一个属于自己的博客了.以下是对自己博客的包装.
+首先打开&lt;a href="http://www.pelicanthemes.com/"&gt;主题官网&lt;/a&gt;挑选自己喜欢的主题,当然我们可以把整个&lt;a href="https://github.com/getpelican/pelican-themes"&gt;主题库&lt;/a&gt;clone到本地.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt; git clone https://github.com/getpelican/pelican-themes.git
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;现在可以自由选择不错的主题了.打开&lt;strong&gt;pelicanconf.py&lt;/strong&gt;配置文件,添加或是更改&lt;strong&gt;THEME&lt;/strong&gt;为自己喜欢的主题.更多配置请见&lt;a href="http://pelican-docs-zh-cn.readthedocs.org/en/latest/settings.html#id20"&gt;官方文档&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;例如选择notmyidea-cms-fr主题:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;THEME = &amp;#39;pelican-themes/notmyidea-cms-fr&amp;#39; #相对路径或是绝对路径
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;hr /&gt;
+&lt;h5&gt;link的图标不加载&lt;/h5&gt;
+&lt;p&gt;主题选择后打开页面一看,擦,有些瑕疵,旁边的一些github等连接没有图片,影响美观不说B格瞬减.
+连接上的小图标:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="如图上面的小图标" src="/pictures/pic2.png" title="u&amp;quot;如图上面的小图标&amp;quot;" /&gt;&lt;/p&gt;
+&lt;p&gt;通过分析查看原因,得知是由于css问题,来到主题文件夹下,尝试修改加载的css文件:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;  &lt;span class="nt"&gt;cd&lt;/span&gt; &lt;span class="nt"&gt;pelican-themes&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nt"&gt;notmyidea-cms-fr&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nt"&gt;static&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nt"&gt;css&lt;/span&gt;
+  &lt;span class="nt"&gt;vim&lt;/span&gt; &lt;span class="nt"&gt;main&lt;/span&gt;&lt;span class="nc"&gt;.css&lt;/span&gt;
+  &lt;span class="err"&gt;#添加如下字段&lt;/span&gt;
+  &lt;span class="nc"&gt;.social&lt;/span&gt; &lt;span class="nt"&gt;a&lt;/span&gt;&lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="nx"&gt;href&lt;/span&gt;&lt;span class="o"&gt;*=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;github.com&amp;#39;&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;&lt;span class="nd"&gt;:before&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="k"&gt;content&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="sx"&gt;url(&amp;#39;../images/icons/github.png&amp;#39;)&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="k"&gt;margin-right&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="m"&gt;2px&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="k"&gt;vertical-align&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="m"&gt;-3px&lt;/span&gt;&lt;span class="p"&gt;;}&lt;/span&gt;
+  &lt;span class="err"&gt;#注意在相应位置放上图标&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;久违的图标就会展现在你的眼前了,B格瞬间上升几个百分点.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;h4&gt;添加评论系统&lt;/h4&gt;
+&lt;p&gt;历经沧桑,终于算是大功告成.等下!貌似还缺一个功能,评论系统.评论可以促进交流,所以这个当然不能少了.目前采用的是国外的评论系统&lt;a href="https://disqus.com/"&gt;Disqus&lt;/a&gt;,安装流程注册填写,会给你博客相关站点分配一个&lt;strong&gt;Shortname&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;回到配置文件&lt;strong&gt;pelicanconf.py&lt;/strong&gt;添加配置&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;DISQUS_SITENAME = Shortname
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;现在大功告成,可以生成页面开始把玩一番吧!&lt;/p&gt;
+&lt;hr /&gt;
+&lt;h3&gt;编写文章&lt;/h3&gt;
+&lt;p&gt;几经转辗,终于可以发篇文章炫耀下了,哈哈哈.本文给予&lt;strong&gt;github pages&lt;/strong&gt;,当然如果你有自己的服务器可以根据&lt;a href="https://help.github.com/articles/creating-pages-with-the-automatic-generator/"&gt;官方教程&lt;/a&gt;设置你自己的站点服务器.这样你就拥有一个二级域名和一个版本库.任性的更新.&lt;/p&gt;
+&lt;p&gt;进入&lt;strong&gt;&lt;em&gt;blog&lt;/em&gt;&lt;/strong&gt;目录下的&lt;strong&gt;&lt;em&gt;output&lt;/em&gt;&lt;/strong&gt;文件夹内,依次执行以下命令:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;  git init
+  git add .
+  git remote add origin https://github.com/bigbo/bigbo.github.io
+  git pull origin master
+  git commit -m &amp;#39;create blog&amp;#39;
+  git push origin master
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;当然如果你不会git,没关系,现在先按照&lt;a href="http://www.git-scm.com/book/zh/v1"&gt;官方文档&lt;/a&gt;敲就可以了.熟悉git的同学可以选择使用框架提供的&lt;strong&gt;Makefile&lt;/strong&gt;文件进行一键上传.&lt;/p&gt;
+&lt;p&gt;一个完整的博客创建发布流程算是完成了.最后打开浏览器访问github pages的域名即可访问.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;h3&gt;总结&lt;/h3&gt;
+&lt;p&gt;目前博客已经可以满足基本的正常使用了.其实我们还可以对其进行不断完善,让其变得更优雅.后续再写些关于插件\配置等有关的内容.&lt;/p&gt;
+&lt;p&gt;第一次建立属于自己的空间,写的过程中参见了网上不少的例子,内容都是参疵不齐.更多的是参照官方文档,或是请教&lt;a href="http://google.com"&gt;google&lt;/a&gt;,这个过程持续了3--4天,终于完成了第一篇,收获还是满满的.当然后续还会有第二第三篇.&lt;/p&gt;
+&lt;p&gt;不管怎样,收获远大于付出.也算是为2014画上半个句号.希望 2015 come on!&lt;/p&gt;</summary></entry></feed>
