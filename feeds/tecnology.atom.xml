@@ -19,7 +19,7 @@
 &lt;p&gt;由于是linux环境,大部分依赖是有的,没有的话可以通过yum/apt-get去安装.win的话就请参照安装.&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;ol&gt;
-&lt;li&gt;安装python&lt;/li&gt;
+&lt;li&gt;安装python (2.7+,低版本的不支持)&lt;/li&gt;
 &lt;li&gt;安装git&lt;/li&gt;
 &lt;li&gt;安装pip&lt;/li&gt;
 &lt;li&gt;安装pelican&amp;amp;markdown    &lt;/li&gt;
