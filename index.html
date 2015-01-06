@@ -33,7 +33,218 @@
         
      <section id="content" class="body">
         <aside id="featured"><article>
-                <h1 class="entry-title"><a href="http://bigbo.github.io/pages/2014/12/31/2014年终总结/">2014年终总结</a></h1> 
+                <h1 class="entry-title"><a href="http://bigbo.github.io/pages/2015/01/05/Moosefs浅析/">MooseFS浅析(一)</a></h1> 
+                <footer class="post-info">
+                        <abbr class="published" title="2015-01-05T23:10:00+08:00">
+                                Publié le 05/01/2015 &agrave; 23:10
+                        </abbr>
+
+                        <address class="vcard author">
+                                Par <a class="url fn" href="#">ljingb</a>
+                        </address>
+                <p>Dans <a href="http://bigbo.github.io/category/tecnology.html">Tecnology</a>. </p>
+</p>                </footer><!-- /.post-info -->
+                <h2>前言</h2>
+<p>之前面临大量数据存储问题,于是开始选择分布式文件系统.于是MooseFS便映入眼底.正好之前用过,所以直接拿来就用.光会用也不行,闲来之时对他进行了一些简单了解,不管是百度还是谷歌,搜到的都是零零散散的东西,更多的博客都是抄來抄去,所以打算自己做些整理,下面就我对MFS的认识进行一下总结.</p>
+<hr />
+<h2>简介</h2>
+<ul>
+<li>MooseFS优越特性如下：<blockquote>
+<ol>
+<li>高可用性(数据可以存储在多个机器上的多个副本)</li>
+<li>可动态扩展随时新增加机器或者是磁盘</li>
+<li>可回收在指定时间内删除的文件(“垃圾回收站”是一个系统级别的服务)</li>
+<li>可以对整个文件甚至在正在写入的文件创建文件的快照。</li>
+<li>使用和部署非常简单,直接mount使用</li>
+</ol>
+</blockquote>
+</li>
+</ul>
+<p>对于<strong>Moosefs</strong>的介绍我在此就不详细说了,更多介绍可以查看<a href="http://www.moosefs.org/">官网</a>以及<a href="http://www.moosefs.com/how_to_get.html">英文版权威指南</a>或是查看田逸所翻译总结的<a href="https://github.com/bigbo/tools/blob/master/study/mfs/MooseFS%E6%9D%83%E5%A8%81%E6%8C%87%E5%8D%97.pdf">权威指南</a>,以上介绍的比自己总结的可能更加详细.我后面的总结是对以上内容的补充.</p>
+<p><strong>*AD:更多资料详见<a href="https://github.com/bigbo/tools/tree/master/study/mfs">GitHub</a></strong></p>
+<hr />
+<h2>系统结构</h2>
+<ul>
+<li>MFS文件系统结构包含4种角色:<blockquote>
+<ol>
+<li>管理服务器managing server(master):负责各个数据存储服务器的管理,文件读写调度,文件空间回收以及恢复.多节点拷贝.单个机器管理整个文件系统,用来存储记录每一个文件的Metadata(记录文件的大小;文件的属性;文件的位置;也包括非规则文件的系统;如目录;sockets;管道和设备)</li>
+<li>元数据日志服务器Metalogger server(Metalogger):负责备份master服务器的变化日志文件,文件类型为changelog_ml.*.mfs,以便于在master server出问题的时候接替其进行工作.</li>
+<li>数据存储服务器data servers (chunkservers):负责连接管理服务器,听从管理服务器调度,提供存储空间,并为客户提供数据传输.</li>
+<li>客户机挂载使用client computers:通过fuse内核接口挂接远程管理服务器上所管理的数据存储服务器,看起来共享的文件系统和本地unix文件系统使用一样的效果.</li>
+</ol>
+</blockquote>
+</li>
+</ul>
+<p>整体架构如图:</p>
+<p><img alt="MFS架构图" src="/pictures/mfs_pic3.png" /></p>
+<hr />
+<h2>配置文件详解</h2>
+<blockquote>
+<p>主要对<strong>V1.6.27-5</strong>版本的配置文件进行解析,后续跟进<strong>2.x</strong>版本配置文件.</p>
+</blockquote>
+<h3>master服务器</h3>
+<blockquote>
+<p>Metadata元数据存储在master服务器的内存中,同时也保存在磁盘上(作为一个定期更新的二进制文件,并实时的更新changelog日志).如果存在metaloggers的话,主要的二进制文件以及日志也复制到metaloggers中.(权威手册中有详细性能测试信息)</p>
+</blockquote>
+<h4>master主要配置文件</h4>
+<ul>
+<li>mfsmaster.cfg<blockquote>
+<p>主配置文件</p>
+</blockquote>
+</li>
+</ul>
+<div class="highlight"><pre>参数说明如下：
+ # WORKING_USER和WORKING_GROUP：是运行master server的用户和组；
+ # SYSLOG_IDENT：是master server在syslog中的标识，也就是说明这是由master server产生的；
+ # LOCK_MEMORY：是否执行mlockall()以避免mfsmaster 进程溢出(默认为0，即否)；
+ # NICE_LEVE：运行的优先级(如果可以默认是 -19; 注意: 进程必须是用root启动)；
+ # EXPORTS_FILENAME：被挂接目录及其权限控制文件的存放位置 
+ # DATA_PATH：metadata files and lock file存放路径，此目录下大致有以下文件：metadata，changelog，sessions，stats，lock。
+ # BACK_LOGS：metadata的change log文件数目(默认是 50);
+ # BACK_META_KEEP_PREVIOUS = 1保留以前元文件数(默认是 1);
+ # REPLICATIONS_DELAY_INIT：(initial delay in seconds before starting replications)初始延迟复制的时间(默认是300s);
+ # REPLICATIONS_DELAY_DISCONNECT：(replication delay in seconds after chunkserver disconnection) chunkserver断开后复制延迟(默认是3600s)；
+ # MATOML_LISTEN_HOST：用于metalogger连接的IP地址(默认是*，代表任何IP)；
+ # MATOML_LISTEN_PORT：监听metalogger请求的端口地址(默认是9419)；
+ # MATOCS_LISTEN_HOST：用于chunkserver连接的IP地址(默认是*，代表任何IP)；
+ # MATOCS_LISTEN_PORT：监听chunkserver连接的端口地址(默认是9420)；
+ # MATOCU_LISTEN_HOST：用于客户端挂接连接的IP地址(默认是*，代表任何IP)；
+ # MATOCU_LISTEN_PORT：监听客户端挂载连接的端口地址(默认是9421)；
+ # CHUNKS_LOOP_TIME ：(Chunks loop frequency in seconds)chunks的回环频率(默认是：300秒)；
+ # CHUNKS_DEL_LIMIT：(Maximum number of chunks to delete in one loop)在一个loop中可以删除chunks的最大数 (默认：100)
+ # CHUNKS_WRITE_REP_LIMIT：(Maximum number of chunks to replicate to one chunkserver in one loop)在一个loop里复制到一个chunkserver的最大chunk数目(默认是1)
+ # CHUNKS_READ_REP_LIMIT：(Maximum number of chunks to replicate from one chunkserver in one loop)在一个loop里从一个chunkserver复制的最大chunk数目(默认是5)
+ # REJECT_OLD_CLIENTS：弹出低于1.6.0的客户端挂接(0或1，默认是0)
+</pre></div>
+
+
+<ul>
+<li>mfsexports.cfg</li>
+</ul>
+<blockquote>
+<p>MFS访问使用权限控制配置文件;地址可以指定的几种表现形式：</p>
+</blockquote>
+<div class="highlight"><pre>所有ip，单个ip，IP网络地址/位数掩码，IP网络地址/子网掩码，ip段范围。
+</pre></div>
+
+
+<blockquote>
+<p>权限部分：</p>
+</blockquote>
+<div class="highlight"><pre>   ro  只读模式共享  
+   rw  读写方式共享  
+   alldirs  许挂载任何指定的子目录  
+   maproot   映射为root,还是指定的用户   
+   password  指定客户端密码
+</pre></div>
+
+
+<h4>metadata.mfs文件</h4>
+<blockquote>
+<p>metadata.mfs, metadata.mfs.back是MooseFS文件系统的元数据metadata的镜像,对集群的数据存储至关重要.做主从也好,做集群备份也好,都是对这些文件做的备份.</p>
+</blockquote>
+<h4>changelog.*.mfs 文件</h4>
+<blockquote>
+<ol>
+<li>changelog.*.mfs 是MooseFS文件系统元数据的改变日志(每一个小时合并到metadata.mfs中一次)</li>
+<li>Metadata文件的大小取决于文件数(而不是他们的大小),Changelog的大小取决于每小时的操作次数.(mfsmaster.cfg配置文件中可以设置)</li>
+</ol>
+</blockquote>
+<h3>metalogger服务器</h3>
+<blockquote>
+<p>master备份服务器,在保证服务高可用的情况下使用(即使不做高可用也需要做个备份服务),服务器性能理论上要比master更好.至少不能比master次.</p>
+</blockquote>
+<h4>metalogger主要配置文件</h4>
+<ul>
+<li>mfsmetalogger.cfg</li>
+</ul>
+<div class="highlight"><pre> <span class="err">#</span> <span class="nt">WORKING_USER</span><span class="err">和</span><span class="nt">WORKING_GROUP</span><span class="o">:</span><span class="err">是运行</span><span class="nt">mfsmetalogger</span> <span class="nt">server</span><span class="err">的用户和组；</span>
+ <span class="err">#</span> <span class="nt">SYSLOG_IDENT</span> <span class="o">:</span><span class="err">是</span><span class="nt">mfsmetalogger</span> <span class="nt">server</span><span class="err">在</span><span class="nt">syslog</span><span class="err">中的标识，也就是说明这是由</span><span class="nt">mfsmetalogger</span> <span class="nt">server</span><span class="err">产生的；</span>
+ <span class="err">#</span> <span class="nt">LOCK_MEMORY</span><span class="o">:</span><span class="err">是否执行</span><span class="nt">mlockall</span><span class="o">()</span><span class="err">以避免</span><span class="nt">mfsmaster</span> <span class="err">进程溢出</span><span class="o">(</span><span class="err">默认为</span><span class="nt">0</span><span class="err">，即否</span><span class="o">);</span>
+ <span class="err">#</span> <span class="nt">NICE_LEVEL</span><span class="err">：运行的优先级</span><span class="o">(</span><span class="err">如果可以默认是</span> <span class="nt">-19</span><span class="o">;</span> <span class="err">注意</span><span class="o">:</span> <span class="err">进程必须是用</span><span class="nt">root</span><span class="err">启动</span><span class="o">)</span><span class="err">；</span>
+ <span class="err">#</span> <span class="nt">DATA_PATH</span><span class="o">:</span> <span class="nt">metadata</span> <span class="nt">files</span> <span class="nt">and</span> <span class="nt">lock</span> <span class="nt">file</span><span class="err">存放路径，此目录下大致有以下文件：</span><span class="nt">metadata</span><span class="err">，</span><span class="nt">changelog</span><span class="err">，</span><span class="nt">sessions</span><span class="err">，</span><span class="nt">stats</span><span class="err">，</span><span class="nt">lock</span><span class="err">。</span>
+ <span class="err">#</span> <span class="nt">BACK_LOGS</span><span class="err">：</span><span class="nt">metadata</span><span class="err">的</span><span class="nt">change</span> <span class="nt">log</span><span class="err">文件数目</span><span class="o">(</span><span class="err">默认是</span> <span class="nt">50</span><span class="o">);</span>
+
+ <span class="err">#</span> <span class="nt">META_DOWNLOAD_FREQ</span> <span class="o">=</span> <span class="nt">1</span> <span class="nf">#metadata</span><span class="err">元数据下载间隔时间</span><span class="o">(</span><span class="err">默认是</span><span class="nt">24</span><span class="err">小时，单位是小时，至多是</span><span class="nt">BACK_LOGS</span><span class="err">的</span><span class="nt">1</span><span class="o">/</span><span class="nt">2</span><span class="o">)</span>
+ <span class="err">#</span> <span class="nt">MASTER_RECONNECTION_DELAY</span> <span class="o">=</span> <span class="nt">5</span>   <span class="err">#</span> <span class="err">在失去连接之后延迟多少秒重新连接</span><span class="nt">master</span>
+ <span class="err">#</span> <span class="nt">MASTER_HOST</span> <span class="o">=</span> <span class="nt">MASTERMFS</span> <span class="err">#</span> <span class="nt">master</span><span class="err">的</span><span class="nt">HOST</span><span class="err">地址</span>
+ <span class="err">#</span> <span class="nt">MASTER_PORT</span> <span class="o">=</span> <span class="nt">9419</span>
+ <span class="err">#</span> <span class="nt">MASTER_TIMEOUT</span> <span class="o">=</span> <span class="nt">60</span> <span class="err">#</span> <span class="nt">Master</span><span class="err">连接超时时间</span><span class="o">(</span><span class="err">单位是秒</span><span class="o">)</span>
+ <span class="err">#</span> <span class="nt">deprecated</span><span class="o">,</span> <span class="nt">to</span> <span class="nt">be</span> <span class="nt">removed</span> <span class="nt">in</span> <span class="nt">MooseFS</span> <span class="nt">1</span><span class="nc">.7</span>
+ <span class="err">#</span> <span class="nt">LOCK_FILE</span> <span class="o">=</span> <span class="o">/</span><span class="nt">var</span><span class="o">/</span><span class="nt">run</span><span class="o">/</span><span class="nt">mfs</span><span class="o">/</span><span class="nt">mfsmetalogger</span><span class="nc">.lock</span>
+</pre></div>
+
+
+<h4>changelog_ml.*.mfs文件</h4>
+<blockquote>
+<p>changelog_ml.*.mfs是MooseFS文件系统的元数据的changelog日志(备份的Master 的Master的changelog日志)</p>
+</blockquote>
+<h4>metadata.ml.mfs.back文件</h4>
+<blockquote>
+<p>metadata.ml.mfs.back是从Master主机上下载的最新的完整metadata.mfs.back的拷贝</p>
+</blockquote>
+<h4>sessions.ml.mfs文件</h4>
+<blockquote>
+<p>sessions.ml.mfs是从master下载的最新的sessions.mfs文件拷贝</p>
+</blockquote>
+<h3>chunker服务器</h3>
+<blockquote>
+<p>数据真实存储的位置,实际使用中,对硬件资源消耗不是很大,最终的瓶颈在网卡和磁盘IO.</p>
+</blockquote>
+<h4>chunker主要配置文件</h4>
+<ul>
+<li>mfschunkserver.cfg</li>
+</ul>
+<div class="highlight"><pre> # WORKING_USER和WORKING_GROUP：是运行mfschunkserver server的用户和组；
+ # SYSLOG_IDENT：是mfschunkserver server在syslog中的标识，也就是说明这是由mfschunkserver server产生的；
+ # LOCK_MEMORY：是否执行mlockall()以避免mfschunkserver 进程溢出(默认为0，即否)；
+ # NICE_LEVE：运行的优先级(如果可以默认是 -19; 注意: 进程必须是用root启动)；
+ # DATA_PATH：metadata files and lock file存放路径，此目录下大致有以下文件：metadata，changelog，sessions，stats，lock。
+ # MASTER_RECONNECTION_DELAY = 5 在失去连接之后延迟多少秒重新连接master
+ # MASTER_HOST: 元数据服务器的名称或地址，可以是主机名，也可以是ip地址。只要数据存储服务器能访问到元数据服务器就行。
+ # MASTER_PORT = 9420
+ # MASTER_TIMEOUT = 60
+ # CSSERV_LISTEN_HOST = *  #允许挂载的客户端连接的IP地址(*允许全部)
+ # CSSERV_LISTEN_PORT = 9422
+ # CSSERV_TIMEOUT = 5      #客户端挂载连接的超时时间(单位为秒)
+ # HDD_CONF_FILENAME = /usr/local/mfs/etc/mfshdd.cfg #分配给MFS使用的磁盘空间配置文件的位置
+ # HDD_TEST_FREQ = 10   # 块的测试期(单位为秒)
+ # deprecated, to be removed in MooseFS 1.7
+ # LOCK_FILE = /var/run/mfs/mfschunkserver.lock
+ # BACK_LOGS = 50
+</pre></div>
+
+
+<h4>mfshdd.cfg文件</h4>
+<blockquote>
+<p>目录列表（指定的）用于moosefs挂载存储</p>
+<p><strong>*AD</strong>:当某块磁盘发生故障后可以在前面加*,集群便会在后续冗余中,把相应磁盘或是存储位置的数据转移到其他地方存储</p>
+</blockquote>
+<h3>mfsclient(mount)服务器</h3>
+<blockquote>
+<p>客户端,安装相应挂载程序使用mfsmount -H MASTER_MFS_HOST /mnt/mfs,进行磁盘挂载.关于使用嘛,找下man吧.</p>
+</blockquote>
+<hr />
+<h2>测试</h2>
+<blockquote>
+<p>官网手册有详细测试信息</p>
+</blockquote>
+<h2>总结</h2>
+<blockquote>
+<p>零零散散算是把相关配置文件大致介绍一遍,没想成已经有不少内容,不多多半都是配置文件内容,感觉以上介绍离实际用处好远.准备接下来写些MFS使用相关的介绍.此篇准备随时更新.</p>
+</blockquote>
+        </article></aside><!-- /#featured -->
+                <h1>Autres articles</h1>
+                <hr />
+                    <ol id="posts-list" class="hfeed">
+        
+ 
+        <li><article class="hentry">    
+                <header>
+                        <h1><a href="http://bigbo.github.io/pages/2014/12/31/2014年终总结/" rel="bookmark" title="Permalien vers «2014年终总结»">2014年终总结</a></h1>
+                </header>
+                
+                <div class="entry-content">
                 <footer class="post-info">
                         <abbr class="published" title="2014-12-31T23:22:00+08:00">
                                 Publié le 31/12/2014 &agrave; 23:22
@@ -42,8 +253,9 @@
                         <address class="vcard author">
                                 Par <a class="url fn" href="#">ljingb</a>
                         </address>
-                <p>Dans <a href="http://bigbo.github.io/category/gui-dang.html">归档</a>. </p>
-</p>                </footer><!-- /.post-info -->
+                        <p> Dans <a href="http://bigbo.github.io/category/gui-dang.html">归档</a></p>
+</p>                    <p></p>
+                </footer><!-- /.post-info -->
                 <p>在这2014年的结尾,陆陆续续的通过博客\微博\微信看到了好多人在对2014年做的一些总结.赶着2014的末班车,在此我也做些总结.</p>
 <hr />
 <h3>工作</h3>
@@ -51,26 +263,10 @@
 <p>那时还是在东三环内的23层,同事还是那么的欢乐,口味依旧那么重.工作环境是那么的轻松欢乐,以至于时间过得那么快,快得都想说句"时间都去哪了".不知不觉公司3月份搬家如期而至;与此同时,项目上遇到的问题比想象中的困难的多的多.最终不得不以结束告终.队伍重组,从而走向了人生的转折.</p>
 <p>4月份来到了@大神的团队,追随一群大神的脚步.开始了一堆高大上的工作.监控\分析\报警,井井有条.让我感到工作的责任还是如此重大.工作内容是如此神圣,虽不能光宗耀祖,但是足可以向身边人吹嘘一番.</p>
 <p>7月犹豫而又慌乱的时代.想想终究算是过去了,就让它淹没在这个时代吧.</p>
-<p>10月没想到该来的还是来了,换了工作,从网到神奇的网站.算是第一次跳槽.想想现在依旧对老东家怀念.也因此终不再犹豫.踏入一个三无地带,从此红旗自己扛,不再有上午茶,中午的安稳觉,下午的集体会;更多的是自己寻找解决方案,尝试处理问题.</p>
-<p>总之找准自己的位置,朝向一个目标前进就是了.要说的是,感谢的人真的是太多了;@大忽悠,感谢把我带上了一条"不归"路;@张姐,感谢合作的那段时间给我指引了好多方向,感觉自己还是不给力,没能坚持到最后,没有给自己一个很好的交代.不过真的学了好多;@会长,感谢那么多的肺腑之言,可惜听了那么多的人生道理,可是依旧没有走好这段路.当然这是后话;@三斗@lantao@SevenShen,有幸跟你们擦肩而过,庆幸自己紧追随你们的步伐,虽然从来没追上过,只能心里默念"他们引擎是V8的".总的来说要感谢的人还是太多了.</p>
-<hr />
-<h3>生活</h3>
-<p>改变生活的唯一途径就是自身努力.两年前就应该到手的驾照终于到手了;拥有了比较满意的"大白腿";参与了祖国提供的一次重反校园的考试;虽然与女票有过激烈的争执,但是感情还是一如既往的稳定.生活品质貌似没有提升,后续有待考证.</p>
-<hr />
-<h3>主要技术</h3>
-<h5>Python+<a href="https://www.djangoproject.com/">Django</a></h5>
-<p>历史问题,用自己所学,重构了一个内部系统,至于现在好用就不得而知了.算是对之前的学习总结.中间还用上了<a href="http://gearman.org/">gearman</a>,当然对于一向不会前端的我,照猫画虎的拼凑除了一个能看的页面也算是小有所成了.有展示,有监控,有搜索,有规整,有报警.维护的事情就交给@轩了,写的太烂不要骂我.</p>
-<h5><a href="http://www.moosefs.org/">MFS</a></h5>
-<p>分布式文件系统.研究跟大牛比不算深入.后续会在博客中做些总结.倒是在呆过的地方都留下了他的身影.还算是一个容易上手使用的文件系统.虽然被坑过,但还算是不错的(看使用场景).</p>
-<h5><a href="http://www.elasticsearch.com/">ELK</a>框架</h5>
-<p>都不知从何说起了.跟随@三斗的脚步,学习研究整套方案的技术细节,调优方案.目前也正在使用打算推广的一套方案.后续如何,还都是未知.感觉自己慢慢的走向了数据挖掘的深坑.</p>
-<h5>GITHUB+Blog</h5>
-<p>终于动手做了,不知道能坚持多久,共勉.</p>
-<p>犹记得2014年初,当时对一年的期望是读一两本好书,coding坏一个键盘,如今的好书只翻了半本有余,键盘的按键依旧是那么轻快好用,对比一年前,只不过键帽发油发亮了.回想当时的期望,不由得对自己说声好傻好天真.如今展望2015,最大的期望就是能把blog坚持下去.</p>
-        </article></aside><!-- /#featured -->
-                <h1>Autres articles</h1>
-                <hr />
-                    <ol id="posts-list" class="hfeed">
+<p>10月没想到该来的还是来了,换了工作,从网到神奇的网站.算是第一次跳槽.想想现在依旧对老东家怀念.也因此终不再犹豫.踏入一个三无地带,从此红旗自己扛,不再有上午茶,中午的安稳觉,下午的集体会;更多的是自己寻找解决方案 ...</p>
+                <a class="readmore" href="http://bigbo.github.io/pages/2014/12/31/2014年终总结/">Lire la suite...</a>
+                </div><!-- /.entry-content -->
+        </article></li>
         
  
         <li><article class="hentry">    
