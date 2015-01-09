@@ -121,7 +121,7 @@ mfsmount -o mfsmeta -H mfs1.com.org /mnt/mfsmeta
 &lt;blockquote&gt;
 &lt;p&gt;另外做些补充：
 &lt;a href="https://github.com/ops-baidu/shadow-mfs"&gt;百度对Moosefs二次开发&lt;/a&gt;,&lt;a href="http://www.zhangxiaolong.org/archives/242.html"&gt;相关文章&lt;/a&gt;&lt;/p&gt;
-&lt;/blockquote&gt;</summary></entry><entry><title>MooseFS浅析(一)</title><link href="http://bigbo.github.io/pages/2015/01/05/Moosefs_one/" rel="alternate"></link><updated>2015-01-06T22:50:00+08:00</updated><author><name>ljingb</name></author><id>tag:bigbo.github.io,2015-01-05:pages/2015/01/05/Moosefs_one/</id><summary type="html">&lt;h2&gt;前言&lt;/h2&gt;
+&lt;/blockquote&gt;</summary><category term="分布式文件系统"></category><category term="Moosefs"></category><category term="分布式存储"></category></entry><entry><title>MooseFS浅析(一)</title><link href="http://bigbo.github.io/pages/2015/01/05/Moosefs_one/" rel="alternate"></link><updated>2015-01-06T22:50:00+08:00</updated><author><name>ljingb</name></author><id>tag:bigbo.github.io,2015-01-05:pages/2015/01/05/Moosefs_one/</id><summary type="html">&lt;h2&gt;前言&lt;/h2&gt;
 &lt;p&gt;之前面临大量数据存储问题,于是开始选择分布式文件系统.于是MooseFS便映入眼底.正好之前用过,所以直接拿来就用.光会用也不行,闲来之时对他进行了一些简单了解,不管是百度还是谷歌,搜到的都是零零散散的东西,更多的博客都是抄來抄去,所以打算自己做些整理,下面就我对MFS的认识进行一下总结.&lt;/p&gt;
 &lt;hr /&gt;
 &lt;h2&gt;简介&lt;/h2&gt;
@@ -309,7 +309,7 @@ mfsmount -o mfsmeta -H mfs1.com.org /mnt/mfsmeta
 &lt;h2&gt;总结&lt;/h2&gt;
 &lt;blockquote&gt;
 &lt;p&gt;零零散散算是把相关配置文件大致介绍一遍,没想成已经有不少内容,不多多半都是配置文件内容,感觉以上介绍离实际用处好远.准备接下来写些MFS使用相关的介绍.此篇准备随时更新.&lt;/p&gt;
-&lt;/blockquote&gt;</summary></entry><entry><title>用Pelican&amp;GitHubPages搭建个人博客</title><link href="http://bigbo.github.io/pages/2014/12/28/create-blog/" rel="alternate"></link><updated>2014-12-28T00:02:00+08:00</updated><author><name>ljingb</name></author><id>tag:bigbo.github.io,2014-12-28:pages/2014/12/28/create-blog/</id><summary type="html">&lt;h3&gt;前言&lt;/h3&gt;
+&lt;/blockquote&gt;</summary><category term="分布式文件系统"></category><category term="Moosefs"></category><category term="分布式存储"></category></entry><entry><title>用Pelican&amp;GitHubPages搭建个人博客</title><link href="http://bigbo.github.io/pages/2014/12/28/create-blog/" rel="alternate"></link><updated>2014-12-28T00:02:00+08:00</updated><author><name>ljingb</name></author><id>tag:bigbo.github.io,2014-12-28:pages/2014/12/28/create-blog/</id><summary type="html">&lt;h3&gt;前言&lt;/h3&gt;
 &lt;p&gt;对于github.io早有认识,但是趋于各种懒,至今才动手.想把这几年的一些自己总结的东西做些记录,匆匆那些年,也应该给自己做些积累了.&lt;/p&gt;
 &lt;p&gt;那么问题来了,建立github page有各种框架,例如:&lt;a href="http://jekyllrb.com/"&gt;jekyll&lt;/a&gt;,&lt;a href="https://github.com/Shopify/liquid/wiki/Liquid-for-Designers"&gt;liquid&lt;/a&gt;,&lt;a href="http://pelican-docs-zh-cn.readthedocs.org/en/latest/"&gt;Pelican&lt;/a&gt;等等,本文采用后者Pelican,关于Pelican不做过多介绍,想了解的就去连接到的文档看吧.&lt;/p&gt;
 &lt;hr /&gt;
@@ -460,4 +460,4 @@ make publish        #生成用于发布的html
 &lt;h3&gt;总结&lt;/h3&gt;
 &lt;p&gt;目前博客已经可以满足基本的正常使用了.其实我们还可以对其进行不断完善,让其变得更优雅.后续再写些关于插件\配置等有关的内容.&lt;/p&gt;
 &lt;p&gt;第一次建立属于自己的空间,写的过程中参见了网上不少的例子,内容都是参疵不齐.更多的是参照官方文档,或是请教&lt;a href="http://google.com"&gt;google&lt;/a&gt;,这个过程持续了3--4天,终于完成了第一篇,收获还是满满的.当然后续还会有第二第三篇.&lt;/p&gt;
-&lt;p&gt;不管怎样,收获远大于付出.也算是为2014画上半个句号.希望 2015 come on!&lt;/p&gt;</summary></entry></feed>
+&lt;p&gt;不管怎样,收获远大于付出.也算是为2014画上半个句号.希望 2015 come on!&lt;/p&gt;</summary><category term="github pages"></category><category term="pelican"></category></entry></feed>

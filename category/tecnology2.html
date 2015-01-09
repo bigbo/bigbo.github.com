@@ -1,242 +1,86 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh"
+>
 <head>
-        <title>BigBo's blog - Tecnology</title>
-        <meta charset="utf-8" />
-        <link rel="stylesheet" href="http://bigbo.github.io/theme/css/main.css" type="text/css" />
-        <link href="http://bigbo.github.io/" type="application/atom+xml" rel="alternate" title="BigBo's blog Flux ATOM" />
+    <title>Tecnology - BigBo's blog</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 
-        <!--[if IE]>
-                <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 
-        <!--[if lte IE 7]>
-                <link rel="stylesheet" type="text/css" media="all" href="http://bigbo.github.io/css/ie.css"/>
-                <script src="http://bigbo.github.io/js/IE8.js" type="text/javascript"></script><![endif]-->
 
-        <!--[if lt IE 7]>
-                <link rel="stylesheet" type="text/css" media="all" href="http://bigbo.github.io/css/ie6.css"/><![endif]-->
+    <meta name="author" content="ljingb" />
+    <meta name="keywords" content="Tecnology" />
+
+    <!-- Enable latex plugin -->
+
+
+    <!-- Open Graph tags -->
+        <meta property="og:site_name" content="BigBo's blog" />
+        <meta property="og:type" content="website"/>
+        <meta property="og:title" content="BigBo's blog"/>
+        <meta property="og:url" content="http://bigbo.github.io"/>
+        <meta property="og:description" content="BigBo's blog"/>
+
+
+    <!-- Bootstrap -->
+        <link rel="stylesheet" href="http://bigbo.github.io/theme/css/bootstrap.min.css" type="text/css"/>
+    <link href="http://bigbo.github.io/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="http://bigbo.github.io/theme/css/pygments/native.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://bigbo.github.io/theme/css/style.css" type="text/css"/>
+
+        <link href="http://bigbo.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate"
+              title="BigBo's blog ATOM Feed"/>
+
+
+        <link href="http://bigbo.github.io/feeds/tecnology.atom.xml" type="application/atom+xml" rel="alternate"
+              title="BigBo's blog Tecnology ATOM Feed"/>
 
 </head>
+<body>
 
-<body id="index" class="home">
-        <header id="banner" class="body">
-                <h1><a href="http://bigbo.github.io/index.html">BigBo's blog </a></h1>
-                <nav><ul>
-                <li><a href="http://bigbo.github.io/index.html">Accueil</a></li>
-                <li><a href="http://bigbo.github.io/archives.html">Archives</a></li>
-                    <li ><a href="http://bigbo.github.io/pages/about/">About</a></li>
-                </ul></nav>
-        </header><!-- /#banner -->
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="http://bigbo.github.io/" class="navbar-brand">
+BigBo's blog            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                         <li><a href="http://bigbo.github.io/pages/about/">
+                             About
+                          </a></li>
+                        <li >
+                            <a href="http://bigbo.github.io/category/gui-dang.html">归档</a>
+                        </li>
+                        <li class="active">
+                            <a href="http://bigbo.github.io/category/tecnology.html">Tecnology</a>
+                        </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="http://bigbo.github.io/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
 
-        
-        
-     <section id="content" class="body">
-        <aside id="featured"><article>
-                <h1 class="entry-title"><a href="http://bigbo.github.io/pages/2015/01/08/Moosefs_two/">MooseFS浅析(二)</a></h1> 
-                <footer class="post-info">
-                        <abbr class="published" title="2015-01-08T19:20:00+08:00">
-                                Publié le 08/01/2015 &agrave; 19:20
-                        </abbr>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9">
 
-                        <address class="vcard author">
-                                Par <a class="url fn" href="#">ljingb</a>
-                        </address>
-                <p>Dans <a href="http://bigbo.github.io/category/tecnology.html">Tecnology</a>. </p>
-</p>                </footer><!-- /.post-info -->
-                <h2>前言</h2>
-<p>继上篇,感觉说了好多废话,多半是配置文件相关参数,作为一个基础运维人员,更关注的是怎么让服务更加稳定(高可用),出现问题如何恢复(容错)等,更接地气的东西打算在下面介绍下.</p>
-<hr />
-<h2>启动和关闭顺序</h2>
-<blockquote>
-<p>master启动后,metalogger\chunker\client三个元素都能自动与master建立连接.</p>
-<blockquote>
-<p>正常启动顺序：matser---chunker---metalogger---client.</p>
-<p>关闭顺序：client---chunker---metalogger---master</p>
-</blockquote>
-</blockquote>
-<hr />
-<h2>client操作影响</h2>
-<blockquote>
-<p>客户端强制<strong>kill -9</strong>杀掉<strong>mfsmount</strong>进程,需要先<strong>umount</strong>,然后再<strong>mount</strong>,否则会提示：</p>
-</blockquote>
-<div class="highlight"><pre><span class="n">fuse</span><span class="o">:</span> <span class="n">bad</span> <span class="n">mount</span> <span class="n">point</span> <span class="err">`</span><span class="sr">/mnt/test/</span><span class="err">&#39;</span><span class="o">:</span> <span class="n">Transport</span> <span class="n">endpoint</span> <span class="k">is</span> <span class="n">not</span> <span class="n">connected</span>
-<span class="n">see</span><span class="o">:</span> <span class="sr">/data/jingbo.li/mfs/bin/</span><span class="n">mfsmount</span> <span class="o">-</span><span class="n">h</span> <span class="k">for</span> <span class="n">help</span>
-</pre></div>
-
-
-<hr />
-<h2>chunker的空间</h2>
-<blockquote>
-<p>查看MooseFS文件的使用情况,请使用<strong>mfsdirinfo</strong>命令,相当于<strong>df</strong>.</p>
-</blockquote>
-<hr />
-<h2>快照<strong>snapshot</strong></h2>
-<blockquote>
-<p>可以快照任何一个文件或目录,语法：<strong>mfsmakesnapshot src dst</strong>,但是src和dst必须都属于mfs体系,即不能mfs体系中的文件快照到其他文件系统.</p>
-</blockquote>
-<hr />
-<h1><strong>mfsappendchunks</strong></h1>
-<blockquote>
-<p>追加chunks到一个文件,追加文件块到另一个文件.如果目标文件不存在,则会创建一个空文件,然后继续将块进行追加.</p>
-</blockquote>
-<hr />
-<h2>回收站机制</h2>
-<p>其实MFS有类似windows的回收站这种机制,当文件不小心删除了,不用担心,去回收站去找.随时可以恢复.当然,我所说的随时随地恢复要看你回收站的数据保存多长时间了(默认24小时).</p>
-<ul>
-<li>
-<p>首先挂载辅助系统</p>
-<blockquote>
-<p>单独安装或挂载<strong>MFSMETA</strong>文件系统,它包含目录/trash (包含仍然可以被还原的删除文件的信息)和<strong>/trash/undel</strong>(用于获取文件),用一个-m或-o mfsmeta的选项,这样可以挂接一个辅助的文件系统MFSMETA,这么做的目的是对于意外的从MooseFS卷上删除文件或者是为了释放磁盘空间而移动的文件而又此文件又过去了垃圾文件存放期的恢复</p>
-<blockquote>
-<p>例如:</p>
-</blockquote>
-</blockquote>
-<div class="highlight"><pre>mfsmount -m /mnt/mfsmeta -H mfs1.com.org
-或者
-mfsmount -o mfsmeta -H mfs1.com.org /mnt/mfsmeta
-</pre></div>
-
-
-<blockquote>
-<p>需要注意的是,如果要挂载mfsmeta,一定要在mfsmaster的mfsexports.cfg文件中加入如下条目:* . rw</p>
-<p>挂载后在/mnt/mfsmeta目录下分reserved和trash两个目录,trash为已删除文件存放目录,删除时间根据mfsgettrashtime设置时间来自动删除.</p>
-</blockquote>
-</li>
-<li>
-<p>设置文件或目录的删除时间</p>
-<blockquote>
-<p>一个删除的文件能够存放在“ 垃圾箱”中的时间称为隔离时间,这个时间可以用<strong>mfsgettrashtime</strong>命令来查看:</p>
-<blockquote>
-<p><img alt="mfsgettrashtime命令" src="/pictures/mfs_pic4.png" />
-用<strong>mfssettrashtime</strong>命令来设置上面的这个有效时间,要注意的是,保存时间单位为秒.
-<img alt="mfssettrashtime命令" src="/pictures/mfs_pic5.png" /></p>
-</blockquote>
-</blockquote>
-</li>
-<li>
-<p>恢复删除的文件</p>
-<blockquote>
-<p>把删除的文件移到/trash/undel下,就可以恢复此文件.在MFSMETA的目录里,除了<strong>trash</strong>和<strong>trash/undel</strong>两个目录,还有第三个目录<strong>reserved</strong>,该目录内有已经删除的文件,但却被其他用户一直打开着.
-在用户关闭了这些被打开的文件后,<strong>reserved</strong>目录中的文件将被删除,文件的数据也将被立即删除.此目录不能进行操作.</p>
-</blockquote>
-</li>
-</ul>
-<hr />
-<h2>单点故障解决</h2>
-<h3>官方提供解决方案</h3>
-<blockquote>
-<h4>从备份中恢复一个master(1.6及以上版本)</h4>
-<ol>
-<li>安装一个mfsmaster</li>
-<li>利用同样的配置来配置这台mfsmaster(copy一份mfsmaster.cfg到备机)</li>
-<li>找回metadata.mfs.back文件,可以从备份中找,也可以中metalogger主机中找(如果启动了metalogger服务),然后把metadata.mfs.back放入data目录,一般为${prefix}/var/mfs.</li>
-<li>从在master宕掉之前的任何运行metalogger服务的服务器上拷贝最后metadata文件,然后放入mfsmaster的数据目录</li>
-<li>利用mfsmetarestore命令合并元数据changelogs，可以用自动恢复模式mfsmetarestore –a，也可以利用非自动化恢复模式，语法如下：mfsmetarestore -m metadata.mfs.back -o metadata.mfs changelog_ml.*.mfs</li>
-</ol>
-<h4>DNS主从</h4>
-<ul>
-<li>详细的就需要看官网的手册了,不过CE版本不支持,需要用PRO版本才支持.具体好不好用我也不知道.</li>
-</ul>
-<h4>UCARP方案</h4>
-<ul>
-<li>
-<p>两台主机安装ucarp,ucarp允许多个主机共享一个虚拟的ip地址,以提供自动的故障恢复功能,当其中某个主机宕机时,其它的主机会自动接管服务,ARP协议的特点在于其非常低的开销,主机间使用加密数据传递信息,并且在冗余主机之间不需要任何额外的网络链接.</p>
-</li>
-<li>
-<p>双机采用虚拟共用一个虚拟IP地址来实现故障自动迁移,执行指令<code>ucarp -zB -i eth1 -s 192.168.1.100 -v 42 -p moose -a 192.168.1.252 --upscript=/data/jingbo.li/mfs/sbin/vip-up --downscript=/data/jingbo.li/mfs/sbin/vip-down</code>
-当master宕机后从机可以即时启动恢复接管master的相应服务.</p>
-<blockquote>
-<p><strong>*</strong>此中方案中要保证两台机器之前的网络畅通,网络抖动都可能影响服务.另外关于脚本的编写恢复策略也影响着恢复状况.我的github上有提供相关脚本.</p>
-</blockquote>
-</li>
-</ul>
-<h4>其他HA方案</h4>
-<ul>
-<li>其他高可用方案,例如:<strong>DRBD+Heartbeat+Pacemaker</strong>等,更多的就请教Google吧.</li>
-</ul>
-</blockquote>
-<p>总结:</p>
-<blockquote>
-<p>根据实际测试(采用ucarp方案),在有些情况下无效,当在你刚写完文件时,在断掉master后,在metalogger机器上做恢复后,客户端上不能对某些文件正常访问,会长时间地卡在那里.通过<strong>mfsfileinfo</strong>在查看文件属性时,会发现一些的块无效提示,在文件文件里也能看到一些提示信息.数据会丢失,完整性得不到保障.出现数据丢失或是读写错误可以尝试使用<strong>mfsfilerepair</strong>修复.</p>
-</blockquote>
-<hr />
-<h2>补充及总结</h2>
-<p>算是对MFS实际应用做的一些总结,对于实际来说,使用情况会复杂的多,实际应用肯定会遇到好多的问题.后续根据使用情况再做些总结和规整.</p>
-<blockquote>
-<p>另外做些补充：
-<a href="https://github.com/ops-baidu/shadow-mfs">百度对Moosefs二次开发</a>,<a href="http://www.zhangxiaolong.org/archives/242.html">相关文章</a></p>
-</blockquote>
-        </article></aside><!-- /#featured -->
-                <h1>Autres articles</h1>
-                <hr />
-                    <ol id="posts-list" class="hfeed">
-        
- 
-        <li><article class="hentry">    
-                <header>
-                        <h1><a href="http://bigbo.github.io/pages/2015/01/05/Moosefs_one/" rel="bookmark" title="Permalien vers «MooseFS浅析(一)»">MooseFS浅析(一)</a></h1>
-                </header>
-                
-                <div class="entry-content">
-                <footer class="post-info">
-                        <abbr class="published" title="2015-01-05T23:10:00+08:00">
-                                Publié le 05/01/2015 &agrave; 23:10
-                        </abbr>
-
-                        <address class="vcard author">
-                                Par <a class="url fn" href="#">ljingb</a>
-                        </address>
-                        <p> Dans <a href="http://bigbo.github.io/category/tecnology.html">Tecnology</a></p>
-</p>                    <p></p>
-                </footer><!-- /.post-info -->
-                <h2>前言</h2>
-<p>之前面临大量数据存储问题,于是开始选择分布式文件系统.于是MooseFS便映入眼底.正好之前用过,所以直接拿来就用.光会用也不行,闲来之时对他进行了一些简单了解,不管是百度还是谷歌,搜到的都是零零散散的东西,更多的博客都是抄來抄去,所以打算自己做些整理,下面就我对MFS的认识进行一下总结.</p>
-<hr />
-<h2>简介</h2>
-<ul>
-<li>MooseFS优越特性如下：<blockquote>
-<ol>
-<li>高可用性(数据可以存储在多个机器上的多个副本)</li>
-<li>可动态扩展随时新增加机器或者是磁盘</li>
-<li>可回收在指定时间内删除的文件(“垃圾回收站”是一个系统级别的服务)</li>
-<li>可以对整个文件甚至在正在写入的文件创建文件的快照。</li>
-<li>使用和部署非常简单,直接mount使用</li>
-</ol>
-</blockquote>
-</li>
-</ul>
-<p>对于<strong>Moosefs</strong>的介绍我在此就不详细说了,更多介绍可以查看<a href="http://www.moosefs.org/">官网</a>以及<a href="http://www.moosefs.com/how_to_get.html">英文版权威指南</a>或是查看田逸所翻译总结的<a href="https://github.com/bigbo/tools/blob/master/study/mfs/MooseFS%E6%9D%83%E5%A8%81%E6%8C%87%E5%8D%97.pdf">权威指南</a>,以上介绍的比自己总结的可能更加详细.我后面的总结是对以上内容的补充.</p>
-<p><strong>*AD:更多资料详见<a href="https://github.com/bigbo/tools/tree/master/study/mfs">GitHub</a></strong></p>
-<hr />
-<h2>系统结构</h2>
-<ul>
-<li>MFS文件系统结构包含4种角色:<blockquote>
-<ol>
-<li>管理服务器managing server(master):负责各个数据存储服务器的管理,文件读写调度,文件空间回收以及恢复.多节点拷贝.单个机器管理整个文件系统,用来存储记录每一个文件的Metadata(记录文件的大小 ...</li></ol></blockquote></li></ul>
-                <a class="readmore" href="http://bigbo.github.io/pages/2015/01/05/Moosefs_one/">Lire la suite...</a>
-                </div><!-- /.entry-content -->
-        </article></li>
-        
- 
-        <li><article class="hentry">    
-                <header>
-                        <h1><a href="http://bigbo.github.io/pages/2014/12/28/create-blog/" rel="bookmark" title="Permalien vers «用Pelican&GitHubPages搭建个人博客»">用Pelican&GitHubPages搭建个人博客</a></h1>
-                </header>
-                
-                <div class="entry-content">
-                <footer class="post-info">
-                        <abbr class="published" title="2014-12-28T00:02:00+08:00">
-                                Publié le 28/12/2014 &agrave; 00:02
-                        </abbr>
-
-                        <address class="vcard author">
-                                Par <a class="url fn" href="#">ljingb</a>
-                        </address>
-                        <p> Dans <a href="http://bigbo.github.io/category/tecnology.html">Tecnology</a></p>
-</p>                    <p></p>
-                </footer><!-- /.post-info -->
-                <h3>前言</h3>
+            <article>
+                <h2><a href="http://bigbo.github.io/pages/2014/12/28/create-blog/">用Pelican&GitHubPages搭建个人博客</a></h2>
+                <div class="summary"><h3>前言</h3>
 <p>对于github.io早有认识,但是趋于各种懒,至今才动手.想把这几年的一些自己总结的东西做些记录,匆匆那些年,也应该给自己做些积累了.</p>
 <p>那么问题来了,建立github page有各种框架,例如:<a href="http://jekyllrb.com/">jekyll</a>,<a href="https://github.com/Shopify/liquid/wiki/Liquid-for-Designers">liquid</a>,<a href="http://pelican-docs-zh-cn.readthedocs.org/en/latest/">Pelican</a>等等,本文采用后者Pelican,关于Pelican不做过多介绍,想了解的就去连接到的文档看吧.</p>
 <hr />
@@ -257,47 +101,152 @@ mfsmount -o mfsmeta -H mfs1.com.org /mnt/mfsmeta
 <blockquote>
 <ol>
 <li>安装python (2.7+,低版本的不支持 ...</li></ol></blockquote>
-                <a class="readmore" href="http://bigbo.github.io/pages/2014/12/28/create-blog/">Lire la suite...</a>
-                </div><!-- /.entry-content -->
-        </article></li>
-</ol><!-- /#posts-list -->
-</section><!-- /#content -->
-
-        <aside id="sidebar">
-                <div class="widget">
-                        <h2>Catégories</h2>
-                        <ul>
-                           <li ><a href="http://bigbo.github.io/category/gui-dang.html">归档</a></li>
-                           <li class="active"><a href="http://bigbo.github.io/category/tecnology.html">Tecnology</a></li>
-                        </ul>
+                    <a class="btn btn-default btn-xs" href="http://bigbo.github.io/pages/2014/12/28/create-blog/">more ...</a>
                 </div>
-                <div class="widget blogroll">
-                        <h2>Liens</h2>
-                        <ul>
-                            <li><a href="http://pelican-docs-zh-cn.readthedocs.org/en/latest/">Pelican Doc</a></li>
-                            <li><a href="http://chenlinux.com/">三斗室</a></li>
-                            <li><a href="http://argcv.com/">JingY</a></li>
-                            <li><a href="http://hailinzeng.github.io/">Hailin Zeng</a></li>
-                        </ul>
-                </div><!-- /.blogroll -->
-                <div class="widget social">
-                        <h2>Réseaux sociaux</h2>
-                        <ul>
-                            <li><a href="http://bigbo.github.io/" rel="alternate">atom feed</a></li>
+            </article>
+            <hr/>
 
-                            <li><a href="feeds/all.atom.xml">atom</a></li>
-                            <li><a href="https://github.com/bigbo">GitHub</a></li>
-                            <li><a href="https://plus.google.com/109995827478386248705">Google+</a></li>
-                            <li><a href="https://lnkd.in/bsndpJX">Linkedin</a></li>
-                        </ul>
-                </div><!-- /.social -->
-        </aside><!-- /#sidebar -->
+        <ul class="pagination">
+                <li class="prev"><a href="http://bigbo.github.io/category/tecnology.html">&laquo;</a>
+                </li>
+                    <li class=""><a
+                            href="http://bigbo.github.io/category/tecnology.html">1</a></li>
+                    <li class="active"><a
+                            href="http://bigbo.github.io/category/tecnology2.html">2</a></li>
+                <li class="next disabled"><a href="#">&raquo;</a></li>
+        </ul>
+        </div>
+        <div class="col-sm-3 well well-sm" id="sidebar">
 
-        <footer id="footer" class="body">
-                <address id="about" class="vcard body">
-                <a href="http://bigbo.github.io/">Bigbo's</a> site BY ljingb , un CMS réalisé en <a href="http://python.org">Python</a>.
-                </address><!-- /#about -->
-        </footer><!-- /#footer -->
+<aside>
+    <section>
+        <ul class="list-group list-group-flush">
+                <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
+                  <ul class="list-group" id="social">
+                    <li class="list-group-item"><a href="feeds/all.atom.xml"><i class="fa fa-atom-square fa-lg"></i> atom</a></li>
+                    <li class="list-group-item"><a href="https://github.com/bigbo"><i class="fa fa-github-square fa-lg"></i> GitHub</a></li>
+                    <li class="list-group-item"><a href="https://plus.google.com/109995827478386248705"><i class="fa fa-google-plus-square fa-lg"></i> Google+</a></li>
+                    <li class="list-group-item"><a href="https://lnkd.in/bsndpJX"><i class="fa fa-linkedin-square fa-lg"></i> Linkedin</a></li>
+                  </ul>
+                </li>
 
+                <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Recent Posts</span></h4>
+                    <ul class="list-group" id="recentposts">
+                        <li class="list-group-item">
+                            <a href="http://bigbo.github.io/pages/2015/01/08/Moosefs_two/">
+                                MooseFS浅析(二)
+                            </a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="http://bigbo.github.io/pages/2015/01/05/Moosefs_one/">
+                                MooseFS浅析(一)
+                            </a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="http://bigbo.github.io/pages/2014/12/28/create-blog/">
+                                用Pelican&GitHubPages搭建个人博客
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+
+                <li class="list-group-item"><a href="http://bigbo.github.io/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
+                    <ul class="list-group list-inline tagcloud" id="tags">
+                        <li class="list-group-item tag-1">
+                            <a href="http://bigbo.github.io/tag/fen-bu-shi-cun-chu.html">
+                                分布式存储
+                            </a>
+                        </li>
+                        <li class="list-group-item tag-1">
+                            <a href="http://bigbo.github.io/tag/fen-bu-shi-wen-jian-xi-tong.html">
+                                分布式文件系统
+                            </a>
+                        </li>
+                        <li class="list-group-item tag-4">
+                            <a href="http://bigbo.github.io/tag/github-pages.html">
+                                github pages
+                            </a>
+                        </li>
+                        <li class="list-group-item tag-1">
+                            <a href="http://bigbo.github.io/tag/moosefs.html">
+                                Moosefs
+                            </a>
+                        </li>
+                        <li class="list-group-item tag-4">
+                            <a href="http://bigbo.github.io/tag/pelican.html">
+                                pelican
+                            </a>
+                        </li>
+                    </ul>
+                </li>    
+
+
+    <li class="list-group-item"><h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
+      <ul class="list-group" id="links">
+        <li class="list-group-item">
+            <a href="http://pelican-docs-zh-cn.readthedocs.org/en/latest/" target="_blank">
+                Pelican Doc
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://chenlinux.com/" target="_blank">
+                三斗室
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://argcv.com/" target="_blank">
+                JingY
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://hailinzeng.github.io/" target="_blank">
+                Hailin Zeng
+            </a>
+        </li>
+      </ul>
+    </li>
+
+        </ul>
+    </section>
+
+</aside>        </div>
+    </div>
+</div>
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2015 ljingb
+            &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
+            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="http://bigbo.github.io/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="http://bigbo.github.io/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="http://bigbo.github.io/theme/js/respond.min.js"></script>
+
+    <!-- Disqus -->
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'bigbo'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function () {
+            var s = document.createElement('script');
+            s.async = true;
+            s.type = 'text/javascript';
+            s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+            (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+        }());
+    </script>
+    <!-- End Disqus Code -->
 </body>
 </html>
