@@ -63,8 +63,8 @@ mfsmount -o mfsmeta -H mfs1.com.org /mnt/mfsmeta
 &lt;blockquote&gt;
 &lt;p&gt;一个删除的文件能够存放在“ 垃圾箱”中的时间称为隔离时间,这个时间可以用&lt;strong&gt;mfsgettrashtime&lt;/strong&gt;命令来查看:&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;&lt;img alt="mfsgettrashtime命令" src="/pictures/mfs_pic4.png" /&gt;
-用&lt;strong&gt;mfssettrashtime&lt;/strong&gt;命令来设置上面的这个有效时间,要注意的是,保存时间单位为秒.
+&lt;p&gt;&lt;img alt="mfsgettrashtime命令" src="/pictures/mfs_pic4.png" /&gt;&lt;/p&gt;
+&lt;p&gt;用&lt;strong&gt;mfssettrashtime&lt;/strong&gt;命令来设置上面的这个有效时间,要注意的是,保存时间单位为秒.
 &lt;img alt="mfssettrashtime命令" src="/pictures/mfs_pic5.png" /&gt;&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;/blockquote&gt;
