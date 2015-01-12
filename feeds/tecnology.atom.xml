@@ -99,13 +99,12 @@ mfsmount -o mfsmeta -H mfs1.com.org /mnt/mfsmeta
 &lt;p&gt;两台主机安装ucarp,ucarp允许多个主机共享一个虚拟的ip地址,以提供自动的故障恢复功能,当其中某个主机宕机时,其它的主机会自动接管服务,ARP协议的特点在于其非常低的开销,主机间使用加密数据传递信息,并且在冗余主机之间不需要任何额外的网络链接.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;双机采用虚拟共用一个虚拟IP地址来实现故障自动迁移,执行指令&lt;code&gt;ucarp -zB -i eth1 -s 192.168.1.100 -v 42 -p moose -a 192.168.1.252 --upscript=/data/jingbo.li/mfs/sbin/vip-up --downscript=/data/jingbo.li/mfs/sbin/vip-down&lt;/code&gt;
+&lt;p&gt;双机采用虚拟共用一个虚拟IP地址来实现故障自动迁移,执行指令
+&lt;code&gt;ucarp -zB -i eth1 -s 192.168.1.100 -v 42 -p moose -a 192.168.1.252 --upscript=/data/jingbo.li/mfs/sbin/vip-up --downscript=/data/jingbo.li/mfs/sbin/vip-down&lt;/code&gt;
 当master宕机后从机可以即时启动恢复接管master的相应服务.&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;*&lt;/strong&gt;此中方案中要保证两台机器之前的网络畅通,网络抖动都可能影响服务.另外关于脚本的编写恢复策略也影响着恢复状况.我的github上有提供相关脚本.&lt;/p&gt;
-&lt;/blockquote&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;*&lt;/strong&gt;此中方案中要保证两台机器之前的网络畅通,网络抖动都可能影响服务.另外关于脚本的编写恢复策略也影响着恢复状况.我的github上有提供相关脚本.&lt;/p&gt;
 &lt;h4&gt;其他HA方案&lt;/h4&gt;
 &lt;ul&gt;
 &lt;li&gt;其他高可用方案,例如:&lt;strong&gt;DRBD+Heartbeat+Pacemaker&lt;/strong&gt;等,更多的就请教Google吧.&lt;/li&gt;
@@ -118,9 +117,10 @@ mfsmount -o mfsmeta -H mfs1.com.org /mnt/mfsmeta
 &lt;hr /&gt;
 &lt;h2&gt;补充及总结&lt;/h2&gt;
 &lt;p&gt;算是对MFS实际应用做的一些总结,对于实际来说,使用情况会复杂的多,实际应用肯定会遇到好多的问题.后续根据使用情况再做些总结和规整.&lt;/p&gt;
+&lt;p&gt;另外做些补充：&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;另外做些补充：
-&lt;a href="https://github.com/ops-baidu/shadow-mfs"&gt;百度对Moosefs二次开发&lt;/a&gt;,&lt;a href="http://www.zhangxiaolong.org/archives/242.html"&gt;相关文章&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;二次开发:&lt;a href="https://github.com/ops-baidu/shadow-mfs"&gt;百度对Moosefs二次开发&lt;/a&gt;,&lt;a href="http://www.zhangxiaolong.org/archives/242.html"&gt;相关文章&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;使用:实际使用来看,不可能使用每个客户端使用的时候都去安装其客户端,造成使用不太方便,其实可以找一台机器挂载MFS后,在其上面搭建一个&lt;strong&gt;FTP&lt;/strong&gt;等相关文件下载或是上传的服务,再加些权限限制,这样对使用者来说就非常方便和友好了.&lt;/p&gt;
 &lt;/blockquote&gt;</summary><category term="分布式文件系统"></category><category term="Moosefs"></category><category term="分布式存储"></category></entry><entry><title>MooseFS浅析(一)</title><link href="http://bigbo.github.io/pages/2015/01/05/Moosefs_one/" rel="alternate"></link><updated>2015-01-06T22:50:00+08:00</updated><author><name>ljingb</name></author><id>tag:bigbo.github.io,2015-01-05:pages/2015/01/05/Moosefs_one/</id><summary type="html">&lt;h2&gt;前言&lt;/h2&gt;
 &lt;p&gt;之前面临大量数据存储问题,于是开始选择分布式文件系统.于是MooseFS便映入眼底.正好之前用过,所以直接拿来就用.光会用也不行,闲来之时对他进行了一些简单了解,不管是百度还是谷歌,搜到的都是零零散散的东西,更多的博客都是抄來抄去,所以打算自己做些整理,下面就我对MFS的认识进行一下总结.&lt;/p&gt;
 &lt;hr /&gt;
