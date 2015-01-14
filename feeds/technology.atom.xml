@@ -226,6 +226,11 @@ mfsmount -o mfsmeta -H mfs1.com.org /mnt/mfsmeta
 &lt;blockquote&gt;
 &lt;p&gt;二次开发:&lt;a href="https://github.com/ops-baidu/shadow-mfs"&gt;百度对Moosefs二次开发&lt;/a&gt;,&lt;a href="http://www.zhangxiaolong.org/archives/242.html"&gt;相关文章&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;使用:实际使用来看,不可能使用每个客户端使用的时候都去安装其客户端,造成使用不太方便,其实可以找一台机器挂载MFS后,在其上面搭建一个&lt;strong&gt;FTP&lt;/strong&gt;等相关文件下载或是上传的服务,再加些权限限制,这样对使用者来说就非常方便和友好了.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;单线程是硬伤&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Moosefs更新其实还算快的,通过看其1.6.X版本源码,其实有些地方写的并不是很好,比如网络方面用的是&lt;strong&gt;poll&lt;/strong&gt;,不知道为什么没有采用更高效的&lt;strong&gt;epoll&lt;/strong&gt;,当然现在的最新版本是2.x版本,具体如何实现的暂时还没有了解,后续会跟进的.&lt;/p&gt;
+&lt;p&gt;另外,Master的单线程机制也不能够发挥多核CPU的优势,导致其性能受限,当海量文件(千万以上级别)存储的选型的时候就要注意了,也不适合高并发的一些业务.&lt;/p&gt;
 &lt;/blockquote&gt;</summary><category term="分布式文件系统"></category><category term="Moosefs"></category><category term="分布式存储"></category></entry><entry><title>MooseFS浅析(一)</title><link href="http://bigbo.github.io/pages/2015/01/05/Moosefs_one/" rel="alternate"></link><updated>2015-01-06T22:50:00+08:00</updated><author><name>ljingb</name></author><id>tag:bigbo.github.io,2015-01-05:pages/2015/01/05/Moosefs_one/</id><summary type="html">&lt;h2&gt;前言&lt;/h2&gt;
 &lt;p&gt;之前面临大量数据存储问题,于是开始选择分布式文件系统.于是MooseFS便映入眼底.正好之前用过,所以直接拿来就用.光会用也不行,闲来之时对他进行了一些简单了解,不管是百度还是谷歌,搜到的都是零零散散的东西,更多的博客都是抄來抄去,所以打算自己做些整理,下面就我对MFS的认识进行一下总结.&lt;/p&gt;
 &lt;hr /&gt;
