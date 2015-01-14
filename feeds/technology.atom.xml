@@ -1,5 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>BigBo's blog</title><link href="http://bigbo.github.io/" rel="alternate"></link><link href="None/feeds/technology.atom.xml" rel="self"></link><id>http://bigbo.github.io/</id><updated>2015-01-09T16:00:00+08:00</updated><entry><title>MooseFS浅析(二)</title><link href="http://bigbo.github.io/pages/2015/01/08/Moosefs_two/" rel="alternate"></link><updated>2015-01-09T16:00:00+08:00</updated><author><name>ljingb</name></author><id>tag:bigbo.github.io,2015-01-08:pages/2015/01/08/Moosefs_two/</id><summary type="html">&lt;h2&gt;前言&lt;/h2&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>BigBo's blog</title><link href="http://bigbo.github.io/" rel="alternate"></link><link href="None/feeds/technology.atom.xml" rel="self"></link><id>http://bigbo.github.io/</id><updated>2015-01-14T13:50:00+08:00</updated><entry><title>Pelican设置及插件使用</title><link href="http://bigbo.github.io/pages/2015/01/13/blog_plugin/" rel="alternate"></link><updated>2015-01-14T13:50:00+08:00</updated><author><name>ljingb</name></author><id>tag:bigbo.github.io,2015-01-13:pages/2015/01/13/blog_plugin/</id><summary type="html">&lt;h2&gt;前言&lt;/h2&gt;
+&lt;p&gt;博客算是正式用起来了,觉得还不错,但是经过查看或是浏览其他人的博客,感觉自己的还是那么的low.为什么呢?因为没有选择一个高大上的主题,没有使用优秀的插件,没有做相关优化.查了查,还有好多后续工作要做.以下就对博客的插件等设置使用总结下.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;h2&gt;主题设置&lt;/h2&gt;
+&lt;p&gt;简单粗暴的设置可以看&lt;a href="http://bigbo.github.io/pages/2014/12/28/create-blog/"&gt;这里&lt;/a&gt;主题设置相关简介.但是我还想说,上面的那些设置还远远不够.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;这里推荐一些优秀的主题&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://github.com/talha131/pelican-elegant"&gt;Elegant&lt;/a&gt;,清俗淡雅.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://github.com/DandyDev/pelican-bootstrap3"&gt;pelican-bootstrap3&lt;/a&gt;,我早期用的一个主题,其中自己改了一些东西.此主题有些问题在于宽屏展示的会出现字体有宽边.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://github.com/jsliang/pelican-fresh"&gt;pelican-fresh&lt;/a&gt;.我现在使用的主题.各方面还都不错.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;当然其实还有好多的优秀主题没有加入到&lt;a href="https://github.com/getpelican/pelican-themes"&gt;官方主题库&lt;/a&gt;,要善用github的搜索功能.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr /&gt;
+&lt;h2&gt;插件设置&lt;/h2&gt;
+&lt;p&gt;插件的使用会使你的博客增添一些好的功能.例如评论功能.这里我推荐一些不错值得装的插件.另外官方也有提供&lt;a href="https://github.com/getpelican/pelican-plugins"&gt;插件库&lt;/a&gt;.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;h4&gt;sitemap&lt;/h4&gt;
+&lt;p&gt;&lt;a href="https://github.com/getpelican/pelican-plugins/tree/master/sitemap"&gt;sitemap&lt;/a&gt;可以生成xml和txt格式的网站地图,配置见插件的readme.&lt;/p&gt;
+&lt;h4&gt;gzip_cache&lt;/h4&gt;
+&lt;p&gt;&lt;a href="https://github.com/getpelican/pelican-plugins/tree/master/gzip_cache"&gt;gzip_cache&lt;/a&gt;,可以将所有的页面压缩为gz格式,相对来说能加快页面的加载速度.&lt;/p&gt;
+&lt;h4&gt;neighbors&lt;/h4&gt;
+&lt;p&gt;&lt;a href="https://github.com/davidlesieur/multi_neighbors"&gt;neighbors&lt;/a&gt;,邻居导航,也就是我们常说的上一篇下一篇文章&lt;/p&gt;
+&lt;h4&gt;related_posts&lt;/h4&gt;
+&lt;p&gt;&lt;a href="https://github.com/LawrenceWoodman/related_posts-jekyll_plugin"&gt;related_posts&lt;/a&gt;,相关文章,根据tags判断的&lt;/p&gt;
+&lt;p&gt;想使用当然还需要在配置文件&lt;strong&gt;pelicanconf.py&lt;/strong&gt;中进行设置.例如:&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;## 插件目录
+PLUGIN_PATHS = [u&amp;quot;pelican-plugins&amp;quot;]
+
+PLUGINS = [u&amp;quot;sitemap&amp;quot;,u&amp;quot;gzip_cache&amp;quot;,u&amp;quot;neighbors&amp;quot;,u&amp;quot;related_posts&amp;quot;]
+
+## 配置sitemap 插件
+SITEMAP = {
+    &amp;quot;format&amp;quot;: &amp;quot;xml&amp;quot;,
+    &amp;quot;priorities&amp;quot;: {
+        &amp;quot;articles&amp;quot;: 0.7,
+        &amp;quot;indexes&amp;quot;: 0.5,
+        &amp;quot;pages&amp;quot;: 0.3,
+    },
+    &amp;quot;changefreqs&amp;quot;: {
+        &amp;quot;articles&amp;quot;: &amp;quot;monthly&amp;quot;,
+        &amp;quot;indexes&amp;quot;: &amp;quot;daily&amp;quot;,
+        &amp;quot;pages&amp;quot;: &amp;quot;monthly&amp;quot;,
+    }
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;hr /&gt;
+&lt;h2&gt;加载慢的解决&lt;/h2&gt;
+&lt;p&gt;当博客上传到github能正常访问后,你就会发现一个问题,加载太TMD慢了!还能不能让然正常的访问了!经过调试,发现是前端&lt;strong&gt;css&lt;/strong&gt;资源需要加载&lt;a href="fonts.googleapi.com"&gt;Google的字体服务&lt;/a&gt;时间过长导致.可以认定是GFW给封了.罪过罪过.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;h4&gt;解决方法&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;1.下载字体文件,到网站的静态文件夹内,具体可以参考&lt;a href="http://sudodev.cn/articles/354.html"&gt;让wordpress主题绕开对google的依赖&lt;/a&gt;.不过此种方法也有些问题.把静态资源放到Github上加载时间也没别之前好多少.&lt;/li&gt;
+&lt;li&gt;2.把Google的静态公共库替换为国内的公共库.例如我的给替换成&lt;a href="fonts.useso.com"&gt;360的镜像地址&lt;/a&gt;.其实这种方法也有些弊端,例如国外用户访问就会出现加载过慢的问题.但是毕竟我们在'朝内',所以就换成360的资源库吧.操作如下:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;#static/css/目录下css文件中,例如main.css&lt;/span&gt;
+&lt;span class="nd"&gt;@import&lt;/span&gt; &lt;span class="n"&gt;url&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;//&lt;/span&gt;&lt;span class="n"&gt;fonts&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;googleapi&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;com&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;css&lt;/span&gt;&lt;span class="err"&gt;?&lt;/span&gt;&lt;span class="n"&gt;family&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;Overlock&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;400&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;700&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;900&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="nd"&gt;@import&lt;/span&gt; &lt;span class="n"&gt;url&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;//&lt;/span&gt;&lt;span class="n"&gt;fonts&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;googleapi&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;com&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;css&lt;/span&gt;&lt;span class="err"&gt;?&lt;/span&gt;&lt;span class="n"&gt;family&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;PT&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="n"&gt;Mono&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="c"&gt;#替换为&lt;/span&gt;
+&lt;span class="nd"&gt;@import&lt;/span&gt; &lt;span class="n"&gt;url&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;//&lt;/span&gt;&lt;span class="n"&gt;fonts&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;useso&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;com&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;css&lt;/span&gt;&lt;span class="err"&gt;?&lt;/span&gt;&lt;span class="n"&gt;family&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;Overlock&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;400&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;700&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;900&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="nd"&gt;@import&lt;/span&gt; &lt;span class="n"&gt;url&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;//&lt;/span&gt;&lt;span class="n"&gt;fonts&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;useso&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;com&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;css&lt;/span&gt;&lt;span class="err"&gt;?&lt;/span&gt;&lt;span class="n"&gt;family&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;PT&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="n"&gt;Mono&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;blockquote&gt;
+&lt;p&gt;可以上传后测试下,基本上能在10s内刷新出来.效果明显.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr /&gt;
+&lt;h2&gt;Google(百度) Analytics和Webmasters设置&lt;/h2&gt;
+&lt;p&gt;注册&lt;a href="http://www.google.com/analytics/"&gt;Google Analytics&lt;/a&gt;和&lt;a href="http://www.google.com/webmasters/"&gt;Webmasters&lt;/a&gt;可以更好的管理自己的站点,&lt;a href="http://zhanzhang.baidu.com/"&gt;百度站长工具&lt;/a&gt;更好的让搜索引擎收录.认证有多种形式,可以根据注册使用向导来完成进一步设置.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;h2&gt;配置文件其他配置&lt;/h2&gt;
+&lt;p&gt;还有一些其他配置就不一一详解了,以下列出仅供参考.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;## 设置URL按照日期显示
+ARTICLE_URL = &amp;#39;pages/{date:%Y}/{date:%m}/{date:%d}/{slug}/&amp;#39;
+ARTICLE_SAVE_AS = &amp;#39;pages/{date:%Y}/{date:%m}/{date:%d}/{slug}/index.html&amp;#39;
+PAGE_URL = &amp;#39;pages/{slug}/&amp;#39;
+PAGE_SAVE_AS = &amp;#39;pages/{slug}/index.html&amp;#39;
+
+## 分页
+DEFAULT_PAGINATION = 2
+
+## 静态目录设置
+STATIC_PATHS = [&amp;quot;pictures&amp;quot;, ]
+
+## 顶部菜单项
+MENUITEMS = [
+            (&amp;#39;archives&amp;#39;,SITEURL+&amp;#39;/archives.html&amp;#39;),
+            ]
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;hr /&gt;
+&lt;h2&gt;总结&lt;/h2&gt;
+&lt;p&gt;以上算是对之前&lt;strong&gt;创建静态博客&lt;/strong&gt;的补充.其实都算是基本的设置,其实还有好多的设置应该做些总结,例如:增加站内搜索框等.时间关系吧,随着对自己博客的改造逐渐进行补充.&lt;/p&gt;</summary><category term="github pages"></category><category term="pelican_plugin"></category></entry><entry><title>MooseFS浅析(二)</title><link href="http://bigbo.github.io/pages/2015/01/08/Moosefs_two/" rel="alternate"></link><updated>2015-01-09T16:00:00+08:00</updated><author><name>ljingb</name></author><id>tag:bigbo.github.io,2015-01-08:pages/2015/01/08/Moosefs_two/</id><summary type="html">&lt;h2&gt;前言&lt;/h2&gt;
 &lt;p&gt;继上篇,感觉说了好多废话,多半是配置文件相关参数,作为一个基础运维人员,更关注的是怎么让服务更加稳定(高可用),出现问题如何恢复(容错)等,更接地气的东西打算在下面介绍下.&lt;/p&gt;
 &lt;hr /&gt;
 &lt;h2&gt;启动和关闭顺序&lt;/h2&gt;
