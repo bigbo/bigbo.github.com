@@ -212,7 +212,7 @@ mfsmount -o mfsmeta -H mfs1.com.org /mnt/mfsmeta
 </blockquote>
 <p>单线程是硬伤</p>
 <blockquote>
-<p>Moosefs更新其实还算快的,通过看其1.6.X版本源码,其实有些地方写的并不是很好,比如网络方面用的是<strong>poll</strong>,不知道为什么没有采用更高效的<strong>epoll</strong>,当然现在的最新版本是2.x版本,具体如何实现的暂时还没有了解,后续会跟进的.</p>
+<p>Moosefs更新其实还算快的,通过看其1.6.X版本源码,其实有些地方写的并不是很好,比如网络方面用的是<strong>poll</strong>,不知道为什么没有采用更高效的<strong>epoll</strong>,当然现在的最新版本是2.x版本,后续会跟进的.(经过查看最新版2.0.43版本,网络方面与1.6.X差别不大)</p>
 <p>另外,Master的单线程机制也不能够发挥多核CPU的优势,导致其性能受限,当海量文件(千万以上级别)存储的选型的时候就要注意了,也不适合高并发的一些业务.</p>
 </blockquote>
 
