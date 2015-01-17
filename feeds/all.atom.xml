@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>BigBo's blog</title><link href="http://bigbo.github.io/" rel="alternate"></link><link href="None/feeds/all.atom.xml" rel="self"></link><id>http://bigbo.github.io/</id><updated>2015-01-17T15:40:00+08:00</updated><entry><title>kafka监控web端(添砖)</title><link href="http://bigbo.github.io/pages/2015/01/17/kafka_web_console/" rel="alternate"></link><updated>2015-01-17T15:40:00+08:00</updated><author><name>ljingb</name></author><id>tag:bigbo.github.io,2015-01-17:pages/2015/01/17/kafka_web_console/</id><summary type="html">&lt;h2&gt;前言&lt;/h2&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>BigBo's blog</title><link href="http://bigbo.github.io/" rel="alternate"></link><link href="None/feeds/all.atom.xml" rel="self"></link><id>http://bigbo.github.io/</id><updated>2015-01-17T19:40:00+08:00</updated><entry><title>kafka监控web端(添砖)</title><link href="http://bigbo.github.io/pages/2015/01/17/kafka_web_console/" rel="alternate"></link><updated>2015-01-17T15:40:00+08:00</updated><author><name>ljingb</name></author><id>tag:bigbo.github.io,2015-01-17:pages/2015/01/17/kafka_web_console/</id><summary type="html">&lt;h2&gt;前言&lt;/h2&gt;
 &lt;p&gt;最近在了解消息队列,主要是之前用的是redis,redis固然非常好用,但是也有相应的使用场景.随着数据量的增长,redis已经不能满足现在的需求了.所以需要找个更好的替代品.问了一圈大牛,也google一番,锁定在&lt;a href="http://kafka.apache.org/"&gt;kafka&lt;/a&gt;上了.关于&lt;strong&gt;kafka&lt;/strong&gt;怎么"玩",我也不知道,算是在摸索当中,想要知道安装使用等方法,请移步Google吧.虽然kafka我不会完,但是我会玩怎么监控它.&lt;/p&gt;
 &lt;hr /&gt;
 &lt;h2&gt;简介&lt;/h2&gt;
@@ -52,9 +52,105 @@ nohup ./kafka-web-console &amp;gt;/dev/null 2&amp;gt;&amp;amp;1 &amp;amp;
 
 &lt;hr /&gt;
 &lt;h2&gt;总结&lt;/h2&gt;
-&lt;p&gt;其实关于kafka相关的知识相当匮乏,林林总总的通过各种博客看了一些简介,摸着石头过河.后续有对kafka的研究再进行记录了解.&lt;/p&gt;</summary><category term="kafka"></category><category term="消息队列"></category><category term="监控"></category></entry><entry><title>MooseFS浅析(三)--chunk存储选择算法(搬砖)</title><link href="http://bigbo.github.io/pages/2015/01/16/Moosefs_three/" rel="alternate"></link><updated>2015-01-17T15:40:00+08:00</updated><author><name>ljingb</name></author><id>tag:bigbo.github.io,2015-01-16:pages/2015/01/16/Moosefs_three/</id><summary type="html">&lt;h2&gt;前言&lt;/h2&gt;
-&lt;p&gt;规划中.....&lt;/p&gt;
-&lt;hr /&gt;</summary><category term="分布式文件系统"></category><category term="Moosefs"></category><category term="分布式存储"></category></entry><entry><title>Pelican设置及插件使用</title><link href="http://bigbo.github.io/pages/2015/01/13/blog_plugin/" rel="alternate"></link><updated>2015-01-14T13:50:00+08:00</updated><author><name>ljingb</name></author><id>tag:bigbo.github.io,2015-01-13:pages/2015/01/13/blog_plugin/</id><summary type="html">&lt;h2&gt;前言&lt;/h2&gt;
+&lt;p&gt;其实关于kafka相关的知识相当匮乏,林林总总的通过各种博客看了一些简介,摸着石头过河.后续有对kafka的研究再进行记录了解.&lt;/p&gt;</summary><category term="kafka"></category><category term="消息队列"></category><category term="监控"></category></entry><entry><title>MooseFS浅析(三)--chunk存储选择算法(搬砖)</title><link href="http://bigbo.github.io/pages/2015/01/16/Moosefs_three/" rel="alternate"></link><updated>2015-01-17T19:40:00+08:00</updated><author><name>ljingb</name></author><id>tag:bigbo.github.io,2015-01-16:pages/2015/01/16/Moosefs_three/</id><summary type="html">&lt;h2&gt;前言&lt;/h2&gt;
+&lt;p&gt;如果自己设计一套chunkserver选择算法,我们要达到哪些目标呢?&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;ol&gt;
+&lt;li&gt;文件打散后尽量平均分布到各台chunkserver上&lt;/li&gt;
+&lt;li&gt;各台chunkserver上的chunk数量尽可能的平均&lt;/li&gt;
+&lt;li&gt;数据分发过程衡量系统负载，尽量把数据放在负载低的chunkserver上&lt;/li&gt;
+&lt;li&gt;数据分发过程是否应该衡量各台chunkserver的可用空间?&lt;/li&gt;
+&lt;li&gt;机架感应?&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;回到MFS使用过程中会有一个疑问.chunkserver的选择是怎么选择的.怎么才能保证数据保存占用空间平衡甚至平均?这就是数据分布算法.也正是分布式文件系统的核心容.所以在此,转来一篇关于MFS的chunk存储选择算法的文章.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;h2&gt;核心算法&lt;/h2&gt;
+&lt;p&gt;还记得matocsserventry结构中的carry字段么,这个字段就是分布算法的核心.每台chunkserver会有自己的carry值,在选择chunkserver会将每台chunkserver按照carry从大到小做快速排序,优先选择carry值大的chunkserver来使用.&lt;/p&gt;
+&lt;p&gt;在描述具体算法前,先介绍三个概念:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;allcnt:mfs中可用的chunkserver的个数&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;availcnt:mfs中当前可以直接存储数据的chunkserver的个数&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;demand:当前文件的副本数目&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;先说allcnt,可用的chunkserver要满足下面几个条件:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;ol&gt;
+&lt;li&gt;chunkserver是活着的&lt;/li&gt;
+&lt;li&gt;chunkserver的总空间大于0&lt;/li&gt;
+&lt;li&gt;chunkserver的可用空间(总空间-使用空间)大于1G&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;availcnt指的是carry值大于1的可用chunkserver的个数.也就是在allcnt的约束条件上加一条carry值大于1.文件1.txt需要存储2个副本,但是mfs中仅仅有1台chunkserver可用,也就是&lt;code&gt;demand&amp;gt;allcnt&lt;/code&gt;的时候,mfs会自动减少文件的副本个数到allcnt,保证文件可以成功写入系统.&lt;/p&gt;
+&lt;p&gt;关于carry有下面几个规则:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;ol&gt;
+&lt;li&gt;仅carry值大于1的chunkserver可以存储新数据&lt;/li&gt;
+&lt;li&gt;每台chunkserver存储新数据后其carry会减1&lt;/li&gt;
+&lt;li&gt;demand&amp;gt;availcnt的时候，会递归的增加每台chunkserver的carry值，直到&lt;code&gt;demand&amp;lt;=availcnt&lt;/code&gt;为止&lt;/li&gt;
+&lt;li&gt;每台chunkserver每次carry值的增加量等于当前chunkserver总空间除以最大的chunkserver总空间&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;上面的规则比较复杂.举个例子就更加清晰了.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;chunkserver 1：totalspace:3.94G carry:0.463254
+chunkserver 2：totalspace:7.87G carry:0.885674
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;文件1.txt大小1k,mfs默认一个chunk大小为64M,所以仅仅需要一个chunk就够了.此时 availcnt=0,demand=1,所以需要增加carry值&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;chunkserver 1：carry=0.463254 + (3.94/7.87) = 0.463254 + 0.500005 = 0.963259
+chunkserver 2：carry=0.885674 + (7.87/7.87) = 0.885674 + 1.000000 = 1.885674
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;此时 availcnt=1,demand=1,所以不需要增加carry值,对chunkserver按照carry从大到小排序结果为:&lt;code&gt;chunkserver 2 &amp;gt; chunkserver 1&lt;/code&gt;,文件1.txt的chunk会存储到chunkserver 2上,同时chunkserver 2的carry会减1&lt;/p&gt;
+&lt;p&gt;如下：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;chunkserver 1：carry=0.963259
+chunkserver 2：carry=1.885674 – 1 = 0.885674
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;文件2.txt大小1k,mfs默认一个chunk大小为64M,所以仅仅需要一个chunk就够了.此时 availcnt=0,demand=1.所以需要增加carry值&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;chunkserver 1：carry=0.963259 + (3.94/7.87) = 0.963259 + 0.500005 = 1.463264
+chunkserver 2：carry=0.885674 + (7.87/7.87) = 0.885674 + 1.000000 = 1.885674
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;此时 availcnt=2,demand=1,所以不需要增加carry值,对chunkserver按照carry从大到小排序结果为:&lt;code&gt;chunkserver 2 &amp;gt; chunkserver 1&lt;/code&gt;,文件2.txt的chunk会存储到chunkserver 2上,同时chunkserver 2的carry会减1&lt;/p&gt;
+&lt;p&gt;如下：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;chunkserver 1：carry=1.463264
+chunkserver 2：carry=1.885674 – 1 = 0.885674
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;文件3.txt大小1k,mfs默认一个chunk大小为64M,所以仅仅需要一个chunk就够了.此时availcnt=1,demand=1,所以不需要增加carry值.对chunkserver按照carry从大到小排序结果为:&lt;code&gt;chunkserver 1 &amp;gt; chunkserver 2&lt;/code&gt;,文件3.txt的chunk会存储到chunkserver 1上,同时chunkserver 1的carry会减1&lt;/p&gt;
+&lt;p&gt;如下:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;chunkserver 1：carry=1.463264 – 1 = 0.463264
+chunkserver 2：carry=0.885674
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;因为两台chunkserver的总空间大小不一致,根据算法总空间大的那台chunkserver会存储更多的新数据.&lt;/p&gt;
+&lt;p&gt;记住:&lt;strong&gt;仅仅和chunkserver的总空间有关系和可用空间没有任何关系&lt;/strong&gt;,也就是说,当各台chunkserver总空间大小差不多的情况下,chunk能更好的平均分布,否则mfs会更倾向于选择总空间大的机器来使用.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p&gt;最后一个问题,当mfs刚刚启动的时候,carry值是如果获得的?&lt;/p&gt;
+&lt;p&gt;答案:随机产生,通过rndu32()这个函数,随机产生一个小于1,大于等于0的数.&lt;/p&gt;
+&lt;p&gt;测试结果如下：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;Nov 23 01:01:25 sunwg mfsmaster[13175]: 192.168.0.159,0.594834
+Nov 23 01:01:25 sunwg mfsmaster[13175]: 192.168.0.160,0.000000
+Nov 23 01:03:58 sunwg mfsmaster[13187]: 192.168.0.159,0.516242
+Nov 23 01:03:58 sunwg mfsmaster[13187]: 192.168.0.160,0.826559
+Nov 23 01:04:17 sunwg mfsmaster[13192]: 192.168.0.159,0.123765
+Nov 23 01:04:17 sunwg mfsmaster[13192]: 192.168.0.160,0.389592
+&lt;/pre&gt;&lt;/div&gt;</summary><category term="分布式文件系统"></category><category term="Moosefs"></category><category term="分布式存储"></category></entry><entry><title>Pelican设置及插件使用</title><link href="http://bigbo.github.io/pages/2015/01/13/blog_plugin/" rel="alternate"></link><updated>2015-01-14T13:50:00+08:00</updated><author><name>ljingb</name></author><id>tag:bigbo.github.io,2015-01-13:pages/2015/01/13/blog_plugin/</id><summary type="html">&lt;h2&gt;前言&lt;/h2&gt;
 &lt;p&gt;博客算是正式用起来了,觉得还不错,但是经过查看或是浏览其他人的博客,感觉自己的还是那么的low.为什么呢?因为没有选择一个高大上的主题,没有使用优秀的插件,没有做相关优化.查了查,还有好多后续工作要做.以下就对博客的插件等设置使用总结下.&lt;/p&gt;
 &lt;hr /&gt;
 &lt;h2&gt;主题设置&lt;/h2&gt;
