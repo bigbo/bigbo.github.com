@@ -132,6 +132,11 @@ SITEMAP = {
 &lt;blockquote&gt;
 &lt;p&gt;可以上传后测试下,基本上能在10s内刷新出来.效果明显.&lt;/p&gt;
 &lt;/blockquote&gt;
+&lt;p&gt;&lt;strong&gt;*国内其他开公共库&lt;/strong&gt;:
+ &lt;a href="http://developer.baidu.com/wiki/index.php?title=docs/cplat/libs"&gt;百度CDN公共库&lt;/a&gt;; 
+ &lt;a href="http://lib.sinaapp.com/"&gt;新浪云计算CDN公共库&lt;/a&gt;; 
+ &lt;a href="http://jscdn.upai.com/"&gt;又拍云JS库CDN服务&lt;/a&gt;; 
+ &lt;a href="http://www.staticfile.org/"&gt;七牛云静态文件CDN&lt;/a&gt;; &lt;/p&gt;
 &lt;hr /&gt;
 &lt;h2&gt;Google(百度) Analytics和Webmasters设置&lt;/h2&gt;
 &lt;p&gt;注册&lt;a href="http://www.google.com/analytics/"&gt;Google Analytics&lt;/a&gt;和&lt;a href="http://www.google.com/webmasters/"&gt;Webmasters&lt;/a&gt;可以更好的管理自己的站点,&lt;a href="http://zhanzhang.baidu.com/"&gt;百度站长工具&lt;/a&gt;更好的让搜索引擎收录.认证有多种形式,可以根据注册使用向导来完成进一步设置.&lt;/p&gt;
