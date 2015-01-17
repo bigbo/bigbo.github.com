@@ -1,5 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>BigBo's blog</title><link href="http://bigbo.github.io/" rel="alternate"></link><link href="None/feeds/all.atom.xml" rel="self"></link><id>http://bigbo.github.io/</id><updated>2015-01-14T13:50:00+08:00</updated><entry><title>Pelican设置及插件使用</title><link href="http://bigbo.github.io/pages/2015/01/13/blog_plugin/" rel="alternate"></link><updated>2015-01-14T13:50:00+08:00</updated><author><name>ljingb</name></author><id>tag:bigbo.github.io,2015-01-13:pages/2015/01/13/blog_plugin/</id><summary type="html">&lt;h2&gt;前言&lt;/h2&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>BigBo's blog</title><link href="http://bigbo.github.io/" rel="alternate"></link><link href="None/feeds/all.atom.xml" rel="self"></link><id>http://bigbo.github.io/</id><updated>2015-01-17T15:40:00+08:00</updated><entry><title>kafka监控web端(添砖)</title><link href="http://bigbo.github.io/pages/2015/01/17/kafka_web_console/" rel="alternate"></link><updated>2015-01-17T15:40:00+08:00</updated><author><name>ljingb</name></author><id>tag:bigbo.github.io,2015-01-17:pages/2015/01/17/kafka_web_console/</id><summary type="html">&lt;h2&gt;前言&lt;/h2&gt;
+&lt;p&gt;最近在了解消息队列,主要是之前用的是redis,redis固然非常好用,但是也有相应的使用场景.随着数据量的增长,redis已经不能满足现在的需求了.所以需要找个更好的替代品.问了一圈大牛,也google一番,锁定在&lt;a href="http://kafka.apache.org/"&gt;kafka&lt;/a&gt;上了.关于&lt;strong&gt;kafka&lt;/strong&gt;怎么"玩",我也不知道,算是在摸索当中,想要知道安装使用等方法,请移步Google吧.虽然kafka我不会完,但是我会玩怎么监控它.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;h2&gt;简介&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;a href="https://github.com/claudemamo/kafka-web-console"&gt;kafka-web-console&lt;/a&gt;,是kafka自己的一个Web管理界面.开源的东西好是好,但是不知道是不是开源的大牛B们都不愿意写文档!!出来个东西,居然没有安装步骤,只是有一些简单的使用说明,甚至说明都不详细,对于此点表示很坑!&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr /&gt;
+&lt;h2&gt;安装&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;h5&gt;1.先下载安装scala构建工具&lt;a href="http://www.scala-sbt.org/0.13/tutorial/Installing-sbt-on-Linux.html"&gt;sbt&lt;/a&gt;&lt;/h5&gt;
+&lt;/blockquote&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt; #本安装环境为centos6.5
+ curl https://bintray.com/sbt/rpm/rpm &amp;gt; bintray-sbt-rpm.repo
+ sudo mv bintray-sbt-rpm.repo /etc/yum.repos.d/
+ sudo yum install sbt
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;blockquote&gt;
+&lt;h5&gt;2.下载&lt;strong&gt;kafka-web-console&lt;/strong&gt;&lt;/h5&gt;
+&lt;p&gt;&lt;code&gt;git clone https://github.com/claudemamo/kafka-web-console&lt;/code&gt;&lt;/p&gt;
+&lt;h5&gt;3.构建包&lt;/h5&gt;
+&lt;/blockquote&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;cd kafka-web-console/  
+sbt dist
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;blockquote&gt;
+&lt;p&gt;此处是构建出一个可用的standalone包来,以后用的话直接部署使用即可.另外,网上有写教程有说需要设置下数据库等设置,看着有些麻烦,默认的数据库是H2,我没有设置其他的数据库,以我的成功案例来看,此处保持默认设置即可.&lt;/p&gt;
+&lt;p&gt;补充:其实早就相对GFW说生祝福了,用sbt构建包的时候问题多多,主要都是下载相关依赖的问题.好多依赖已经被墙了,以至于下载巨慢无比,甚至下载失败.有此问题的请挂代理.sbt怎么设置代理?你问我,我也不会,但是总有人会,请异步---&amp;gt;&lt;a href="http://stackoverflow.com/questions/13803459/how-to-use-sbt-from-behind-proxy"&gt;sbt构建代理设置&lt;/a&gt;&lt;/p&gt;
+&lt;h5&gt;4.部署运行&lt;/h5&gt;
+&lt;p&gt;当你顺利的构建完成之后,在&lt;code&gt;kafka-web-console/target/universal&lt;/code&gt;下出先一个压缩包.此压缩包正是刚才编译出的应用端.解压zip即可.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;unzip kafka-web-console-2.1.0-SNAPSHOT.zip  
+cd kafka-web-console-2.1.0-SNAPSHOT/bin
+#第一次启动加个参数不然报错
+./kafka-web-console -DapplyEvolutions.default=true
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;blockquote&gt;
+&lt;p&gt;至此你可以访问相应的机器的9000端口就可以体验了.&lt;/p&gt;
+&lt;h5&gt;查看帮助以及后台运行&lt;/h5&gt;
+&lt;/blockquote&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;./kafka-web-console -h  
+nohup ./kafka-web-console &amp;gt;/dev/null 2&amp;gt;&amp;amp;1 &amp;amp;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;hr /&gt;
+&lt;h2&gt;总结&lt;/h2&gt;
+&lt;p&gt;其实关于kafka相关的知识相当匮乏,林林总总的通过各种博客看了一些简介,摸着石头过河.后续有对kafka的研究再进行记录了解.&lt;/p&gt;</summary><category term="kafka"></category><category term="消息队列"></category><category term="监控"></category></entry><entry><title>MooseFS浅析(三)--chunk存储选择算法(搬砖)</title><link href="http://bigbo.github.io/pages/2015/01/16/Moosefs_three/" rel="alternate"></link><updated>2015-01-17T15:40:00+08:00</updated><author><name>ljingb</name></author><id>tag:bigbo.github.io,2015-01-16:pages/2015/01/16/Moosefs_three/</id><summary type="html">&lt;h2&gt;前言&lt;/h2&gt;
+&lt;p&gt;规划中.....&lt;/p&gt;
+&lt;hr /&gt;</summary><category term="分布式文件系统"></category><category term="Moosefs"></category><category term="分布式存储"></category></entry><entry><title>Pelican设置及插件使用</title><link href="http://bigbo.github.io/pages/2015/01/13/blog_plugin/" rel="alternate"></link><updated>2015-01-14T13:50:00+08:00</updated><author><name>ljingb</name></author><id>tag:bigbo.github.io,2015-01-13:pages/2015/01/13/blog_plugin/</id><summary type="html">&lt;h2&gt;前言&lt;/h2&gt;
 &lt;p&gt;博客算是正式用起来了,觉得还不错,但是经过查看或是浏览其他人的博客,感觉自己的还是那么的low.为什么呢?因为没有选择一个高大上的主题,没有使用优秀的插件,没有做相关优化.查了查,还有好多后续工作要做.以下就对博客的插件等设置使用总结下.&lt;/p&gt;
 &lt;hr /&gt;
 &lt;h2&gt;主题设置&lt;/h2&gt;
@@ -80,6 +135,48 @@ SITEMAP = {
 &lt;hr /&gt;
 &lt;h2&gt;Google(百度) Analytics和Webmasters设置&lt;/h2&gt;
 &lt;p&gt;注册&lt;a href="http://www.google.com/analytics/"&gt;Google Analytics&lt;/a&gt;和&lt;a href="http://www.google.com/webmasters/"&gt;Webmasters&lt;/a&gt;可以更好的管理自己的站点,&lt;a href="http://zhanzhang.baidu.com/"&gt;百度站长工具&lt;/a&gt;更好的让搜索引擎收录.认证有多种形式,可以根据注册使用向导来完成进一步设置.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;h2&gt;添加多说评论&lt;/h2&gt;
+&lt;p&gt;首先在&lt;a href="http://duoshuo.com/"&gt;多说&lt;/a&gt;的网站中注册一个账号.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;h4&gt;修改模板文件&lt;/h4&gt;
+&lt;p&gt;修改&lt;code&gt;templates/article.html&lt;/code&gt;内容,在最后一个endif之后添加如下内容&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nv"&gt;DUOSHUO_SITENAME&lt;/span&gt; &lt;span class="k"&gt;and&lt;/span&gt; &lt;span class="nv"&gt;SITEURL&lt;/span&gt; &lt;span class="k"&gt;and&lt;/span&gt; &lt;span class="nv"&gt;article.status&lt;/span&gt; &lt;span class="p"&gt;!&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;draft&amp;quot;&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;div&lt;/span&gt; &lt;span class="na"&gt;class=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;comments&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;h2&amp;gt;&lt;/span&gt;Comments !&lt;span class="nt"&gt;&amp;lt;/h2&amp;gt;&lt;/span&gt;
+    &lt;span class="c"&gt;&amp;lt;!-- Duoshuo Comment BEGIN --&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;div&lt;/span&gt; &lt;span class="na"&gt;class=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;ds-thread&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;script&lt;/span&gt; &lt;span class="na"&gt;type=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;text/javascript&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+        var duoshuoQuery = {short_name:&amp;quot;&lt;span class="cp"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;DUOSHUO_SITENAME&lt;/span&gt; &lt;span class="cp"&gt;}}&lt;/span&gt;&amp;quot;};
+  (function() {
+   var ds = document.createElement(&amp;#39;script&amp;#39;);
+   ds.type = &amp;#39;text/javascript&amp;#39;;ds.async = true;
+   ds.src = &amp;#39;http://static.duoshuo.com/embed.js&amp;#39;;
+   ds.charset = &amp;#39;UTF-8&amp;#39;;
+   (document.getElementsByTagName(&amp;#39;head&amp;#39;)[0]
+    || document.getElementsByTagName(&amp;#39;body&amp;#39;)[0]).appendChild(ds);
+
+   })();
+  &lt;span class="nt"&gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;noscript&amp;gt;&lt;/span&gt;Please enable JavaScript to view the comments.&lt;span class="nt"&gt;&amp;lt;/noscript&amp;gt;&lt;/span&gt;
+&lt;span class="c"&gt;&amp;lt;!-- Duoshuo Comment END --&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/endif&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;blockquote&gt;
+&lt;p&gt;这段代码会自动引入多说的评论插件,显示评论内容.&lt;/p&gt;
+&lt;h4&gt;修改配置文件&lt;/h4&gt;
+&lt;p&gt;在Pelicanconf.py中添加&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;DUOSHUO_SITENAME = &amp;quot;你的blog名称&amp;quot;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;blockquote&gt;
+&lt;p&gt;然后重新生成网站就会看到相关的评论界面了.&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;hr /&gt;
 &lt;h2&gt;配置文件其他配置&lt;/h2&gt;
 &lt;p&gt;还有一些其他配置就不一一详解了,以下列出仅供参考.&lt;/p&gt;

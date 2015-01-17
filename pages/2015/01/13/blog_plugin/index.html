@@ -168,6 +168,48 @@ SITEMAP = {
 <h2>Google(百度) Analytics和Webmasters设置</h2>
 <p>注册<a href="http://www.google.com/analytics/">Google Analytics</a>和<a href="http://www.google.com/webmasters/">Webmasters</a>可以更好的管理自己的站点,<a href="http://zhanzhang.baidu.com/">百度站长工具</a>更好的让搜索引擎收录.认证有多种形式,可以根据注册使用向导来完成进一步设置.</p>
 <hr />
+<h2>添加多说评论</h2>
+<p>首先在<a href="http://duoshuo.com/">多说</a>的网站中注册一个账号.</p>
+<blockquote>
+<h4>修改模板文件</h4>
+<p>修改<code>templates/article.html</code>内容,在最后一个endif之后添加如下内容</p>
+</blockquote>
+<div class="highlight"><pre><span class="cp">{%</span> <span class="k">if</span> <span class="nv">DUOSHUO_SITENAME</span> <span class="k">and</span> <span class="nv">SITEURL</span> <span class="k">and</span> <span class="nv">article.status</span> <span class="p">!</span><span class="o">=</span> <span class="s2">&quot;draft&quot;</span> <span class="cp">%}</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;comments&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;h2&gt;</span>Comments !<span class="nt">&lt;/h2&gt;</span>
+    <span class="c">&lt;!-- Duoshuo Comment BEGIN --&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;ds-thread&quot;</span><span class="nt">&gt;&lt;/div&gt;</span>
+    <span class="nt">&lt;script</span> <span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span><span class="nt">&gt;</span>
+        var duoshuoQuery = {short_name:&quot;<span class="cp">{{</span> <span class="nv">DUOSHUO_SITENAME</span> <span class="cp">}}</span>&quot;};
+  (function() {
+   var ds = document.createElement(&#39;script&#39;);
+   ds.type = &#39;text/javascript&#39;;ds.async = true;
+   ds.src = &#39;http://static.duoshuo.com/embed.js&#39;;
+   ds.charset = &#39;UTF-8&#39;;
+   (document.getElementsByTagName(&#39;head&#39;)[0]
+    || document.getElementsByTagName(&#39;body&#39;)[0]).appendChild(ds);
+
+   })();
+  <span class="nt">&lt;/script&gt;</span>
+  <span class="nt">&lt;noscript&gt;</span>Please enable JavaScript to view the comments.<span class="nt">&lt;/noscript&gt;</span>
+<span class="c">&lt;!-- Duoshuo Comment END --&gt;</span>
+<span class="nt">&lt;/endif&gt;</span>
+</pre></div>
+
+
+<blockquote>
+<p>这段代码会自动引入多说的评论插件,显示评论内容.</p>
+<h4>修改配置文件</h4>
+<p>在Pelicanconf.py中添加</p>
+</blockquote>
+<div class="highlight"><pre>DUOSHUO_SITENAME = &quot;你的blog名称&quot;
+</pre></div>
+
+
+<blockquote>
+<p>然后重新生成网站就会看到相关的评论界面了.</p>
+</blockquote>
+<hr />
 <h2>配置文件其他配置</h2>
 <p>还有一些其他配置就不一一详解了,以下列出仅供参考.</p>
 <div class="highlight"><pre>## 设置URL按照日期显示
@@ -194,18 +236,26 @@ MENUITEMS = [
 <p>以上算是对之前<strong>创建静态博客</strong>的补充.其实都算是基本的设置,其实还有好多的设置应该做些总结,例如:增加站内搜索框等.时间关系吧,随着对自己博客的改造逐渐进行补充.</p>
 
       </div><!-- /.entry-content -->
-      <div class="comments">
-        <h2>Comments</h2>
-        <div id="disqus_thread"></div>
-        <script type="text/javascript">
-          var disqus_identifier = "pages/2015/01/13/blog_plugin/";
-          (function() {
-          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-          dsq.src = '//bigbo.disqus.com/embed.js';
-          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-          })();
-        </script>
-      </div>
+
+        <div class="comments">
+                <h2>Comments !</h2>
+                    <!-- Duoshuo Comment BEGIN -->
+                        <div class="ds-thread"></div>
+                            <script type="text/javascript">
+        var duoshuoQuery = {short_name:"bigbo"};
+  (function() {
+      var ds = document.createElement('script');
+         ds.type = 'text/javascript';ds.async = true;
+            ds.src = 'http://static.duoshuo.com/embed.js';
+               ds.charset = 'UTF-8';
+                  (document.getElementsByTagName('head')[0]
+                       || document.getElementsByTagName('body')[0]).appendChild(ds);
+
+                     })();
+  </script>
+    <noscript>Please enable JavaScript to view the comments.</noscript>
+    <!-- Duoshuo Comment END -->
+
 
     </article>
   </section>
