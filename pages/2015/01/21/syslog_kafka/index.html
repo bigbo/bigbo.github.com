@@ -121,6 +121,7 @@
 <p>使用需要在<code>rsyslog.conf</code>配置文件下或是相应的配置文件中加入<code>module(load="omkafka")</code>表示引入该模块.测试使用可以参照<a href="http://www.rsyslog.com/doc/master/configuration/modules/omkafka.html#example">文档中的示例</a>.</p>
 <p>其实文档是相当的简陋,使用示例感觉就是配置上仅仅能使用,更多更详细的根本没有介绍,索性<a href="http://kafka.apache.org/documentation.html#producerconfigs">kafka官方的文档</a>是相当的详细.在使用的角度看,rsyslog目前是作为一个<strong>Producer</strong>的角色,所以可以依照kafka的文档的<strong>3.3Producer Configs</strong>章节设置,设置相应的参数可以放到<code>confParam</code>或是<code>topicConfParam</code>中就可以了.</p>
 <p>仅仅测试的话,根据rsyslog官方文档中配置即可生效.更多的设置和方法还是参照kafka相关设置,以及经过自己充分测试再另行体验,由于我也是才接触配置,更多的使用也不太了解.没有文档真的很瞎啊,但是至少知道了大致怎么使用了.目前的体验来看<code>partitions.number</code>等参数是很好用的.</p>
+<p>rsyslog的kafka模块使用<a href="http://lists.adiscon.net/pipermail/rsyslog/2014-December/039291.html">问答列表</a></p>
 
       </div><!-- /.entry-content -->
 
