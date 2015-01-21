@@ -64,6 +64,60 @@
                         <article>
                             <header>
                                 <h1 class="entry-title">
+                                    <a href="http://bigbo.github.io/pages/2015/01/08/Moosefs_two/" rel="bookmark" title="Permalink to MooseFS浅析(二)">
+                                       MooseFS浅析(二)
+                                    </a>
+                                </h1>
+                            </header>
+                            <div class="entry-content">
+<footer class="post-info">
+    <address class="vcard author">
+        by <a class="url fn" href="http://bigbo.github.io/author/ljingb.html">ljingb</a>
+    </address>
+
+    in <a href="http://bigbo.github.io/category/technology.html">Technology</a>
+
+    on 2015-01-08
+
+        |
+        tags:         <a href="http://bigbo.github.io/tag/fen-bu-shi-wen-jian-xi-tong.html">分布式文件系统</a>
+        <a href="http://bigbo.github.io/tag/moosefs.html">Moosefs</a>
+        <a href="http://bigbo.github.io/tag/fen-bu-shi-cun-chu.html">分布式存储</a>
+
+
+        |
+        <a href="http://bigbo.github.io/pages/2015/01/08/Moosefs_two/#disqus_thread">comments</a>
+
+    
+</footer><!-- /.post-info -->                                <h2>前言</h2>
+<p>继上篇,感觉说了好多废话,多半是配置文件相关参数,作为一个基础运维人员,更关注的是怎么让服务更加稳定(高可用),出现问题如何恢复(容错)等,更接地气的东西打算在下面介绍下.</p>
+<hr />
+<h2>启动和关闭顺序</h2>
+<blockquote>
+<p>master启动后,metalogger\chunker\client三个元素都能自动与master建立连接.</p>
+<blockquote>
+<p>正常启动顺序：matser---chunker---metalogger---client.</p>
+<p>关闭顺序：client---chunker---metalogger---master</p>
+</blockquote>
+</blockquote>
+<hr />
+<h2>client操作影响</h2>
+<blockquote>
+<p>客户端强制<strong>kill -9</strong>杀掉<strong>mfsmount</strong>进程,需要先<strong>umount</strong>,然后再<strong>mount</strong>,否则会提示：</p>
+</blockquote>
+<div class="highlight"><pre><span class="n">fuse</span><span class="o">:</span> <span class="n">bad</span> <span class="n">mount</span> <span class="n">point</span> <span class="err">`</span><span class="sr">/mnt/test/</span><span class="err">&#39;</span><span class="o">:</span> <span class="n">Transport</span> <span class="n">endpoint</span> <span class="k">is</span> <span class="n">not</span> <span class="n">connected</span>
+<span class="n">see</span><span class="o">:</span> <span class="sr">/data/jingbo.li/mfs/bin/</span><span class="n">mfsmount ...</span></pre></div>
+                                <p class="readmore">
+                                    <a class="btn btn-small btn-info" href="http://bigbo.github.io/pages/2015/01/08/Moosefs_two/">Read more...</a>
+                                </p>
+                            </div><!-- /.entry-content -->
+                            <hr/>
+                        </article>
+                    </li>
+                    <li>
+                        <article>
+                            <header>
+                                <h1 class="entry-title">
                                     <a href="http://bigbo.github.io/pages/2015/01/05/Moosefs_one/" rel="bookmark" title="Permalink to MooseFS浅析(一)">
                                        MooseFS浅析(一)
                                     </a>
@@ -120,46 +174,6 @@
                             <hr/>
                         </article>
                     </li>
-                    <li>
-                        <article>
-                            <header>
-                                <h1 class="entry-title">
-                                    <a href="http://bigbo.github.io/pages/2014/12/31/2014年终总结/" rel="bookmark" title="Permalink to 2014年终总结">
-                                       2014年终总结
-                                    </a>
-                                </h1>
-                            </header>
-                            <div class="entry-content">
-<footer class="post-info">
-    <address class="vcard author">
-        by <a class="url fn" href="http://bigbo.github.io/author/ljingb.html">ljingb</a>
-    </address>
-
-    in <a href="http://bigbo.github.io/category/gui-dang.html">归档</a>
-
-    on 2014-12-31
-
-
-
-        |
-        <a href="http://bigbo.github.io/pages/2014/12/31/2014年终总结/#disqus_thread">comments</a>
-
-    
-</footer><!-- /.post-info -->                                <p>在这2014年的结尾,陆陆续续的通过博客\微博\微信看到了好多人在对2014年做的一些总结.赶着2014的末班车,在此我也做些总结.</p>
-<hr />
-<h3>工作</h3>
-<p>其实总的来说这一年是不平凡的一年.对于一个职场小白来说,应该从老东家说起.</p>
-<p>那时还是在东三环内的23层,同事还是那么的欢乐,口味依旧那么重.工作环境是那么的轻松欢乐,以至于时间过得那么快,快得都想说句"时间都去哪了".不知不觉公司3月份搬家如期而至;与此同时,项目上遇到的问题比想象中的困难的多的多.最终不得不以结束告终.队伍重组,从而走向了人生的转折.</p>
-<p>4月份来到了@大神的团队,追随一群大神的脚步.开始了一堆高大上的工作.监控\分析\报警,井井有条.让我感到工作的责任还是如此重大.工作内容是如此神圣,虽不能光宗耀祖,但是足可以向身边人吹嘘一番.</p>
-<p>7月犹豫而又慌乱的时代.想想终究算是过去了,就让它淹没在这个时代吧.</p>
-<p>10月没想到该来的还是来了,换了工作,从网到神奇的网站.算是第一次跳槽.想想现在依旧对老东家怀念.也因此终不再犹豫.踏入一个三无地带,从此红旗自己扛,不再有上午茶,中午的安稳觉,下午的集体会;更多的是自己寻找解决方案 ...</p>
-                                <p class="readmore">
-                                    <a class="btn btn-small btn-info" href="http://bigbo.github.io/pages/2014/12/31/2014年终总结/">Read more...</a>
-                                </p>
-                            </div><!-- /.entry-content -->
-                            <hr/>
-                        </article>
-                    </li>
                     </ol><!-- /#posts-list -->
 <p class="paginator">
         <a href="http://bigbo.github.io/author/ljingb2.html">&laquo;</a>
@@ -202,14 +216,15 @@
                 <h2>Tags</h2>
                 <ul id="cloud">
                      <li class="tag-1"><a href="http://bigbo.github.io/tag/fen-bu-shi-wen-jian-xi-tong.html">分布式文件系统</a></li>
-                     <li class="tag-1"><a href="http://bigbo.github.io/tag/fen-bu-shi-cun-chu.html">分布式存储</a></li>
                      <li class="tag-4"><a href="http://bigbo.github.io/tag/pelican.html">pelican</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/xiao-xi-dui-lie.html">消息队列</a></li>
-                     <li class="tag-2"><a href="http://bigbo.github.io/tag/github-pages.html">github pages</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/pelican_plugin.html">pelican_plugin</a></li>
-                     <li class="tag-1"><a href="http://bigbo.github.io/tag/moosefs.html">Moosefs</a></li>
                      <li class="tag-4"><a href="http://bigbo.github.io/tag/jian-kong.html">监控</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/kafka.html">kafka</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/pelican_plugin.html">pelican_plugin</a></li>
+                     <li class="tag-2"><a href="http://bigbo.github.io/tag/kafka.html">kafka</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/syslog.html">syslog</a></li>
+                     <li class="tag-2"><a href="http://bigbo.github.io/tag/xiao-xi-dui-lie.html">消息队列</a></li>
+                     <li class="tag-2"><a href="http://bigbo.github.io/tag/github-pages.html">github pages</a></li>
+                     <li class="tag-1"><a href="http://bigbo.github.io/tag/moosefs.html">Moosefs</a></li>
+                     <li class="tag-1"><a href="http://bigbo.github.io/tag/fen-bu-shi-cun-chu.html">分布式存储</a></li>
                 </ul>
              </div>
 <!-- /.Tags -->

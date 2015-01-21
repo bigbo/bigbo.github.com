@@ -64,6 +64,51 @@
                         <article>
                             <header>
                                 <h1 class="entry-title">
+                                    <a href="http://bigbo.github.io/pages/2015/01/21/syslog_kafka/" rel="bookmark" title="Permalink to syslog与Kafka结合使用">
+                                       syslog与Kafka结合使用
+                                    </a>
+                                </h1>
+                            </header>
+                            <div class="entry-content">
+<footer class="post-info">
+    <address class="vcard author">
+        by <a class="url fn" href="http://bigbo.github.io/author/ljingb.html">ljingb</a>
+    </address>
+
+    in <a href="http://bigbo.github.io/category/technology.html">Technology</a>
+
+    on 2015-01-21
+
+        |
+        tags:         <a href="http://bigbo.github.io/tag/kafka.html">kafka</a>
+        <a href="http://bigbo.github.io/tag/xiao-xi-dui-lie.html">消息队列</a>
+        <a href="http://bigbo.github.io/tag/syslog.html">syslog</a>
+
+
+        |
+        <a href="http://bigbo.github.io/pages/2015/01/21/syslog_kafka/#disqus_thread">comments</a>
+
+    
+</footer><!-- /.post-info -->                                <h2>前言</h2>
+<p>最近在折腾<a href="http://www.rsyslog.com/">Rsyslog</a>,传输日志,对他怎么说呢,谁用谁知道,我仅仅是了解使用的程度,对于里面的坑以及使用策略还没有那么深入,不过日后会逐步的细化了解,其实现在对于日志传输来过网上一大堆技术方案任你选.但是感觉用rsyslog传输还是最方便,最快捷的.他以不变应万变,看图说话:</p>
+<p><img alt="rsyslog" src="/pictures/rsyslog_1.png" title="u&quot;rsyslog支持图&quot;" /></p>
+<p>可见rsyslog的覆盖面是相当的广泛.奈何近几日,打算把redis替换为<a href="http://kafka.apache.org/">kafka</a>,本篇主要记录<code>rsyslog</code>与<code>kafka</code>的对接使用. 上了.</p>
+<hr />
+<h2>Rsyslog对kafka的支持</h2>
+<p>通过对<a href="http://www.rsyslog.com/doc/master/configuration/modules/omkafka.html#example">rsyslog官方文档</a>查看,得知<code>rsyslog</code>对<code>kafka</code>的支持是<code>v8.7.0</code>版本后才提供的支持.通过<a href="https://github.com/rsyslog/rsyslog/blob/v8-stable/ChangeLog">ChangeLog</a>也可以看出<code>V8.X</code>的版本变化.</p>
+<p>查看本机的rsyslog版本:</p>
+<div class="highlight"><pre>rsyslog.x86_64                                      7.6.3-1.el6 ...</pre></div>
+                                <p class="readmore">
+                                    <a class="btn btn-small btn-info" href="http://bigbo.github.io/pages/2015/01/21/syslog_kafka/">Read more...</a>
+                                </p>
+                            </div><!-- /.entry-content -->
+                            <hr/>
+                        </article>
+                    </li>
+                    <li>
+                        <article>
+                            <header>
+                                <h1 class="entry-title">
                                     <a href="http://bigbo.github.io/pages/2015/01/17/kafka_web_console/" rel="bookmark" title="Permalink to kafka监控web端(添砖)">
                                        kafka监控web端(添砖)
                                     </a>
@@ -111,84 +156,6 @@
                             <hr/>
                         </article>
                     </li>
-                    <li>
-                        <article>
-                            <header>
-                                <h1 class="entry-title">
-                                    <a href="http://bigbo.github.io/pages/2015/01/16/Moosefs_three/" rel="bookmark" title="Permalink to MooseFS浅析(三)--chunk存储选择算法(搬砖)">
-                                       MooseFS浅析(三)--chunk存储选择算法(搬砖)
-                                    </a>
-                                </h1>
-                            </header>
-                            <div class="entry-content">
-<footer class="post-info">
-    <address class="vcard author">
-        by <a class="url fn" href="http://bigbo.github.io/author/ljingb.html">ljingb</a>
-    </address>
-
-    in <a href="http://bigbo.github.io/category/technology.html">Technology</a>
-
-    on 2015-01-16
-
-        |
-        tags:         <a href="http://bigbo.github.io/tag/fen-bu-shi-wen-jian-xi-tong.html">分布式文件系统</a>
-        <a href="http://bigbo.github.io/tag/moosefs.html">Moosefs</a>
-        <a href="http://bigbo.github.io/tag/fen-bu-shi-cun-chu.html">分布式存储</a>
-
-
-        |
-        <a href="http://bigbo.github.io/pages/2015/01/16/Moosefs_three/#disqus_thread">comments</a>
-
-    
-</footer><!-- /.post-info -->                                <h2>前言</h2>
-<p>如果自己设计一套chunkserver选择算法,我们要达到哪些目标呢?</p>
-<blockquote>
-<ol>
-<li>文件打散后尽量平均分布到各台chunkserver上</li>
-<li>各台chunkserver上的chunk数量尽可能的平均</li>
-<li>数据分发过程衡量系统负载，尽量把数据放在负载低的chunkserver上</li>
-<li>数据分发过程是否应该衡量各台chunkserver的可用空间?</li>
-<li>机架感应?</li>
-</ol>
-</blockquote>
-<p>回到MFS使用过程中会有一个疑问.chunkserver的选择是怎么选择的.怎么才能保证数据保存占用空间平衡甚至平均?这就是数据分布算法.也正是分布式文件系统的核心容.所以在此,转来一篇关于MFS的chunk存储选择算法的文章.</p>
-<hr />
-<h2>核心算法</h2>
-<p>还记得matocsserventry结构中的carry字段么,这个字段就是分布算法的核心.每台chunkserver会有自己的carry值,在选择chunkserver会将每台chunkserver按照carry从大到小做快速排序,优先选择carry值大的chunkserver来使用.</p>
-<p>在描述具体算法前,先介绍三个概念:</p>
-<blockquote>
-<ul>
-<li>
-<p>allcnt:mfs中可用的chunkserver的个数</p>
-</li>
-<li>
-<p>availcnt:mfs中当前可以直接存储数据的chunkserver的个数</p>
-</li>
-<li>
-<p>demand:当前文件的副本数目</p>
-</li>
-</ul>
-</blockquote>
-<p>先说allcnt,可用的chunkserver要满足下面几个条件:</p>
-<blockquote>
-<ol>
-<li>chunkserver是活着的</li>
-<li>chunkserver的总空间大于0</li>
-<li>chunkserver的可用空间(总空间-使用空间)大于1G</li>
-</ol>
-</blockquote>
-<p>availcnt指的是carry值大于1的可用chunkserver的个数.也就是在allcnt的约束条件上加一条carry值大于1.文件1.txt需要存储2个副本,但是mfs中仅仅有1台chunkserver可用,也就是<code>demand&gt;allcnt</code>的时候,mfs会自动减少文件的副本个数到allcnt,保证文件可以成功写入系统.</p>
-<p>关于carry有下面几个规则:</p>
-<blockquote>
-<ol>
-<li>仅carry值大于1的chunkserver可以存储新数据 ...</li></ol></blockquote>
-                                <p class="readmore">
-                                    <a class="btn btn-small btn-info" href="http://bigbo.github.io/pages/2015/01/16/Moosefs_three/">Read more...</a>
-                                </p>
-                            </div><!-- /.entry-content -->
-                            <hr/>
-                        </article>
-                    </li>
                     </ol><!-- /#posts-list -->
 <p class="paginator">
     Page 1 / 4
@@ -230,14 +197,15 @@
                 <h2>Tags</h2>
                 <ul id="cloud">
                      <li class="tag-1"><a href="http://bigbo.github.io/tag/fen-bu-shi-wen-jian-xi-tong.html">分布式文件系统</a></li>
-                     <li class="tag-1"><a href="http://bigbo.github.io/tag/fen-bu-shi-cun-chu.html">分布式存储</a></li>
                      <li class="tag-4"><a href="http://bigbo.github.io/tag/pelican.html">pelican</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/xiao-xi-dui-lie.html">消息队列</a></li>
-                     <li class="tag-2"><a href="http://bigbo.github.io/tag/github-pages.html">github pages</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/pelican_plugin.html">pelican_plugin</a></li>
-                     <li class="tag-1"><a href="http://bigbo.github.io/tag/moosefs.html">Moosefs</a></li>
                      <li class="tag-4"><a href="http://bigbo.github.io/tag/jian-kong.html">监控</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/kafka.html">kafka</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/pelican_plugin.html">pelican_plugin</a></li>
+                     <li class="tag-2"><a href="http://bigbo.github.io/tag/kafka.html">kafka</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/syslog.html">syslog</a></li>
+                     <li class="tag-2"><a href="http://bigbo.github.io/tag/xiao-xi-dui-lie.html">消息队列</a></li>
+                     <li class="tag-2"><a href="http://bigbo.github.io/tag/github-pages.html">github pages</a></li>
+                     <li class="tag-1"><a href="http://bigbo.github.io/tag/moosefs.html">Moosefs</a></li>
+                     <li class="tag-1"><a href="http://bigbo.github.io/tag/fen-bu-shi-cun-chu.html">分布式存储</a></li>
                 </ul>
              </div>
 <!-- /.Tags -->
