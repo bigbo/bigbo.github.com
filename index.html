@@ -34,6 +34,9 @@
 </head>
 
 <body id="index">
+<a class="hidden-phone" href="https://github.com/bigbo">
+<img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub" />
+</a>
     <div class="row-fluid">
         <div class="span10 offset1">
             <header id="banner" >
@@ -59,7 +62,7 @@
             <div class="row-fluid">
 <div class="span9">
                 <section>
-                    <ol id="posts-list" class="hfeed" start="1">
+                    <ol id="posts-list" class="hfeed" start="2">
                     <li>
                         <article>
                             <header>
@@ -152,9 +155,60 @@
                             <hr/>
                         </article>
                     </li>
+                    <li>
+                        <article>
+                            <header>
+                                <h1 class="entry-title">
+                                    <a href="http://bigbo.github.io/pages/2015/01/17/kafka_web_console/" rel="bookmark" title="Permalink to kafka监控web端(添砖)">
+                                       kafka监控web端(添砖)
+                                    </a>
+                                </h1>
+                            </header>
+                            <div class="entry-content">
+<footer class="post-info">
+    <address class="vcard author">
+        by <a class="url fn" href="http://bigbo.github.io/author/ljingb.html">ljingb</a>
+    </address>
+
+    in <a href="http://bigbo.github.io/category/technology.html">Technology</a>
+
+    on 2015-01-17
+
+        |
+        tags:         <a href="http://bigbo.github.io/tag/kafka.html">kafka</a>
+        <a href="http://bigbo.github.io/tag/xiao-xi-dui-lie.html">消息队列</a>
+        <a href="http://bigbo.github.io/tag/jian-kong.html">监控</a>
+
+
+        |
+        <a href="http://bigbo.github.io/pages/2015/01/17/kafka_web_console/#disqus_thread">comments</a>
+
+    
+</footer><!-- /.post-info -->                                <h2>前言</h2>
+<p>最近在了解消息队列,主要是之前用的是redis,redis固然非常好用,但是也有相应的使用场景.随着数据量的增长,redis已经不能满足现在的需求了.所以需要找个更好的替代品.问了一圈大牛,也google一番,锁定在<a href="http://kafka.apache.org/">kafka</a>上了.关于<strong>kafka</strong>怎么"玩",我也不知道,算是在摸索当中,想要知道安装使用等方法,请移步Google吧.虽然kafka我不会玩,但是我会玩怎么监控它.</p>
+<hr />
+<h2>简介</h2>
+<blockquote>
+<p><a href="https://github.com/claudemamo/kafka-web-console">kafka-web-console</a>,是kafka自己的一个Web管理界面.开源的东西好是好,但是不知道是不是开源的大牛B们都不愿意写文档!!出来个东西,居然没有安装步骤,只是有一些简单的使用说明,甚至说明都不详细,对于此点表示很坑!</p>
+</blockquote>
+<hr />
+<h2>安装</h2>
+<blockquote>
+<h5>1.先下载安装scala构建工具<a href="http://www.scala-sbt.org/0.13/tutorial/Installing-sbt-on-Linux.html">sbt</a></h5>
+</blockquote>
+<div class="highlight"><pre> #本安装环境为centos6.5
+ curl https://bintray.com/sbt/rpm/rpm &gt; bintray-sbt-rpm.repo
+ sudo mv ...</pre></div>
+                                <p class="readmore">
+                                    <a class="btn btn-small btn-info" href="http://bigbo.github.io/pages/2015/01/17/kafka_web_console/">Read more...</a>
+                                </p>
+                            </div><!-- /.entry-content -->
+                            <hr/>
+                        </article>
+                    </li>
                     </ol><!-- /#posts-list -->
 <p class="paginator">
-    Page 1 / 5
+    Page 1 / 3
         <a href="http://bigbo.github.io/index2.html">&raquo;</a>
 </p>
                 </section><!-- /#content -->
@@ -192,18 +246,18 @@
             <div>
                 <h2>Tags</h2>
                 <ul id="cloud">
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/pelican_plugin.html">pelican_plugin</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/logstash.html">logstash</a></li>
+                     <li class="tag-1"><a href="http://bigbo.github.io/tag/fen-bu-shi-cun-chu.html">分布式存储</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/jian-kong.html">监控</a></li>
                      <li class="tag-4"><a href="http://bigbo.github.io/tag/ri-zhi-chu-li.html">日志处理</a></li>
                      <li class="tag-1"><a href="http://bigbo.github.io/tag/kafka.html">kafka</a></li>
                      <li class="tag-4"><a href="http://bigbo.github.io/tag/rsyslog.html">rsyslog</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/jian-kong.html">监控</a></li>
-                     <li class="tag-1"><a href="http://bigbo.github.io/tag/fen-bu-shi-cun-chu.html">分布式存储</a></li>
-                     <li class="tag-1"><a href="http://bigbo.github.io/tag/fen-bu-shi-wen-jian-xi-tong.html">分布式文件系统</a></li>
+                     <li class="tag-1"><a href="http://bigbo.github.io/tag/xiao-xi-dui-lie.html">消息队列</a></li>
+                     <li class="tag-1"><a href="http://bigbo.github.io/tag/moosefs.html">Moosefs</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/pelican_plugin.html">pelican_plugin</a></li>
                      <li class="tag-2"><a href="http://bigbo.github.io/tag/github-pages.html">github pages</a></li>
                      <li class="tag-4"><a href="http://bigbo.github.io/tag/pelican.html">pelican</a></li>
-                     <li class="tag-1"><a href="http://bigbo.github.io/tag/moosefs.html">Moosefs</a></li>
-                     <li class="tag-1"><a href="http://bigbo.github.io/tag/xiao-xi-dui-lie.html">消息队列</a></li>
+                     <li class="tag-1"><a href="http://bigbo.github.io/tag/fen-bu-shi-wen-jian-xi-tong.html">分布式文件系统</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/logstash.html">logstash</a></li>
                 </ul>
              </div>
 <!-- /.Tags -->
