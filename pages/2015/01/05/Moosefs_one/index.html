@@ -97,14 +97,14 @@
 <li>高可用性(数据可以存储在多个机器上的多个副本)</li>
 <li>可动态扩展随时新增加机器或者是磁盘</li>
 <li>可回收在指定时间内删除的文件(“垃圾回收站”是一个系统级别的服务)</li>
-<li>可以对整个文件甚至在正在写入的文件创建文件的快照。</li>
+<li>可以对整个文件甚至在正在写入的文件创建文件的快照.</li>
 <li>使用和部署非常简单,直接mount使用</li>
 </ol>
 </blockquote>
 </li>
 </ul>
-<p>对于<strong>Moosefs</strong>的介绍我在此就不详细说了,更多介绍可以查看<a href="http://www.moosefs.org/">官网</a>以及<a href="http://www.moosefs.com/how_to_get.html">英文版权威指南</a>或是查看田逸所翻译总结的<a href="https://github.com/bigbo/tools/blob/master/study/mfs/MooseFS%E6%9D%83%E5%A8%81%E6%8C%87%E5%8D%97.pdf">权威指南</a>,以上介绍的比自己总结的可能更加详细.我后面的总结是对以上内容的补充.</p>
-<p><strong>*AD:更多资料详见<a href="https://github.com/bigbo/tools/tree/master/study/mfs">GitHub</a></strong></p>
+<p>对于 <strong>Moosefs</strong> 的介绍我在此就不详细说了,更多介绍可以查看 <a href="http://www.moosefs.org/">官网</a> 以及 <a href="http://www.moosefs.com/how_to_get.html">英文版权威指南</a> 或是查看田逸所翻译总结的 <a href="https://github.com/bigbo/tools/blob/master/study/mfs/MooseFS%E6%9D%83%E5%A8%81%E6%8C%87%E5%8D%97.pdf">权威指南</a> ,以上介绍的比自己总结的可能更加详细.我后面的总结是对以上内容的补充.</p>
+<p><strong> *AD:更多资料详见<a href="https://github.com/bigbo/tools/tree/master/study/mfs">GitHub</a> </strong></p>
 <hr />
 <h2>系统结构</h2>
 <ul>
@@ -123,7 +123,7 @@
 <hr />
 <h2>配置文件详解</h2>
 <blockquote>
-<p>主要对<strong>V1.6.27-5</strong>版本的配置文件进行解析,后续跟进<strong>2.x</strong>版本配置文件.</p>
+<p>主要对 <strong>V1.6.27-5</strong> 版本的配置文件进行解析,后续跟进 <strong>2.x</strong> 版本配置文件.</p>
 </blockquote>
 <h3>master服务器</h3>
 <blockquote>
@@ -142,16 +142,16 @@
  # LOCK_MEMORY：是否执行mlockall()以避免mfsmaster 进程溢出(默认为0，即否)；
  # NICE_LEVE：运行的优先级(如果可以默认是 -19; 注意: 进程必须是用root启动)；
  # EXPORTS_FILENAME：被挂接目录及其权限控制文件的存放位置 
- # DATA_PATH：metadata files and lock file存放路径，此目录下大致有以下文件：metadata，changelog，sessions，stats，lock。
+ # DATA_PATH：metadata files and lock file存放路径，此目录下大致有以下文件：metadata，changelog，sessions，stats，lock.
  # BACK_LOGS：metadata的change log文件数目(默认是 50);
  # BACK_META_KEEP_PREVIOUS = 1保留以前元文件数(默认是 1);
  # REPLICATIONS_DELAY_INIT：(initial delay in seconds before starting replications)初始延迟复制的时间(默认是300s);
  # REPLICATIONS_DELAY_DISCONNECT：(replication delay in seconds after chunkserver disconnection) chunkserver断开后复制延迟(默认是3600s)；
- # MATOML_LISTEN_HOST：用于metalogger连接的IP地址(默认是*，代表任何IP)；
+ # MATOML_LISTEN_HOST：用于metalogger连接的IP地址(默认是*,代表任何IP)；
  # MATOML_LISTEN_PORT：监听metalogger请求的端口地址(默认是9419)；
  # MATOCS_LISTEN_HOST：用于chunkserver连接的IP地址(默认是*，代表任何IP)；
  # MATOCS_LISTEN_PORT：监听chunkserver连接的端口地址(默认是9420)；
- # MATOCU_LISTEN_HOST：用于客户端挂接连接的IP地址(默认是*，代表任何IP)；
+ # MATOCU_LISTEN_HOST：用于客户端挂接连接的IP地址(默认是*,代表任何IP)；
  # MATOCU_LISTEN_PORT：监听客户端挂载连接的端口地址(默认是9421)；
  # CHUNKS_LOOP_TIME ：(Chunks loop frequency in seconds)chunks的回环频率(默认是：300秒)；
  # CHUNKS_DEL_LIMIT：(Maximum number of chunks to delete in one loop)在一个loop中可以删除chunks的最大数 (默认：100)
@@ -167,7 +167,7 @@
 <blockquote>
 <p>MFS访问使用权限控制配置文件;地址可以指定的几种表现形式：</p>
 </blockquote>
-<div class="highlight"><pre>所有ip，单个ip，IP网络地址/位数掩码，IP网络地址/子网掩码，ip段范围。
+<div class="highlight"><pre>所有ip，单个ip，IP网络地址/位数掩码，IP网络地址/子网掩码，ip段范围.
 </pre></div>
 
 
@@ -205,7 +205,7 @@
  <span class="err">#</span> <span class="nt">SYSLOG_IDENT</span> <span class="o">:</span><span class="err">是</span><span class="nt">mfsmetalogger</span> <span class="nt">server</span><span class="err">在</span><span class="nt">syslog</span><span class="err">中的标识，也就是说明这是由</span><span class="nt">mfsmetalogger</span> <span class="nt">server</span><span class="err">产生的；</span>
  <span class="err">#</span> <span class="nt">LOCK_MEMORY</span><span class="o">:</span><span class="err">是否执行</span><span class="nt">mlockall</span><span class="o">()</span><span class="err">以避免</span><span class="nt">mfsmaster</span> <span class="err">进程溢出</span><span class="o">(</span><span class="err">默认为</span><span class="nt">0</span><span class="err">，即否</span><span class="o">);</span>
  <span class="err">#</span> <span class="nt">NICE_LEVEL</span><span class="err">：运行的优先级</span><span class="o">(</span><span class="err">如果可以默认是</span> <span class="nt">-19</span><span class="o">;</span> <span class="err">注意</span><span class="o">:</span> <span class="err">进程必须是用</span><span class="nt">root</span><span class="err">启动</span><span class="o">)</span><span class="err">；</span>
- <span class="err">#</span> <span class="nt">DATA_PATH</span><span class="o">:</span> <span class="nt">metadata</span> <span class="nt">files</span> <span class="nt">and</span> <span class="nt">lock</span> <span class="nt">file</span><span class="err">存放路径，此目录下大致有以下文件：</span><span class="nt">metadata</span><span class="err">，</span><span class="nt">changelog</span><span class="err">，</span><span class="nt">sessions</span><span class="err">，</span><span class="nt">stats</span><span class="err">，</span><span class="nt">lock</span><span class="err">。</span>
+ <span class="err">#</span> <span class="nt">DATA_PATH</span><span class="o">:</span> <span class="nt">metadata</span> <span class="nt">files</span> <span class="nt">and</span> <span class="nt">lock</span> <span class="nt">file</span><span class="err">存放路径，此目录下大致有以下文件：</span><span class="nt">metadata</span><span class="err">，</span><span class="nt">changelog</span><span class="err">，</span><span class="nt">sessions</span><span class="err">，</span><span class="nt">stats</span><span class="err">，</span><span class="nt">lock</span><span class="o">.</span>
  <span class="err">#</span> <span class="nt">BACK_LOGS</span><span class="err">：</span><span class="nt">metadata</span><span class="err">的</span><span class="nt">change</span> <span class="nt">log</span><span class="err">文件数目</span><span class="o">(</span><span class="err">默认是</span> <span class="nt">50</span><span class="o">);</span>
 
  <span class="err">#</span> <span class="nt">META_DOWNLOAD_FREQ</span> <span class="o">=</span> <span class="nt">1</span> <span class="nf">#metadata</span><span class="err">元数据下载间隔时间</span><span class="o">(</span><span class="err">默认是</span><span class="nt">24</span><span class="err">小时，单位是小时，至多是</span><span class="nt">BACK_LOGS</span><span class="err">的</span><span class="nt">1</span><span class="o">/</span><span class="nt">2</span><span class="o">)</span>
@@ -239,12 +239,12 @@
 <li>mfschunkserver.cfg</li>
 </ul>
 <div class="highlight"><pre> # WORKING_USER和WORKING_GROUP：是运行mfschunkserver server的用户和组；
- # SYSLOG_IDENT：是mfschunkserver server在syslog中的标识，也就是说明这是由mfschunkserver server产生的；
+ # SYSLOG_IDENT：是mfschunkserver server在syslog中的标识,也就是说明这是由mfschunkserver server产生的；
  # LOCK_MEMORY：是否执行mlockall()以避免mfschunkserver 进程溢出(默认为0，即否)；
  # NICE_LEVE：运行的优先级(如果可以默认是 -19; 注意: 进程必须是用root启动)；
- # DATA_PATH：metadata files and lock file存放路径，此目录下大致有以下文件：metadata，changelog，sessions，stats，lock。
+ # DATA_PATH：metadata files and lock file存放路径,此目录下大致有以下文件：metadata，changelog，sessions，stats，lock.
  # MASTER_RECONNECTION_DELAY = 5 在失去连接之后延迟多少秒重新连接master
- # MASTER_HOST: 元数据服务器的名称或地址，可以是主机名，也可以是ip地址。只要数据存储服务器能访问到元数据服务器就行。
+ # MASTER_HOST: 元数据服务器的名称或地址,可以是主机名，也可以是ip地址.只要数据存储服务器能访问到元数据服务器就行.
  # MASTER_PORT = 9420
  # MASTER_TIMEOUT = 60
  # CSSERV_LISTEN_HOST = *  #允许挂载的客户端连接的IP地址(*允许全部)
