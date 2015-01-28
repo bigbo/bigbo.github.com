@@ -241,18 +241,14 @@ src="http://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="F
 <p>继上篇,感觉说了好多废话,多半是配置文件相关参数,作为一个基础运维人员,更关注的是怎么让服务更加稳定(高可用),出现问题如何恢复(容错)等,更接地气的东西打算在下面介绍下.</p>
 <hr />
 <h2>启动和关闭顺序</h2>
-<blockquote>
 <p>master启动后,metalogger\chunker\client三个元素都能自动与master建立连接.</p>
 <blockquote>
 <p>正常启动顺序:matser---chunker---metalogger---client.</p>
 <p>关闭顺序:client---chunker---metalogger---master</p>
 </blockquote>
-</blockquote>
 <hr />
-<h2>client操作影响</h2>
-<blockquote>
-<p>客户端强制<strong>kill -9</strong>杀掉<strong>mfsmount</strong>进程,需要先<strong>umount</strong>,然后再<strong>mount</strong>,否则会提示:</p>
-</blockquote>
+<h2>Client操作与修复</h2>
+<p>客户端强制 <code>kill -9</code> 杀掉 <code>mfsmount</code> 进程,需要先 <code>umount</code> ,然后再 <code>mount</code> ,否则会提示:</p>
 <div class="highlight"><pre><span class="n">fuse</span><span class="o">:</span> <span class="n">bad</span> <span class="n">mount</span> <span class="n">point</span> <span class="err">`</span><span class="sr">/mnt/test/</span><span class="err">&#39;</span><span class="o">:</span> <span class="n">Transport</span> <span class="n">endpoint</span> <span class="k">is</span> <span class="n">not</span> <span class="n">connected</span>
 <span class="n">see</span><span class="o">:</span> <span class="sr">/data/jingbo.li/mfs/bin/</span><span class="n">mfsmount ...</span></pre></div>
                                 <p class="readmore">
@@ -303,18 +299,18 @@ src="http://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="F
             <div>
                 <h2>Tags</h2>
                 <ul id="cloud">
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/ri-zhi-chu-li.html">日志处理</a></li>
-                     <li class="tag-1"><a href="http://bigbo.github.io/tag/fen-bu-shi-wen-jian-xi-tong.html">分布式文件系统</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/pelican.html">pelican</a></li>
                      <li class="tag-4"><a href="http://bigbo.github.io/tag/rsyslog.html">rsyslog</a></li>
+                     <li class="tag-1"><a href="http://bigbo.github.io/tag/xiao-xi-dui-lie.html">消息队列</a></li>
                      <li class="tag-4"><a href="http://bigbo.github.io/tag/logstash.html">logstash</a></li>
+                     <li class="tag-1"><a href="http://bigbo.github.io/tag/fen-bu-shi-wen-jian-xi-tong.html">分布式文件系统</a></li>
+                     <li class="tag-1"><a href="http://bigbo.github.io/tag/moosefs.html">Moosefs</a></li>
                      <li class="tag-2"><a href="http://bigbo.github.io/tag/github-pages.html">github pages</a></li>
+                     <li class="tag-1"><a href="http://bigbo.github.io/tag/fen-bu-shi-cun-chu.html">分布式存储</a></li>
+                     <li class="tag-1"><a href="http://bigbo.github.io/tag/kafka.html">kafka</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/ri-zhi-chu-li.html">日志处理</a></li>
                      <li class="tag-4"><a href="http://bigbo.github.io/tag/pelican_plugin.html">pelican_plugin</a></li>
                      <li class="tag-4"><a href="http://bigbo.github.io/tag/jian-kong.html">监控</a></li>
-                     <li class="tag-1"><a href="http://bigbo.github.io/tag/xiao-xi-dui-lie.html">消息队列</a></li>
-                     <li class="tag-1"><a href="http://bigbo.github.io/tag/fen-bu-shi-cun-chu.html">分布式存储</a></li>
-                     <li class="tag-1"><a href="http://bigbo.github.io/tag/moosefs.html">Moosefs</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/pelican.html">pelican</a></li>
-                     <li class="tag-1"><a href="http://bigbo.github.io/tag/kafka.html">kafka</a></li>
                 </ul>
              </div>
 <!-- /.Tags -->
