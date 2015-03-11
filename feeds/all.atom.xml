@@ -250,7 +250,10 @@ nohup ./kafka-web-console &amp;gt;/dev/null 2&amp;gt;&amp;amp;1 &amp;amp;
 
 &lt;hr /&gt;
 &lt;h2&gt;总结&lt;/h2&gt;
-&lt;p&gt;其实关于kafka相关的知识相当匮乏,林林总总的通过各种博客看了一些简介,摸着石头过河.后续有对kafka的研究再进行记录了解.&lt;/p&gt;</summary><category term="kafka"></category><category term="消息队列"></category><category term="监控"></category></entry><entry><title>MooseFS浅析(三)--chunk存储选择算法(搬砖)</title><link href="http://bigbo.github.io/pages/2015/01/16/Moosefs_three/" rel="alternate"></link><updated>2015-01-17T19:40:00+08:00</updated><author><name>ljingb</name></author><id>tag:bigbo.github.io,2015-01-16:pages/2015/01/16/Moosefs_three/</id><summary type="html">&lt;h2&gt;前言&lt;/h2&gt;
+&lt;p&gt;其实关于kafka相关的知识相当匮乏,林林总总的通过各种博客看了一些简介,摸着石头过河.后续有对kafka的研究再进行记录了解.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt; 提示: &lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;关于kafka-web-console的使用要注意,实际使用发现,&lt;strong&gt; 会产生过多的TCP连接,导致抢占过多系统资源不说还占用过多的系统端口 &lt;/strong&gt;.由于对java一窍不通,所以也没搞明白什么原因导致.另外其监控效果也不好,图形非常不准.&lt;/p&gt;
+&lt;p&gt;推荐另外一个监控系统 &lt;code&gt;KafkaOffsetMonitor&lt;/code&gt; ,用来实时监控Kafka集群的consumers以及它们在partition中的offset(偏移量).体验非常不错.唯一缺点是其中前端js部分可能用到了Google的前端公开库,导致身在天朝的人打开较慢或是直接打不开,需要注意下.&lt;/p&gt;</summary><category term="kafka"></category><category term="消息队列"></category><category term="监控"></category></entry><entry><title>MooseFS浅析(三)--chunk存储选择算法(搬砖)</title><link href="http://bigbo.github.io/pages/2015/01/16/Moosefs_three/" rel="alternate"></link><updated>2015-01-17T19:40:00+08:00</updated><author><name>ljingb</name></author><id>tag:bigbo.github.io,2015-01-16:pages/2015/01/16/Moosefs_three/</id><summary type="html">&lt;h2&gt;前言&lt;/h2&gt;
 &lt;p&gt;如果自己设计一套chunkserver选择算法,我们要达到哪些目标呢?&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;ol&gt;
