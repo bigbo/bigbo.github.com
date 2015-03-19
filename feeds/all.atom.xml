@@ -1,5 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>BigBo's blog</title><link href="http://bigbo.github.io/" rel="alternate"></link><link href="/feeds/all.atom.xml" rel="self"></link><id>http://bigbo.github.io/</id><updated>2015-01-23T19:30:00+08:00</updated><entry><title>logstash的kafka插件使用</title><link href="http://bigbo.github.io/pages/2015/01/23/logstash_kafka/" rel="alternate"></link><updated>2015-01-23T19:30:00+08:00</updated><author><name>ljingb</name></author><id>tag:bigbo.github.io,2015-01-23:pages/2015/01/23/logstash_kafka/</id><summary type="html">&lt;h2&gt;前言&lt;/h2&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>BigBo's blog</title><link href="http://bigbo.github.io/" rel="alternate"></link><link href="/feeds/all.atom.xml" rel="self"></link><id>http://bigbo.github.io/</id><updated>2015-03-19T23:30:00+08:00</updated><entry><title>elasticsearch之hadoop插件使用</title><link href="http://bigbo.github.io/pages/2015/02/28/elasticsearch_hadoop/" rel="alternate"></link><updated>2015-03-19T23:30:00+08:00</updated><author><name>ljingb</name></author><id>tag:bigbo.github.io,2015-02-28:pages/2015/02/28/elasticsearch_hadoop/</id><summary type="html">&lt;h2&gt;elastic与Hadoop的连接&lt;/h2&gt;
+&lt;p&gt;几个月前,由于资源有限,而需求无限,不得已想到es与hadoop的连接,本来想的很好,尝试把HDFS作为es的存储后端,把index存入HDFS中,这样就能节省存储空间了.当然官网也有相关使用配置(这里就不介绍了),经过几天的奋斗还是没能实现当初的想法,也幸亏没实现,实现了性能也是一大坑(猜测性能非常差以至于官方的 &lt;a href="https://github.com/elastic/elasticsearch-hdfs"&gt;elasticsearch-hdfs&lt;/a&gt; 插件都几年没更新了!).&lt;/p&gt;
+&lt;p&gt;不过倒是尝试了把HDFS作为后端存储,可以实现备份elasticsearch数据快照到HDFS或者是从HDFS中恢复数据.选择插件 &lt;a href="https://github.com/elastic/elasticsearch-hadoop/tree/master/repository-hdfs"&gt;repository-hdfs&lt;/a&gt;,其实就是使用了ES的 &lt;code&gt;snapshot/restore&lt;/code&gt; 功能.&lt;/p&gt;
+&lt;h2&gt;安装插件&lt;/h2&gt;
+&lt;p&gt;我的es版本为 &lt;code&gt;1.3.9-1&lt;/code&gt;,注意: &lt;code&gt;1.3.0-1.3.7 and 1.4.0-1.4.2&lt;/code&gt; 存在&lt;a href="https://www.elastic.co/blog/elasticsearch-1-4-3-and-1-3-8-released/"&gt;Grooy漏洞&lt;/a&gt;,所以选择版本的时候注意下,插件选择版本对应为2.0.2,后端Hadoop为2.5.0,安装方式如下: &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;./bin/plugin -i elasticsearch/elasticsearch-repository-hdfs/2.0.2
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;当然像我这样没外网的可以选择 &lt;a href="https://oss.sonatype.org/content/repositories/snapshots/org/elasticsearch/elasticsearch-repository-hdfs/"&gt;插件下载&lt;/a&gt;,选择对应的版本,解压拷贝到es的plugin目录.&lt;/p&gt;
+&lt;h2&gt;配置使用&lt;/h2&gt;
+&lt;h4&gt;直接用curl法:&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;curl -XPUT &amp;#39;http://localhost:9200/_snapshot/backup&amp;#39; -d &amp;#39;{
+  &amp;quot;type&amp;quot;: &amp;quot;hdfs&amp;quot;,
+    &amp;quot;settings&amp;quot;: {
+            &amp;quot;uri&amp;quot;: &amp;quot;hdfs://hadoop:8020&amp;quot;,
+            &amp;quot;path&amp;quot;: &amp;quot;/test/es&amp;quot;,
+            &amp;quot;conf_location&amp;quot;: &amp;quot;hdfs-site.xml&amp;quot;
+    }
+}&amp;#39;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;返回 &lt;code&gt;{"acknowledged":true}&lt;/code&gt; 表示创建成功.&lt;/p&gt;
+&lt;h5&gt;查看创建的配置:&lt;/h5&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;curl http://localhost:9200/_snapshot/_all
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;可以看到返回刚才配置信息.&lt;/p&gt;
+&lt;h5&gt;测试备份数据&lt;/h5&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;curl -XPUT &amp;quot;localhost:9200/_snapshot/backup/snapshot_1?wait_for_completion=true&amp;quot;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;尝试去看下HDFS上是否有刚才备份的文件,访问 &lt;code&gt;http://hadoop:50070/explorer.html#/test/es&lt;/code&gt; 便可以看到相关的快照文件.&lt;/p&gt;
+&lt;h5&gt;测试还原数据&lt;/h5&gt;
+&lt;p&gt;通过快照还原数据,测试前可以把之前测试做过备份的索引进行删除,然后通过如下命令进行数据恢复:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;curl -XPOST &amp;quot;localhost:9200/_snapshot/backup/snapshot_1/_restore?wait_for_completion=true&amp;quot;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;通过kopf插件进行设置&lt;/h4&gt;
+&lt;p&gt;&lt;a href="https://github.com/lmenezes/elasticsearch-kopf"&gt;elasticsearch-kopf&lt;/a&gt;,是一个对es集群管理综合插件,无需安装&lt;a href="http://lmenezes.com/elasticsearch-kopf/?location=http://localhost:9200"&gt;体验地址&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;备份恢复快照设置如图:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="rsyslog" src="/pictures/es_hdfs.png" title="u&amp;quot;kopf设置&amp;quot;" /&gt;&lt;/p&gt;</summary><category term="elasticsearch 快照"></category><category term="elasticsearch plugin"></category><category term="HDFS"></category></entry><entry><title>logstash的kafka插件使用</title><link href="http://bigbo.github.io/pages/2015/01/23/logstash_kafka/" rel="alternate"></link><updated>2015-01-23T19:30:00+08:00</updated><author><name>ljingb</name></author><id>tag:bigbo.github.io,2015-01-23:pages/2015/01/23/logstash_kafka/</id><summary type="html">&lt;h2&gt;前言&lt;/h2&gt;
 &lt;p&gt;关于logstash可以产看其 &lt;a href="http://logstash.net/"&gt;官网&lt;/a&gt; ,对于英文有障碍的人士,或是想知道更多插件使用技巧的用户请移步 &lt;a href="http://chenlinux.com/"&gt;@三斗室&lt;/a&gt; 所著作 &lt;a href="https://github.com/bigbo/logstash-best-practice-cn"&gt;logstash最佳实战&lt;/a&gt; ,本片内容已经并入其中相关章节.&lt;/p&gt;
 &lt;hr /&gt;
 &lt;h2&gt;Logstash-kafka简介&lt;/h2&gt;
