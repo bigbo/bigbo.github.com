@@ -68,6 +68,47 @@ src="http://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="F
                         <article>
                             <header>
                                 <h1 class="entry-title">
+                                    <a href="http://bigbo.github.io/pages/2015/02/28/elasticsearch_hadoop/" rel="bookmark" title="Permalink to elasticsearch之hadoop插件使用">
+                                       elasticsearch之hadoop插件使用
+                                    </a>
+                                </h1>
+                            </header>
+                            <div class="entry-content">
+<footer class="post-info">
+    <address class="vcard author">
+        by <a class="url fn" href="http://bigbo.github.io/author/ljingb.html">ljingb</a>
+    </address>
+
+    in <a href="http://bigbo.github.io/category/technology.html">Technology</a>
+
+    on 2015-02-28
+
+        |
+        tags:         <a href="http://bigbo.github.io/tag/elasticsearch-kuai-zhao.html">elasticsearch 快照</a>
+        <a href="http://bigbo.github.io/tag/elasticsearch-plugin.html">elasticsearch plugin</a>
+        <a href="http://bigbo.github.io/tag/hdfs.html">HDFS</a>
+
+
+        |
+        <a href="http://bigbo.github.io/pages/2015/02/28/elasticsearch_hadoop/#disqus_thread">comments</a>
+
+    
+</footer><!-- /.post-info -->                                <h2>elastic与Hadoop的连接</h2>
+<p>几个月前,由于资源有限,而需求无限,不得已想到es与hadoop的连接,本来想的很好,尝试把HDFS作为es的存储后端,把index存入HDFS中,这样就能节省存储空间了.当然官网也有相关使用配置(这里就不介绍了),经过几天的奋斗还是没能实现当初的想法,也幸亏没实现,实现了性能也是一大坑(猜测性能非常差以至于官方的 <a href="https://github.com/elastic/elasticsearch-hdfs">elasticsearch-hdfs</a> 插件都几年没更新了!).</p>
+<p>不过倒是尝试了把HDFS作为后端存储,可以实现备份elasticsearch数据快照到HDFS或者是从HDFS中恢复数据.选择插件 <a href="https://github.com/elastic/elasticsearch-hadoop/tree/master/repository-hdfs">repository-hdfs</a>,其实就是使用了ES的 <code>snapshot/restore</code> 功能.</p>
+<h2>安装插件</h2>
+<p>我的es版本为 <code>1.3.9-1</code>,注意: <code>1.3.0-1.3.7 and 1.4.0-1.4.2</code> 存在<a href="https://www.elastic.co/blog/elasticsearch-1-4-3-and-1-3-8-released/">Grooy漏洞</a>,所以选择版本的时候注意下,插件选择版本对应为2.0.2,后端Hadoop为2.5 ...</p>
+                                <p class="readmore">
+                                    <a class="btn btn-small btn-info" href="http://bigbo.github.io/pages/2015/02/28/elasticsearch_hadoop/">Read more...</a>
+                                </p>
+                            </div><!-- /.entry-content -->
+                            <hr/>
+                        </article>
+                    </li>
+                    <li>
+                        <article>
+                            <header>
+                                <h1 class="entry-title">
                                     <a href="http://bigbo.github.io/pages/2015/01/23/logstash_kafka/" rel="bookmark" title="Permalink to logstash的kafka插件使用">
                                        logstash的kafka插件使用
                                     </a>
@@ -156,61 +197,10 @@ src="http://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="F
                             <hr/>
                         </article>
                     </li>
-                    <li>
-                        <article>
-                            <header>
-                                <h1 class="entry-title">
-                                    <a href="http://bigbo.github.io/pages/2015/01/17/kafka_web_console/" rel="bookmark" title="Permalink to kafka监控web端(添砖)">
-                                       kafka监控web端(添砖)
-                                    </a>
-                                </h1>
-                            </header>
-                            <div class="entry-content">
-<footer class="post-info">
-    <address class="vcard author">
-        by <a class="url fn" href="http://bigbo.github.io/author/ljingb.html">ljingb</a>
-    </address>
-
-    in <a href="http://bigbo.github.io/category/technology.html">Technology</a>
-
-    on 2015-01-17
-
-        |
-        tags:         <a href="http://bigbo.github.io/tag/kafka.html">kafka</a>
-        <a href="http://bigbo.github.io/tag/xiao-xi-dui-lie.html">消息队列</a>
-        <a href="http://bigbo.github.io/tag/jian-kong.html">监控</a>
-
-
-        |
-        <a href="http://bigbo.github.io/pages/2015/01/17/kafka_web_console/#disqus_thread">comments</a>
-
-    
-</footer><!-- /.post-info -->                                <h2>前言</h2>
-<p>最近在了解消息队列,主要是之前用的是redis,redis固然非常好用,但是也有相应的使用场景.随着数据量的增长,redis已经不能满足现在的需求了.所以需要找个更好的替代品.问了一圈大牛,也google一番,锁定在<a href="http://kafka.apache.org/">kafka</a>上了.关于<strong>kafka</strong>怎么"玩",我也不知道,算是在摸索当中,想要知道安装使用等方法,请移步Google吧.虽然kafka我不会玩,但是我会玩怎么监控它.</p>
-<hr />
-<h2>简介</h2>
-<blockquote>
-<p><a href="https://github.com/claudemamo/kafka-web-console">kafka-web-console</a>,是kafka自己的一个Web管理界面.开源的东西好是好,但是不知道是不是开源的大牛B们都不愿意写文档!!出来个东西,居然没有安装步骤,只是有一些简单的使用说明,甚至说明都不详细,对于此点表示很坑!</p>
-</blockquote>
-<hr />
-<h2>安装</h2>
-<blockquote>
-<h5>1.先下载安装scala构建工具<a href="http://www.scala-sbt.org/0.13/tutorial/Installing-sbt-on-Linux.html">sbt</a></h5>
-</blockquote>
-<div class="highlight"><pre> #本安装环境为centos6.5
- curl https://bintray.com/sbt/rpm/rpm &gt; bintray-sbt-rpm.repo
- sudo mv ...</pre></div>
-                                <p class="readmore">
-                                    <a class="btn btn-small btn-info" href="http://bigbo.github.io/pages/2015/01/17/kafka_web_console/">Read more...</a>
-                                </p>
-                            </div><!-- /.entry-content -->
-                            <hr/>
-                        </article>
-                    </li>
                     </ol><!-- /#posts-list -->
 <p class="paginator">
         <a href="http://bigbo.github.io/author/ljingb.html">&laquo;</a>
-    Page 2 / 4
+    Page 2 / 5
         <a href="http://bigbo.github.io/author/ljingb3.html">&raquo;</a>
 </p>
                 </section><!-- /#content -->
@@ -248,23 +238,25 @@ src="http://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="F
             <div>
                 <h2>Tags</h2>
                 <ul id="cloud">
-                     <li class="tag-1"><a href="http://bigbo.github.io/tag/kafka.html">kafka</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/elasticsearch-plugin.html">elasticsearch plugin</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/pelican.html">pelican</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/elasticsearch-pei-zhi.html">elasticsearch 配置</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/pelican_plugin.html">pelican_plugin</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/elasticsearch-kuai-zhao.html">elasticsearch 快照</a></li>
-                     <li class="tag-2"><a href="http://bigbo.github.io/tag/github-pages.html">github pages</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/rsyslog.html">rsyslog</a></li>
-                     <li class="tag-1"><a href="http://bigbo.github.io/tag/fen-bu-shi-wen-jian-xi-tong.html">分布式文件系统</a></li>
-                     <li class="tag-1"><a href="http://bigbo.github.io/tag/xiao-xi-dui-lie.html">消息队列</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/jian-kong.html">监控</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/logstashcha-jian.html">logstash插件</a></li>
                      <li class="tag-4"><a href="http://bigbo.github.io/tag/logstash.html">logstash</a></li>
-                     <li class="tag-2"><a href="http://bigbo.github.io/tag/ri-zhi-chu-li.html">日志处理</a></li>
+                     <li class="tag-1"><a href="http://bigbo.github.io/tag/ri-zhi-chu-li.html">日志处理</a></li>
                      <li class="tag-4"><a href="http://bigbo.github.io/tag/hdfs.html">HDFS</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/logstashcha-jian.html">logstash插件</a></li>
                      <li class="tag-1"><a href="http://bigbo.github.io/tag/moosefs.html">Moosefs</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/elasticsearch-pei-zhi.html">elasticsearch 配置</a></li>
+                     <li class="tag-1"><a href="http://bigbo.github.io/tag/xiao-xi-dui-lie.html">消息队列</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/pelican_plugin.html">pelican_plugin</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/rsyslog.html">rsyslog</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/ri-zhi-zhuan-fa.html">日志转发</a></li>
                      <li class="tag-1"><a href="http://bigbo.github.io/tag/fen-bu-shi-cun-chu.html">分布式存储</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/elasticsearch-kuai-zhao.html">elasticsearch 快照</a></li>
+                     <li class="tag-1"><a href="http://bigbo.github.io/tag/fen-bu-shi-wen-jian-xi-tong.html">分布式文件系统</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/jian-kong.html">监控</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/wen-jian-jian-ting.html">文件监听</a></li>
+                     <li class="tag-2"><a href="http://bigbo.github.io/tag/github-pages.html">github pages</a></li>
+                     <li class="tag-1"><a href="http://bigbo.github.io/tag/kafka.html">kafka</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/pelican.html">pelican</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/elasticsearch-plugin.html">elasticsearch plugin</a></li>
                 </ul>
              </div>
 <!-- /.Tags -->

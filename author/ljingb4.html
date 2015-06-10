@@ -68,6 +68,56 @@ src="http://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="F
                         <article>
                             <header>
                                 <h1 class="entry-title">
+                                    <a href="http://bigbo.github.io/pages/2015/01/08/Moosefs_two/" rel="bookmark" title="Permalink to MooseFS浅析(二)">
+                                       MooseFS浅析(二)
+                                    </a>
+                                </h1>
+                            </header>
+                            <div class="entry-content">
+<footer class="post-info">
+    <address class="vcard author">
+        by <a class="url fn" href="http://bigbo.github.io/author/ljingb.html">ljingb</a>
+    </address>
+
+    in <a href="http://bigbo.github.io/category/technology.html">Technology</a>
+
+    on 2015-01-08
+
+        |
+        tags:         <a href="http://bigbo.github.io/tag/fen-bu-shi-wen-jian-xi-tong.html">分布式文件系统</a>
+        <a href="http://bigbo.github.io/tag/moosefs.html">Moosefs</a>
+        <a href="http://bigbo.github.io/tag/fen-bu-shi-cun-chu.html">分布式存储</a>
+
+
+        |
+        <a href="http://bigbo.github.io/pages/2015/01/08/Moosefs_two/#disqus_thread">comments</a>
+
+    
+</footer><!-- /.post-info -->                                <h2>前言</h2>
+<p>继上篇,感觉说了好多废话,多半是配置文件相关参数,作为一个基础运维人员,更关注的是怎么让服务更加稳定(高可用),出现问题如何恢复(容错)等,更接地气的东西打算在下面介绍下.</p>
+<hr />
+<h2>启动和关闭顺序</h2>
+<p>master启动后,metalogger\chunker\client三个元素都能自动与master建立连接.</p>
+<blockquote>
+<p>正常启动顺序:matser---chunker---metalogger---client.</p>
+<p>关闭顺序:client---chunker---metalogger---master</p>
+</blockquote>
+<hr />
+<h2>Client操作与修复</h2>
+<p>客户端强制 <code>kill -9</code> 杀掉 <code>mfsmount</code> 进程,需要先 <code>umount</code> ,然后再 <code>mount</code> ,否则会提示:</p>
+<div class="highlight"><pre><span class="n">fuse</span><span class="o">:</span> <span class="n">bad</span> <span class="n">mount</span> <span class="n">point</span> <span class="err">`</span><span class="sr">/mnt/test/</span><span class="err">&#39;</span><span class="o">:</span> <span class="n">Transport</span> <span class="n">endpoint</span> <span class="k">is</span> <span class="n">not</span> <span class="n">connected</span>
+<span class="n">see</span><span class="o">:</span> <span class="sr">/data/jingbo.li/mfs/bin/</span><span class="n">mfsmount ...</span></pre></div>
+                                <p class="readmore">
+                                    <a class="btn btn-small btn-info" href="http://bigbo.github.io/pages/2015/01/08/Moosefs_two/">Read more...</a>
+                                </p>
+                            </div><!-- /.entry-content -->
+                            <hr/>
+                        </article>
+                    </li>
+                    <li>
+                        <article>
+                            <header>
+                                <h1 class="entry-title">
                                     <a href="http://bigbo.github.io/pages/2015/01/05/Moosefs_one/" rel="bookmark" title="Permalink to MooseFS浅析(一)">
                                        MooseFS浅析(一)
                                     </a>
@@ -164,66 +214,11 @@ src="http://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="F
                             <hr/>
                         </article>
                     </li>
-                    <li>
-                        <article>
-                            <header>
-                                <h1 class="entry-title">
-                                    <a href="http://bigbo.github.io/pages/2014/12/28/create-blog/" rel="bookmark" title="Permalink to 用Pelican&GitHubPages搭建个人博客">
-                                       用Pelican&GitHubPages搭建个人博客
-                                    </a>
-                                </h1>
-                            </header>
-                            <div class="entry-content">
-<footer class="post-info">
-    <address class="vcard author">
-        by <a class="url fn" href="http://bigbo.github.io/author/ljingb.html">ljingb</a>
-    </address>
-
-    in <a href="http://bigbo.github.io/category/technology.html">Technology</a>
-
-    on 2014-12-28
-
-        |
-        tags:         <a href="http://bigbo.github.io/tag/github-pages.html">github pages</a>
-        <a href="http://bigbo.github.io/tag/pelican.html">pelican</a>
-
-
-        |
-        <a href="http://bigbo.github.io/pages/2014/12/28/create-blog/#disqus_thread">comments</a>
-
-    
-</footer><!-- /.post-info -->                                <h3>前言</h3>
-<p>对于github.io早有认识,但是趋于各种懒,至今才动手.想把这几年的一些自己总结的东西做些记录,匆匆那些年,也应该给自己做些积累了.</p>
-<p>那么问题来了,建立github page有各种框架,例如:<a href="http://jekyllrb.com/">jekyll</a>,<a href="https://github.com/Shopify/liquid/wiki/Liquid-for-Designers">liquid</a>,<a href="http://pelican-docs-zh-cn.readthedocs.org/en/latest/">Pelican</a>等等,本文采用后者Pelican,关于Pelican不做过多介绍,想了解的就去连接到的文档看吧.</p>
-<hr />
-<h3>搭建基础</h3>
-<p>Pelican基于Python,相比Wordpress等其他框架来说,它比较轻,另外有些自己的<a href="http://docs.getpelican.com/en/3.3.0/#features">特性</a>,再配合免费的github pages,非常棒!主要是在linux下进行搭建,过程中会涉及如下技术知识,不过都是很初级的使用,即使新手也可以很容易的上手.</p>
-<blockquote>
-<p><a href="https://github.com">github</a></p>
-<p><a href="https://pages.github.com">github pages</a></p>
-<p><a href="http://git-scm.com/blog/2010/06/09/pro-git-zh.html">git</a></p>
-<p><a href="http://www.python.org">python</a></p>
-<p><a href="https://pypi.python.org/pypi/pip">pip</a></p>
-<p><a href="http://pelican-docs-zh-cn.readthedocs.org/en/latest">pelican</a></p>
-<p><a href="http://wowubuntu.com/markdown/">markdown</a></p>
-</blockquote>
-<hr />
-<h3>下载安装</h3>
-<p>由于是linux环境,大部分依赖是有的,没有的话可以通过yum/apt-get去安装.win的话就请参照安装.</p>
-<blockquote>
-<ol>
-<li>安装python (2.7+,低版本的不支持 ...</li></ol></blockquote>
-                                <p class="readmore">
-                                    <a class="btn btn-small btn-info" href="http://bigbo.github.io/pages/2014/12/28/create-blog/">Read more...</a>
-                                </p>
-                            </div><!-- /.entry-content -->
-                            <hr/>
-                        </article>
-                    </li>
                     </ol><!-- /#posts-list -->
 <p class="paginator">
         <a href="http://bigbo.github.io/author/ljingb3.html">&laquo;</a>
-    Page 4 / 4
+    Page 4 / 5
+        <a href="http://bigbo.github.io/author/ljingb5.html">&raquo;</a>
 </p>
                 </section><!-- /#content -->
 </div>
@@ -260,23 +255,25 @@ src="http://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="F
             <div>
                 <h2>Tags</h2>
                 <ul id="cloud">
-                     <li class="tag-1"><a href="http://bigbo.github.io/tag/kafka.html">kafka</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/elasticsearch-plugin.html">elasticsearch plugin</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/pelican.html">pelican</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/elasticsearch-pei-zhi.html">elasticsearch 配置</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/pelican_plugin.html">pelican_plugin</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/elasticsearch-kuai-zhao.html">elasticsearch 快照</a></li>
-                     <li class="tag-2"><a href="http://bigbo.github.io/tag/github-pages.html">github pages</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/rsyslog.html">rsyslog</a></li>
-                     <li class="tag-1"><a href="http://bigbo.github.io/tag/fen-bu-shi-wen-jian-xi-tong.html">分布式文件系统</a></li>
-                     <li class="tag-1"><a href="http://bigbo.github.io/tag/xiao-xi-dui-lie.html">消息队列</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/jian-kong.html">监控</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/logstashcha-jian.html">logstash插件</a></li>
                      <li class="tag-4"><a href="http://bigbo.github.io/tag/logstash.html">logstash</a></li>
-                     <li class="tag-2"><a href="http://bigbo.github.io/tag/ri-zhi-chu-li.html">日志处理</a></li>
+                     <li class="tag-1"><a href="http://bigbo.github.io/tag/ri-zhi-chu-li.html">日志处理</a></li>
                      <li class="tag-4"><a href="http://bigbo.github.io/tag/hdfs.html">HDFS</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/logstashcha-jian.html">logstash插件</a></li>
                      <li class="tag-1"><a href="http://bigbo.github.io/tag/moosefs.html">Moosefs</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/elasticsearch-pei-zhi.html">elasticsearch 配置</a></li>
+                     <li class="tag-1"><a href="http://bigbo.github.io/tag/xiao-xi-dui-lie.html">消息队列</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/pelican_plugin.html">pelican_plugin</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/rsyslog.html">rsyslog</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/ri-zhi-zhuan-fa.html">日志转发</a></li>
                      <li class="tag-1"><a href="http://bigbo.github.io/tag/fen-bu-shi-cun-chu.html">分布式存储</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/elasticsearch-kuai-zhao.html">elasticsearch 快照</a></li>
+                     <li class="tag-1"><a href="http://bigbo.github.io/tag/fen-bu-shi-wen-jian-xi-tong.html">分布式文件系统</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/jian-kong.html">监控</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/wen-jian-jian-ting.html">文件监听</a></li>
+                     <li class="tag-2"><a href="http://bigbo.github.io/tag/github-pages.html">github pages</a></li>
+                     <li class="tag-1"><a href="http://bigbo.github.io/tag/kafka.html">kafka</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/pelican.html">pelican</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/elasticsearch-plugin.html">elasticsearch plugin</a></li>
                 </ul>
              </div>
 <!-- /.Tags -->
