@@ -1,5 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>BigBo's blog</title><link href="http://bigbo.github.io/" rel="alternate"></link><link href="/feeds/technology.atom.xml" rel="self"></link><id>http://bigbo.github.io/</id><updated>2015-04-16T16:30:00+08:00</updated><entry><title>elasticsearch配置小记</title><link href="http://bigbo.github.io/pages/2015/04/10/elasticsearch_config/" rel="alternate"></link><updated>2015-04-16T16:30:00+08:00</updated><author><name>ljingb</name></author><id>tag:bigbo.github.io,2015-04-10:pages/2015/04/10/elasticsearch_config/</id><summary type="html">&lt;p&gt;基于 &lt;code&gt;elasticsearch 1.4.4&lt;/code&gt; 版本.安装方式为RPM安装.所有涉及路径需根据实际情况来设置判断.&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>BigBo's blog</title><link href="http://bigbo.github.io/" rel="alternate"></link><link href="/feeds/technology.atom.xml" rel="self"></link><id>http://bigbo.github.io/</id><updated>2015-05-27T23:30:00+08:00</updated><entry><title>Mozilla Heka使用</title><link href="http://bigbo.github.io/pages/2015/05/23/mozilla_heka/" rel="alternate"></link><updated>2015-05-27T23:30:00+08:00</updated><author><name>ljingb</name></author><id>tag:bigbo.github.io,2015-05-23:pages/2015/05/23/mozilla_heka/</id><summary type="html">&lt;p&gt;监控中时常需要对重要日志进行实时收集分析,之前一直使用 &lt;code&gt;logstash&lt;/code&gt; 來做agent,由于 &lt;code&gt;logstash&lt;/code&gt; 对系统强依赖 &lt;code&gt;Java_JDK&lt;/code&gt; ,从而使用起来需要受系统环境限制.
+作为对日志转发工具,对系统环境有限制的情况下可以有两个选择:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;a href="https://github.com/bloonix/awesant"&gt;awesant&lt;/a&gt; :基于perl写的轻量级logstash&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/mozilla-services/heka"&gt;heka&lt;/a&gt; :基于go语言开发,无系统依赖,高并发&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr /&gt;
+&lt;h2&gt;0x01 Heka简介&lt;/h2&gt;
+&lt;p&gt;Heka 是 Mozilla 公司仿造 logstash 设计,用 Golang 重写的一个开源项目.采用了类 logstash 的 input -&amp;gt; splitters -&amp;gt; decoder -&amp;gt; filter -&amp;gt; encoder -&amp;gt; output 的流程概念.其特点在于,在中间的 decoder/filter/encoder 部分,设计了 sandbox 概念,可以采用内嵌 lua 脚本做这一部分的工作,降低了全程使用静态 Golang 编写的难度.此外,其 filter 阶段还提供了一些监控和统计报警功能.&lt;/p&gt;
+&lt;p&gt;官网地址见：http://hekad.readthedocs.org/&lt;/p&gt;
+&lt;hr /&gt;
+&lt;h2&gt;0x02 架构简述&lt;/h2&gt;
+&lt;p&gt;Heka 内部对数据的过滤;转发等,都是采用指针形式.有着高并发,速度快等特点(实际测试监听文件转发至 Kafka 速度是 logstash 的10倍左右) ,目前 heka 可以支持多种格式的消息.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="heka" src="/pictures/heka-overview-diagram.png" title="u&amp;quot;heka流程图&amp;quot;" /&gt;&lt;/p&gt;
+&lt;p&gt;对日志处理流程如下:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;[input] -&amp;gt; [splitter] -&amp;gt; [decoder] -&amp;gt; [filter] -&amp;gt; [encoder] -&amp;gt; [output]&lt;/code&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;[input]:
+输入插件从外部获得数据,并将其读入Heka管道进行处理,支持数据读取方式包含:网络传输(tcp/udp),消息队列支持(AMQP/KAFKA),文件监听等多种方式.&lt;/li&gt;
+&lt;li&gt;[splitter]:
+ 对数据流进行分流,以区分不同来源日志.&lt;/li&gt;
+&lt;li&gt;[decoder]:
+ 对数据流进行编码,把 message 的结构各个属性解析出来,支持 Lua 对数据进行编码处理.&lt;/li&gt;
+&lt;li&gt;[filter]:
+ Heka的处理引擎,可以对数据流进行过滤逻辑,包含统计/聚合甚至做些统计等操作.&lt;/li&gt;
+&lt;li&gt;[encoder]
+ 相对[decoder]来说是互逆操作,重新把消息内容编码为一定的格式,格式化输出.&lt;/li&gt;
+&lt;li&gt;[output]
+ 根据指定的匹配规则把某类型的消息输出到外部系统,支持多种协议和方式.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;以上是整个流程各个步骤实现的功能,当然实际使用的话,这几步不是必须都要有的,如果接收到的数据,没有加密或其他特殊格式需要单独编码,可以直接处理,那Decoder就不需要. 甚至不想输出任何东西,不提供Outputs都可以.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;h2&gt;0x03 Heka 配置使用&lt;/h2&gt;
+&lt;p&gt;Heka的配置文件要设置好所需要的 Input/Decoder/Filter/Encoder/Output(不需要的可以不配置).
+配置文件对于新手来说,编写不是那么友好,而且使用起来有些死板,不过可以调用 &lt;code&gt;lua&lt;/code&gt; 可以对日志进行灵活的定制转换.&lt;/p&gt;
+&lt;p&gt;以对文件进行实时监听为例:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;#hekad的资源配置
+[hekad]
+#使用CPU核心数,最大性能是设置为CPU核心数*2,需要合理配置
+maxprocs = 24
+#heka的PID记录文件,便于监控heka进程的死活
+pid_file = &amp;#39;/var/log/heka.pid&amp;#39;
+
+#数据处理类,根据实际情况自己命名,eg:heka_test
+[heka_test]
+#input使用类型,根据实际情况选择
+type = &amp;quot;LogstreamerInput&amp;quot;
+#记录当前文件的读取位置保存目录,会把当前读取文件位置写入文件(文件名默认为:数据流的命名,例如这里为heka_test)
+journal_directory = &amp;quot;/tmp/heka&amp;quot;
+#被监听文件目录
+log_directory = &amp;quot;/data0/nginxlogs&amp;quot;
+#正则匹配路径此处是匹配log_directory后面的路径,例如现在监听的文件路径为
+#/data0/nginxlogs/2015/05/23/test.log
+file_match = &amp;#39;(?P&amp;lt;Year&amp;gt;\d+)/(?P&amp;lt;Month&amp;gt;\d+)/(?P&amp;lt;Day&amp;gt;\d+)/(?P&amp;lt;FileName&amp;gt;[^/]+)\.log&amp;#39;
+#排序,以match匹配到的年月日对文件进行排序依次监听读取
+priority = [&amp;quot;Year&amp;quot;,&amp;quot;Month&amp;quot;,&amp;quot;Day&amp;quot;]
+#日志的最后修改时间在oldest_duration时间后,则不会监听
+#heka 0.9.1及以前版本此处有bug,该设置无效
+oldest_duration = &amp;quot;1h&amp;quot;
+#分类设置,内部是修改全局变量 Logger,以备后面对日志流做来源区分,默认则为数据处理类名
+differentiator = [&amp;quot;FileName&amp;quot;,&amp;quot;-&amp;quot;,&amp;quot;test&amp;quot;]
+
+#编码设置
+[PayloadEncoder]
+#在每行log后面不自动添加&amp;quot;\n&amp;quot;
+append_newlines = false
+
+#output设置,同input设置
+[test]
+#output到kafka
+type = &amp;quot;KafkaOutput&amp;quot;
+#过滤log的类型,对不同日志发送到不同位置,&amp;quot;Logger == &amp;#39;a-test&amp;#39;其中a-test指数据流名即全局变量 Logger 的值
+message_matcher = &amp;quot;Logger == &amp;#39;a-test&amp;#39;&amp;quot;
+#写入哪个topic,或是采用 topic_variable 自动写入相应数据流对应topic
+topic = &amp;quot;test&amp;quot;
+#kafka机器列表
+addrs = [&amp;quot;192.1.19.1:9092&amp;quot;,&amp;quot;192.1.19.2:9092&amp;quot;]
+#采用相应编码输出
+encoder = &amp;quot;PayloadEncoder&amp;quot;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;配置文件写好规则后可以使用 &lt;code&gt;heka-logstreamer&lt;/code&gt; 来查看匹配规则的是否是想要监听的文件.如下命令: &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;heka-logstreamer -config&lt;span class="o"&gt;=&lt;/span&gt;test.toml
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;没问题的话,就可以愉快的把玩heka了.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;hekad -config=test.toml
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;hr /&gt;
+&lt;h2&gt;0x04 简单调试&lt;/h2&gt;
+&lt;p&gt;整个来看配置文件的编写上手不是太简单,使用过程中有些规则的使用需要不断的调试.每次使用时可以通过先把log打印到终端进行简单调试来对规则进一步优化调整.
+日志直接输出到终端配置如下:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;#相同地方不做注释,同上
+[hekad]
+maxprocs = 24
+pid_file = &amp;#39;/var/log/heka.pid&amp;#39;
+
+[heka_test]
+type = &amp;quot;LogstreamerInput&amp;quot;
+journal_directory = &amp;quot;/tmp/heka&amp;quot;
+log_directory = &amp;quot;/data0/nginxlogs&amp;quot;
+file_match = &amp;#39;(?P&amp;lt;Year&amp;gt;\d+)/(?P&amp;lt;Month&amp;gt;\d+)/(?P&amp;lt;Day&amp;gt;\d+)/(?P&amp;lt;FileName&amp;gt;[^/]+)\.log&amp;#39;
+priority = [&amp;quot;Year&amp;quot;,&amp;quot;Month&amp;quot;,&amp;quot;Day&amp;quot;]
+oldest_duration = &amp;quot;1h&amp;quot;
+differentiator = [&amp;quot;FileName&amp;quot;,&amp;quot;-&amp;quot;,&amp;quot;test&amp;quot;]
+
+#编码设置
+[RstEncoder]
+
+#输出每条日志的所有结构内容
+[LogOutput]
+message_matcher = &amp;quot;TRUE&amp;quot;
+encoder = &amp;quot;RstEncoder&amp;quot;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;以上配置文件可以输出每条日志的所有结构信息值,包含系统的全局变量,显示例如:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;:Timestamp: 2015-05-20 09:34:19.386066825 +0000 UTC
+:Type: logfile
+:Hostname: xxx
+:Pid: 0
+:Uuid: aad4ca95-0332-4cf6-af06-ae7729788d29
+:Logger: a-test
+:Payload: &amp;lt;message&amp;gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;在输出之前可以通过此方法进行调试判断.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p&gt;当然以上纯属测试体验简介,其实heka功能还是很强大的,支持多种协议和消息队列,更多的数据流处理可以在后续去体验挖掘.&lt;/p&gt;</summary><category term="文件监听"></category><category term="日志处理"></category><category term="日志转发"></category></entry><entry><title>elasticsearch配置小记</title><link href="http://bigbo.github.io/pages/2015/04/10/elasticsearch_config/" rel="alternate"></link><updated>2015-04-16T16:30:00+08:00</updated><author><name>ljingb</name></author><id>tag:bigbo.github.io,2015-04-10:pages/2015/04/10/elasticsearch_config/</id><summary type="html">&lt;p&gt;基于 &lt;code&gt;elasticsearch 1.4.4&lt;/code&gt; 版本.安装方式为RPM安装.所有涉及路径需根据实际情况来设置判断.&lt;/p&gt;
 &lt;h2&gt;0x01 内存调整&lt;/h2&gt;
 &lt;p&gt;调整ES内存分配有多种方式,建议调整 &lt;code&gt;/etc/sysconfig/elasticsearch&lt;/code&gt; 中的设置(还可以直接修改bin下的启动脚本).&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;# Directory where the Elasticsearch binary distribution resides

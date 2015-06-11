@@ -3,7 +3,7 @@
 作为对日志转发工具,对系统环境有限制的情况下可以有两个选择:&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;&lt;a href="https://github.com/bloonix/awesant"&gt;awesant&lt;/a&gt; :基于perl写的轻量级logstash&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://github.com/mozilla-services/heka"&gt;heka&lt;/a&gt; :后面重点介绍&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/mozilla-services/heka"&gt;heka&lt;/a&gt; :基于go语言开发,无系统依赖,高并发&lt;/li&gt;
 &lt;/ol&gt;
 &lt;hr /&gt;
 &lt;h2&gt;0x01 Heka简介&lt;/h2&gt;
@@ -11,8 +11,9 @@
 &lt;p&gt;官网地址见：http://hekad.readthedocs.org/&lt;/p&gt;
 &lt;hr /&gt;
 &lt;h2&gt;0x02 架构简述&lt;/h2&gt;
-&lt;p&gt;Heka 内部对数据的过滤;转发等,都是采用指针形式.有着高并发,速度快等特点(实际测试监听文件转发至 Kafka 速度是 logstash 的10倍左右) ,目前 heka 可以支持多种格式的消息.
-对日志处理流程如下:&lt;/p&gt;
+&lt;p&gt;Heka 内部对数据的过滤;转发等,都是采用指针形式.有着高并发,速度快等特点(实际测试监听文件转发至 Kafka 速度是 logstash 的10倍左右) ,目前 heka 可以支持多种格式的消息.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="heka" src="/pictures/heka-overview-diagram.png" title="u&amp;quot;heka流程图&amp;quot;" /&gt;&lt;/p&gt;
+&lt;p&gt;对日志处理流程如下:&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;[input] -&amp;gt; [splitter] -&amp;gt; [decoder] -&amp;gt; [filter] -&amp;gt; [encoder] -&amp;gt; [output]&lt;/code&gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;[input]:
@@ -32,7 +33,8 @@
 &lt;hr /&gt;
 &lt;h2&gt;0x03 Heka 配置使用&lt;/h2&gt;
 &lt;p&gt;Heka的配置文件要设置好所需要的 Input/Decoder/Filter/Encoder/Output(不需要的可以不配置).
-以对文件进行实时监听为例:&lt;/p&gt;
+配置文件对于新手来说,编写不是那么友好,而且使用起来有些死板,不过可以调用 &lt;code&gt;lua&lt;/code&gt; 可以对日志进行灵活的定制转换.&lt;/p&gt;
+&lt;p&gt;以对文件进行实时监听为例:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;#hekad的资源配置
 [hekad]
 #使用CPU核心数,最大性能是设置为CPU核心数*2,需要合理配置

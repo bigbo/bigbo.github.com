@@ -97,11 +97,11 @@ src="http://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="F
 作为对日志转发工具,对系统环境有限制的情况下可以有两个选择:</p>
 <ol>
 <li><a href="https://github.com/bloonix/awesant">awesant</a> :基于perl写的轻量级logstash</li>
-<li><a href="https://github.com/mozilla-services/heka">heka</a> :后面重点介绍</li>
+<li><a href="https://github.com/mozilla-services/heka">heka</a> :基于go语言开发,无系统依赖,高并发</li>
 </ol>
 <hr />
 <h2>0x01 Heka简介</h2>
-<p>Heka 是 Mozilla 公司仿造 logstash 设计,用 Golang 重写的一个开源项目.采用了类 logstash 的 input -&gt; splitters -&gt; decoder -&gt; filter -&gt; encoder -&gt; output 的流程概念.其特点在于,在中间的 decoder/filter/encoder 部分,设计了 sandbox 概念,可以采用内嵌 lua 脚本做这一部分的工作,降低了全程使用静态 Golang ...</p>
+<p>Heka 是 Mozilla 公司仿造 logstash 设计,用 Golang 重写的一个开源项目.采用了类 logstash 的 input -&gt; splitters -&gt; decoder -&gt; filter -&gt; encoder -&gt; output 的流程概念.其特点在于,在中间的 decoder/filter/encoder 部分,设计了 sandbox 概念,可以采用内嵌 lua 脚本做这一部分的工作 ...</p>
                                 <p class="readmore">
                                     <a class="btn btn-small btn-info" href="http://bigbo.github.io/pages/2015/05/23/mozilla_heka/">Read more...</a>
                                 </p>
@@ -268,25 +268,25 @@ ES_HEAP_SIZE=32g
             <div>
                 <h2>Tags</h2>
                 <ul id="cloud">
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/logstash.html">logstash</a></li>
-                     <li class="tag-1"><a href="http://bigbo.github.io/tag/ri-zhi-chu-li.html">日志处理</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/hdfs.html">HDFS</a></li>
+                     <li class="tag-1"><a href="http://bigbo.github.io/tag/kafka.html">kafka</a></li>
+                     <li class="tag-1"><a href="http://bigbo.github.io/tag/fen-bu-shi-wen-jian-xi-tong.html">分布式文件系统</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/rsyslog.html">rsyslog</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/elasticsearch-kuai-zhao.html">elasticsearch 快照</a></li>
+                     <li class="tag-1"><a href="http://bigbo.github.io/tag/fen-bu-shi-cun-chu.html">分布式存储</a></li>
                      <li class="tag-4"><a href="http://bigbo.github.io/tag/logstashcha-jian.html">logstash插件</a></li>
+                     <li class="tag-1"><a href="http://bigbo.github.io/tag/ri-zhi-chu-li.html">日志处理</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/wen-jian-jian-ting.html">文件监听</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/jian-kong.html">监控</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/hdfs.html">HDFS</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/pelican.html">pelican</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/elasticsearch-plugin.html">elasticsearch plugin</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/ri-zhi-zhuan-fa.html">日志转发</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/pelican_plugin.html">pelican_plugin</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/logstash.html">logstash</a></li>
                      <li class="tag-1"><a href="http://bigbo.github.io/tag/moosefs.html">Moosefs</a></li>
                      <li class="tag-4"><a href="http://bigbo.github.io/tag/elasticsearch-pei-zhi.html">elasticsearch 配置</a></li>
                      <li class="tag-1"><a href="http://bigbo.github.io/tag/xiao-xi-dui-lie.html">消息队列</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/pelican_plugin.html">pelican_plugin</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/rsyslog.html">rsyslog</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/ri-zhi-zhuan-fa.html">日志转发</a></li>
-                     <li class="tag-1"><a href="http://bigbo.github.io/tag/fen-bu-shi-cun-chu.html">分布式存储</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/elasticsearch-kuai-zhao.html">elasticsearch 快照</a></li>
-                     <li class="tag-1"><a href="http://bigbo.github.io/tag/fen-bu-shi-wen-jian-xi-tong.html">分布式文件系统</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/jian-kong.html">监控</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/wen-jian-jian-ting.html">文件监听</a></li>
                      <li class="tag-2"><a href="http://bigbo.github.io/tag/github-pages.html">github pages</a></li>
-                     <li class="tag-1"><a href="http://bigbo.github.io/tag/kafka.html">kafka</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/pelican.html">pelican</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/elasticsearch-plugin.html">elasticsearch plugin</a></li>
                 </ul>
              </div>
 <!-- /.Tags -->

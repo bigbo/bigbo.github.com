@@ -95,7 +95,7 @@ src="http://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="F
 作为对日志转发工具,对系统环境有限制的情况下可以有两个选择:</p>
 <ol>
 <li><a href="https://github.com/bloonix/awesant">awesant</a> :基于perl写的轻量级logstash</li>
-<li><a href="https://github.com/mozilla-services/heka">heka</a> :后面重点介绍</li>
+<li><a href="https://github.com/mozilla-services/heka">heka</a> :基于go语言开发,无系统依赖,高并发</li>
 </ol>
 <hr />
 <h2>0x01 Heka简介</h2>
@@ -103,8 +103,9 @@ src="http://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="F
 <p>官网地址见：http://hekad.readthedocs.org/</p>
 <hr />
 <h2>0x02 架构简述</h2>
-<p>Heka 内部对数据的过滤;转发等,都是采用指针形式.有着高并发,速度快等特点(实际测试监听文件转发至 Kafka 速度是 logstash 的10倍左右) ,目前 heka 可以支持多种格式的消息.
-对日志处理流程如下:</p>
+<p>Heka 内部对数据的过滤;转发等,都是采用指针形式.有着高并发,速度快等特点(实际测试监听文件转发至 Kafka 速度是 logstash 的10倍左右) ,目前 heka 可以支持多种格式的消息.</p>
+<p><img alt="heka" src="/pictures/heka-overview-diagram.png" title="u&quot;heka流程图&quot;" /></p>
+<p>对日志处理流程如下:</p>
 <p><code>[input] -&gt; [splitter] -&gt; [decoder] -&gt; [filter] -&gt; [encoder] -&gt; [output]</code></p>
 <ul>
 <li>[input]:
@@ -124,7 +125,8 @@ src="http://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="F
 <hr />
 <h2>0x03 Heka 配置使用</h2>
 <p>Heka的配置文件要设置好所需要的 Input/Decoder/Filter/Encoder/Output(不需要的可以不配置).
-以对文件进行实时监听为例:</p>
+配置文件对于新手来说,编写不是那么友好,而且使用起来有些死板,不过可以调用 <code>lua</code> 可以对日志进行灵活的定制转换.</p>
+<p>以对文件进行实时监听为例:</p>
 <div class="highlight"><pre>#hekad的资源配置
 [hekad]
 #使用CPU核心数,最大性能是设置为CPU核心数*2,需要合理配置
