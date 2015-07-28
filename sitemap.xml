@@ -5,28 +5,28 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>http://bigbo.github.io/</loc>
-<lastmod>2015-06-11T22:24:49-00:00</lastmod>
+<lastmod>2015-07-28T21:01:46-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://bigbo.github.io/archives.html</loc>
-<lastmod>2015-06-11T22:24:49-00:00</lastmod>
+<lastmod>2015-07-28T21:01:46-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://bigbo.github.io/tags.html</loc>
-<lastmod>2015-06-11T22:24:49-00:00</lastmod>
+<lastmod>2015-07-28T21:01:46-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://bigbo.github.io/categories.html</loc>
-<lastmod>2015-06-11T22:24:49-00:00</lastmod>
+<lastmod>2015-07-28T21:01:46-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -36,6 +36,13 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <lastmod>2014-12-28T00:01:00+08:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.3</priority>
+</url>
+
+<url>
+<loc>http://bigbo.github.io/pages/2015/07/20/elasticsearch_oom/</loc>
+<lastmod>2015-07-28T21:00:00+08:00</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.7</priority>
 </url>
 
 <url>
@@ -138,7 +145,7 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>http://bigbo.github.io/category/technology.html</loc>
-<lastmod>2015-05-27T23:30:00+08:00</lastmod>
+<lastmod>2015-07-28T21:00:00+08:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -159,6 +166,13 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>http://bigbo.github.io/tag/ri-zhi-chu-li.html</loc>
+<lastmod>2015-05-27T23:30:00+08:00</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>http://bigbo.github.io/tag/ri-zhi-zhuan-fa.html</loc>
 <lastmod>2015-05-27T23:30:00+08:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
@@ -207,8 +221,15 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 </url>
 
 <url>
-<loc>http://bigbo.github.io/tag/kafka.html</loc>
-<lastmod>2015-03-27T19:30:00+08:00</lastmod>
+<loc>http://bigbo.github.io/tag/elasticsearch-diao-you.html</loc>
+<lastmod>2015-07-28T21:00:00+08:00</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>http://bigbo.github.io/tag/wen-jian-jian-ting.html</loc>
+<lastmod>2015-05-27T23:30:00+08:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -235,8 +256,8 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 </url>
 
 <url>
-<loc>http://bigbo.github.io/tag/wen-jian-jian-ting.html</loc>
-<lastmod>2015-05-27T23:30:00+08:00</lastmod>
+<loc>http://bigbo.github.io/tag/jian-kong.html</loc>
+<lastmod>2015-01-17T15:40:00+08:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -249,15 +270,15 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 </url>
 
 <url>
-<loc>http://bigbo.github.io/tag/jian-kong.html</loc>
-<lastmod>2015-01-17T15:40:00+08:00</lastmod>
+<loc>http://bigbo.github.io/tag/elasticsearch-oom.html</loc>
+<lastmod>2015-07-28T21:00:00+08:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>http://bigbo.github.io/tag/ri-zhi-zhuan-fa.html</loc>
-<lastmod>2015-05-27T23:30:00+08:00</lastmod>
+<loc>http://bigbo.github.io/tag/kafka.html</loc>
+<lastmod>2015-03-27T19:30:00+08:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -278,7 +299,7 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>http://bigbo.github.io/author/ljingb.html</loc>
-<lastmod>2015-05-27T23:30:00+08:00</lastmod>
+<lastmod>2015-07-28T21:00:00+08:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>

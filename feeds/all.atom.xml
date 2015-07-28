@@ -1,5 +1,145 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>BigBo's blog</title><link href="http://bigbo.github.io/" rel="alternate"></link><link href="/feeds/all.atom.xml" rel="self"></link><id>http://bigbo.github.io/</id><updated>2015-05-27T23:30:00+08:00</updated><entry><title>Mozilla Heka使用</title><link href="http://bigbo.github.io/pages/2015/05/23/mozilla_heka/" rel="alternate"></link><updated>2015-05-27T23:30:00+08:00</updated><author><name>ljingb</name></author><id>tag:bigbo.github.io,2015-05-23:pages/2015/05/23/mozilla_heka/</id><summary type="html">&lt;p&gt;监控中时常需要对重要日志进行实时收集分析,之前一直使用 &lt;code&gt;logstash&lt;/code&gt; 來做agent,由于 &lt;code&gt;logstash&lt;/code&gt; 对系统强依赖 &lt;code&gt;Java_JDK&lt;/code&gt; ,从而使用起来需要受系统环境限制.
+<feed xmlns="http://www.w3.org/2005/Atom"><title>BigBo's blog</title><link href="http://bigbo.github.io/" rel="alternate"></link><link href="/feeds/all.atom.xml" rel="self"></link><id>http://bigbo.github.io/</id><updated>2015-07-28T21:00:00+08:00</updated><entry><title>引发Elasticsearch OOM之type</title><link href="http://bigbo.github.io/pages/2015/07/20/elasticsearch_oom/" rel="alternate"></link><updated>2015-07-28T21:00:00+08:00</updated><author><name>ljingb</name></author><id>tag:bigbo.github.io,2015-07-20:pages/2015/07/20/elasticsearch_oom/</id><summary type="html">&lt;p&gt;开源日志处理哪家强?当数 &lt;a href="https://www.elastic.co/"&gt;ELKstack&lt;/a&gt; ,但搭起来容易用起来难,尤其是ES,小脾气那叫一个多,不好好调教下时不时的就会给你来点颜色,什么脑裂,内存不足 &lt;code&gt;OOM&lt;/code&gt;,要不就是索引过慢,性能跟不上;应有尽有,自从用起来,一把心酸.&lt;/p&gt;
+&lt;p&gt;最近又出问题了,之前好好的集群(已经正常运行3个多月了),当新接入了一个服务(大部分只有写),变得频繁罢工,一周就要重启4次左右,搞得身心疲惫,终于发现故障的原因,故记之,警示后人.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;h2&gt;0x01 ES 几个基本概念&lt;/h2&gt;
+&lt;h3&gt;集群&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;cluster (集群)
+代表一个集群,集群中有多个节点,其中有一个为主节点,这个主节点是可以通过选举产生的(可以设定主节点角色),主从节点是对于集群内部来说的.es的一个概念就是去中心化,字面上理解就是无中心节点,这是对于集群外部来说的,因为从外部来看es集群,在逻辑上是个整体,你与任何一个节点的通信和与整个es集群通信是等价的.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;shards (分片)
+代表索引分片,es可以把一个完整的索引分成多个分片,这样的好处是可以把一个大的索引拆分成多个,分布到不同的节点上.构成分布式搜索.分片的数量只能在索引创建前指定,并且索引创建后不能更改.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;replicas (副本)
+每个主分片可以有零个或多个副本.副本是主分片的一个拷贝,有两个作用:&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;故障转移:如果主分片有问题,副本分片可以提升为主分片;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;提高性能:获取和搜索请求可以处理主分片或副本分片.当然,注意副本不是越多越好!&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;默认情况下,每个主分片有一个副本,不过索引的副本数量可以动态地改变.在同一个节点上,一个副本分片将永远不会和其主分片一起运行.&lt;/p&gt;
+&lt;h3&gt;文档元数据&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;index (索引)
+索引就是像关系数据库中的"数据库".通过映射可以定义成多种类型.
+索引是一个逻辑命名空间映射到一个或多个主要的分片,可以有零个或多个副本分片.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;document (文档)
+文档是存储在elasticsearch中的一个JSON文件.这是相当与关系数据库中表的一行数据.每个文档被存储在索引中,并具有一个类型和一个id.一个文档是一个JSON对象(也被称为在其他语言中的 hash / hashmap / associative array(关联数组)),其中包含零个或多个字段 或者键值对.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;原始JSON文档将被存储在索引的_source字段.在获得(getting) 或者搜索(searching)默认的返回时,得到或搜索文档.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;mapping (映射):
+映射是像关系数据库中的"模式定义".每个索引都有一个映射.它定义了每个索引的类型.再加上一些索引范围的设置.映射可以被明确地定义,或者在一个文档被索引的时候自动生成.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;type (类型):
+Type是相当于关系数据库中的"表".每种类型都有一列字段,用来定义文档的类型.映射定义了对在文档中的每个字段如何进行分析.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;source field (源字段)
+默认情况下,你的JSON文档将被索引存储在_source字段里面,所有的get(获取)和search(搜索)请求将返回的该字段。这将允许你直接从搜索结果中访问到源数据，而不需要再次发起请求检索。
+注：索引将返回完整的的JSON字符串给你，即使它包含无效的JSON。此字段里的内容不表示任何该对象里面的数据如何被索引。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;field (字段)
+文档中包含的一组字段或键值对.字段的值可以是一个简单的(标量)值(如字符串,整数,日期),或者一个嵌套的结构就像一个数组或对象.一个字段就是类似关系数据库表中的一列.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;映射的每个字段有一个字段的类型"type" ( &lt;strong&gt;不要与文档类型混淆&lt;/strong&gt; ),表示那种类型的数据可以存储在该字段里,如:整数 &lt;code&gt;&amp;lt;integer&amp;gt;&lt;/code&gt; , 字符串 &lt;code&gt;&amp;lt;string&amp;gt;&lt;/code&gt; , 对象 &lt;code&gt;&amp;lt;object&amp;gt;&lt;/code&gt; .映射还允许你定义(除其他事项外)一个字段的值如何进行分析.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;id (标识)
+每个文档ID标识了一个文档.一个文档的 索引/类型/ ID 必须是唯一的.如果没有提供ID,将是自动生成. (还可以看到路由 &lt;code&gt;&amp;lt;routing&amp;gt;&lt;/code&gt; ）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;角色关系对照&lt;/h3&gt;
+&lt;p&gt;elasticsearch 跟 MySQL 中定义数据格式的角色关系对照表如下:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;MySQL&lt;/th&gt;
+&lt;th align="center"&gt;备注&lt;/th&gt;
+&lt;th align="center"&gt;elasticsearch&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;database&lt;/td&gt;
+&lt;td align="center"&gt;many tables&lt;/td&gt;
+&lt;td align="center"&gt;index&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;table&lt;/td&gt;
+&lt;td align="center"&gt;many rows;one schema&lt;/td&gt;
+&lt;td align="center"&gt;type&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;row&lt;/td&gt;
+&lt;td align="center"&gt;many columns&lt;/td&gt;
+&lt;td align="center"&gt;document&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;以上都是一些基本概念的解释,参照对比MySQL,可以大致了了解ES存储结构关系.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;h2&gt;0x02 故障回顾&lt;/h2&gt;
+&lt;h3&gt;问题发生现象&lt;/h3&gt;
+&lt;p&gt;前天新接入一个需求,在elasticsearch建立索引,总是在不久之后崩溃,查看日志,ES甩出一坨坨内存不够用的警告,日志中并伴随着有java OutOfMemoryError的错误信息.用如下命令查看索引状态,发现在建的索引健康状态为Green.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;curl -XGET &amp;#39;http://localhost:9200/_cat/health&amp;#39;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;日志内存不足warn:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;[2015-07-21 11:39:01,458][WARN ][monitor.jvm              ] [Fagin] [gc][old][83840][226] duration [15.1s], collections [1]/[16.2s], total [15.1s]/[6.3m], memory [3.4gb]-&amp;gt;[2.7gb]/[3.8gb], all_pools {[young] [731.6mb]-&amp;gt;[115.9mb]/[1gb]}{[survivor] [136.5mb]-&amp;gt;[0b]/[136.5mb]}{[old] [2.5gb]-&amp;gt;[2.6gb]/[2.6gb]}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;然后逐渐有的节点不接受请求和响应,逐渐的脱离集群.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;[2015-07-21 11:45:25,978][WARN ][discovery.zen.publish    ] [Fagin] timed out waiting for all nodes to process published state [28846] (timeout [30s], pending nodes: [[Silvermane][o8o6aA_fTEu7TJnKlP9zNA][110-19-179.org][inet[/192.9.19.179:9300]]])
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;问题追查及分析&lt;/h3&gt;
+&lt;p&gt;推测是由于内存分配的太小导致,于是重启服务,把内存调整到32G内存重启跑起来,并且对JVM的GC过程添加监控,以为从此可以安心睡觉了.但是想不到悲剧即将发生.不到8个小时,内存又要被撑爆了!于是继续追查原因.&lt;/p&gt;
+&lt;p&gt;新建立一个小集群,小集群所有服务配置和大集群配置一样,唯一不同的是内存只分配为2g(大集群内存分配32G),开启双写模式,数据同时写入两个集群.&lt;/p&gt;
+&lt;p&gt;通过对日志的查看以及对jvm的监控,发现日志中有大量的WARN,而且每条都不重复&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;WARN&lt;/span&gt; &lt;span class="p"&gt;][&lt;/span&gt;&lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;mapper&lt;/span&gt;             &lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;Blue&lt;/span&gt; &lt;span class="n"&gt;Marvel&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;2015&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mo"&gt;07&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;21&lt;/span&gt;&lt;span class="n"&gt;_history&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="n"&gt;Type&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;xz&lt;/span&gt;&lt;span class="p"&gt;@&lt;/span&gt;&lt;span class="n"&gt;rl_tab&lt;/span&gt;&lt;span class="p"&gt;@&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;tieba&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;Theme_17&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;html&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="n"&gt;contains&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="sc"&gt;&amp;#39;.&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;it&lt;/span&gt; &lt;span class="n"&gt;is&lt;/span&gt; &lt;span class="n"&gt;recommended&lt;/span&gt; &lt;span class="n"&gt;not&lt;/span&gt; &lt;span class="n"&gt;to&lt;/span&gt; &lt;span class="n"&gt;include&lt;/span&gt; &lt;span class="n"&gt;it&lt;/span&gt; &lt;span class="n"&gt;within&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="n"&gt;type&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;
+&lt;span class="p"&gt;........&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;于是想起前几天接入的新的业务,可能是type字段有些非法字符,感觉不是问题所在,所以可以忽略.&lt;/p&gt;
+&lt;p&gt;在开启双写模式下,经过不到1个小时的时间,小集群内存就OOM了,集群瘫痪无相应了.此时开始注意到上面说的WARN,并根据实际数据写入量做分析,发现实际写入数据size也就不到2g左右,集群内存就被撑爆,而我的硬盘空间远远大于2g存储空间,感觉所有数据都被存到内存当中了,而不是存到硬盘当中了.于是打开监控查看之前OOM的整个历史记录.
+&lt;img alt="elasticsearch_oom1" src="/pictures/es_oom1.png" title="u&amp;quot;es_oom&amp;quot;" /&gt;&lt;/p&gt;
+&lt;hr /&gt;
+&lt;h2&gt;0x03 故障分析总结&lt;/h2&gt;
+&lt;p&gt;通过上面监控发现,随着我的数据写入量的增大,jvm每次完整一次gc后可用内存越来越少,存在内存泄露.而日志中继续不断报WARN.此时查看对应索引的mapping,发现长时间无法返回结果,查看数据写入逻辑得知,写入数据index中的type被当成一个变量,也就是每一个关键词都会在mapping中生成一个"[关键词]"的type,于是这会导致ES得到一条日志就会 &lt;code&gt;update_mapping&lt;/code&gt; ,更新 &lt;code&gt;cluster.metadata&lt;/code&gt;, &lt;code&gt;type&lt;/code&gt; 是 &lt;code&gt;mapping&lt;/code&gt; 中的一部分, &lt;code&gt;mapping&lt;/code&gt; 也用于配置元数据和type之间的关系;以上的使用可以理解为每有一个关键字,就会新建一张表,而 &lt;code&gt;mapping&lt;/code&gt; 是元数据,需要加载到内存,来管理各个索引每个对应字段的,最终会得到一个非常庞大的 &lt;code&gt;mapping&lt;/code&gt; ,从而内存不足,造成集群响应不了从而假死宕机.&lt;/p&gt;
+&lt;p&gt;以上都是理论,实践出真知,在服务没有宕机之前赶紧把有问题索引干掉,于是美好的事情发生了,内存回收正常,通过上图可以看到18:30分以后的监控数据是删掉有问题索引以后的jvm gc过程,一切恢复正常.&lt;/p&gt;
+&lt;p&gt;es索引的结构 &lt;code&gt;index -&amp;gt; shard -&amp;gt; segment&lt;/code&gt; ,是这样一个逻辑,如果用户搜 &lt;code&gt;/index/type/_search&lt;/code&gt; , 就需要有个办法快速过滤出满足需要的数据集,type是被索引起来的.有两种使用方式注意: &lt;strong&gt;不同type下不同field的类型如果不一样&lt;/strong&gt; 以及 &lt;strong&gt;不同_type下相同field&lt;/strong&gt; 都会在mapping新生成一个type,还是会浪费mapping空间,所以使用上需要注意.&lt;/p&gt;
+&lt;p&gt;但凡集群不稳定经常OOM的话就需要追查原因了,首先要做到有据可查,也就是要把能加监控的加监控,观察宕机情况,然后查看log,log的记录还是很详细的,跟着log來查相应原因,一般都好解决.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p&gt;关于ES相关文档：
+Elasticsearch权威指南1 &lt;sup id="fnref:ES_BOOK1"&gt;&lt;a class="footnote-ref" href="#fn:ES_BOOK1" rel="footnote"&gt;1&lt;/a&gt;&lt;/sup&gt;
+ElasticSearch 权威指南2 &lt;sup id="fnref:ES_BOOK2"&gt;&lt;a class="footnote-ref" href="#fn:ES_BOOK2" rel="footnote"&gt;2&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;div class="footnote"&gt;
+&lt;hr /&gt;
+&lt;ol&gt;
+&lt;li id="fn:ES_BOOK1"&gt;
+&lt;p&gt;https://www.gitbook.com/book/looly/elasticsearch-the-definitive-guide-cn/details&amp;#160;&lt;a class="footnote-backref" href="#fnref:ES_BOOK1" rev="footnote" title="Jump back to footnote 1 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id="fn:ES_BOOK2"&gt;
+&lt;p&gt;https://www.gitbook.com/book/fuxiaopang/learnelasticsearch/details&amp;#160;&lt;a class="footnote-backref" href="#fnref:ES_BOOK2" rev="footnote" title="Jump back to footnote 2 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;</summary><category term="elasticsearch oom"></category><category term="elasticsearch 调优"></category></entry><entry><title>Mozilla Heka使用</title><link href="http://bigbo.github.io/pages/2015/05/23/mozilla_heka/" rel="alternate"></link><updated>2015-05-27T23:30:00+08:00</updated><author><name>ljingb</name></author><id>tag:bigbo.github.io,2015-05-23:pages/2015/05/23/mozilla_heka/</id><summary type="html">&lt;p&gt;监控中时常需要对重要日志进行实时收集分析,之前一直使用 &lt;code&gt;logstash&lt;/code&gt; 來做agent,由于 &lt;code&gt;logstash&lt;/code&gt; 对系统强依赖 &lt;code&gt;Java_JDK&lt;/code&gt; ,从而使用起来需要受系统环境限制.
 作为对日志转发工具,对系统环境有限制的情况下可以有两个选择:&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;&lt;a href="https://github.com/bloonix/awesant"&gt;awesant&lt;/a&gt; :基于perl写的轻量级logstash&lt;/li&gt;

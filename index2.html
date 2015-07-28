@@ -68,6 +68,76 @@ src="http://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="F
                         <article>
                             <header>
                                 <h1 class="entry-title">
+                                    <a href="http://bigbo.github.io/pages/2015/03/26/logstash_performance/" rel="bookmark" title="Permalink to logstash-input-file以及logstash-output-kafka插件性能测试">
+                                       logstash-input-file以及logstash-output-kafka插件性能测试
+                                    </a>
+                                </h1>
+                            </header>
+                            <div class="entry-content">
+<footer class="post-info">
+    <address class="vcard author">
+        by <a class="url fn" href="http://bigbo.github.io/author/ljingb.html">ljingb</a>
+    </address>
+
+    in <a href="http://bigbo.github.io/category/technology.html">Technology</a>
+
+    on 2015-03-26
+
+        |
+        tags:         <a href="http://bigbo.github.io/tag/kafka.html">kafka</a>
+        <a href="http://bigbo.github.io/tag/xiao-xi-dui-lie.html">消息队列</a>
+        <a href="http://bigbo.github.io/tag/logstashcha-jian.html">logstash插件</a>
+        <a href="http://bigbo.github.io/tag/ri-zhi-chu-li.html">日志处理</a>
+
+
+        |
+        <a href="http://bigbo.github.io/pages/2015/03/26/logstash_performance/#disqus_thread">comments</a>
+
+    
+</footer><!-- /.post-info -->                                <p>最近项目需求,要了解下logstash的一些性能,根据现有的技术方案,主要是针对 <code>logstash-input-file</code> 插件以及 <code>logstash-output-kafka</code> 插件进行测试,不过最近关注 logstash 的人应该清楚,目前处于新老版本迭代期,老版本<a href="https://download.elasticsearch.org/logstash/logstash/logstash-1.4.2.tar.gz">1.4.2版本</a> 和新版本 <a href="http://download.elasticsearch.org/logstash/logstash/logstash-1.5.0.rc2.tar.gz">1.5.0RC2版本</a> ,<a href="http://chenlinux.com/2015/02/10/logstash-outputs-elasticsearch-http-memory-leak/">1.4.2版本内存泄露</a> 问题在1.5版本后得到改进,但是1.5还没出正式版本.以下是根据1.5RC2版本来进行测试对比.</p>
+<p>硬件环境:</p>
+<table>
+<thead>
+<tr>
+<th>CPU</th>
+<th>硬盘</th>
+<th>内存</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Intel CorporationXeonE5 v2/Core i7</td>
+<td>2TX1</td>
+<td>128G</td>
+</tr>
+</tbody>
+</table>
+<blockquote></blockquote>
+<p>软件环境:</p>
+<table>
+<thead>
+<tr>
+<th>系统</th>
+<th align="center">java_jdk</th>
+<th align="center">JVM</th>
+<th align="center">Kafka Configuration</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>centos6.5</td>
+<td align="center">1.7 ...</td></tr></tbody></table>
+                                <p class="readmore">
+                                    <a class="btn btn-small btn-info" href="http://bigbo.github.io/pages/2015/03/26/logstash_performance/">Read more...</a>
+                                </p>
+                            </div><!-- /.entry-content -->
+                            <hr/>
+                        </article>
+                    </li>
+                    <li>
+                        <article>
+                            <header>
+                                <h1 class="entry-title">
                                     <a href="http://bigbo.github.io/pages/2015/02/28/elasticsearch_hadoop/" rel="bookmark" title="Permalink to elasticsearch之hadoop插件使用">
                                        elasticsearch之hadoop插件使用
                                     </a>
@@ -152,51 +222,6 @@ src="http://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="F
                             <hr/>
                         </article>
                     </li>
-                    <li>
-                        <article>
-                            <header>
-                                <h1 class="entry-title">
-                                    <a href="http://bigbo.github.io/pages/2015/01/21/syslog_kafka/" rel="bookmark" title="Permalink to rsyslog与Kafka结合使用">
-                                       rsyslog与Kafka结合使用
-                                    </a>
-                                </h1>
-                            </header>
-                            <div class="entry-content">
-<footer class="post-info">
-    <address class="vcard author">
-        by <a class="url fn" href="http://bigbo.github.io/author/ljingb.html">ljingb</a>
-    </address>
-
-    in <a href="http://bigbo.github.io/category/technology.html">Technology</a>
-
-    on 2015-01-21
-
-        |
-        tags:         <a href="http://bigbo.github.io/tag/kafka.html">kafka</a>
-        <a href="http://bigbo.github.io/tag/xiao-xi-dui-lie.html">消息队列</a>
-        <a href="http://bigbo.github.io/tag/rsyslog.html">rsyslog</a>
-
-
-        |
-        <a href="http://bigbo.github.io/pages/2015/01/21/syslog_kafka/#disqus_thread">comments</a>
-
-    
-</footer><!-- /.post-info -->                                <h2>前言</h2>
-<p>最近在折腾 <a href="http://www.rsyslog.com/">Rsyslog</a> ,传输日志,对他怎么说呢,谁用谁知道,我仅仅是了解使用的程度,对于里面的坑以及使用策略还没有那么深入,不过日后会逐步的细化了解,其实现在对于日志传输来过网上一大堆技术方案任你选.但是感觉用rsyslog传输还是最方便,最快捷的.他以不变应万变,看图说话:</p>
-<p><img alt="rsyslog" src="/pictures/rsyslog_1.png" title="u&quot;rsyslog支持图&quot;" /></p>
-<p>可见rsyslog的覆盖面是相当的广泛.奈何近几日,打算把redis替换为 <a href="http://kafka.apache.org/">kafka</a> ,本篇主要记录 <code>rsyslog</code> 与 <code>kafka</code> 的对接使用. 上了.</p>
-<hr />
-<h2>Rsyslog对kafka的支持</h2>
-<p>通过对 <a href="http://www.rsyslog.com/doc/master/configuration/modules/omkafka.html#example">rsyslog官方文档</a> 查看,得知 <code>rsyslog</code> 对 <code>kafka</code> 的支持是 <code>v8.7.0</code> 版本后才提供的支持.通过 <a href="https://github.com/rsyslog/rsyslog/blob/v8-stable/ChangeLog">ChangeLog</a> 也可以看出 <code>V8.X</code> 的版本变化.</p>
-<p>查看本机的rsyslog版本:</p>
-<div class="highlight"><pre>rsyslog.x86_64                                      7.6.3-1.el6 ...</pre></div>
-                                <p class="readmore">
-                                    <a class="btn btn-small btn-info" href="http://bigbo.github.io/pages/2015/01/21/syslog_kafka/">Read more...</a>
-                                </p>
-                            </div><!-- /.entry-content -->
-                            <hr/>
-                        </article>
-                    </li>
                     </ol><!-- /#posts-list -->
 <p class="paginator">
         <a href="http://bigbo.github.io/index.html">&laquo;</a>
@@ -238,25 +263,27 @@ src="http://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="F
             <div>
                 <h2>Tags</h2>
                 <ul id="cloud">
-                     <li class="tag-1"><a href="http://bigbo.github.io/tag/kafka.html">kafka</a></li>
-                     <li class="tag-1"><a href="http://bigbo.github.io/tag/fen-bu-shi-wen-jian-xi-tong.html">分布式文件系统</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/rsyslog.html">rsyslog</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/elasticsearch-kuai-zhao.html">elasticsearch 快照</a></li>
-                     <li class="tag-1"><a href="http://bigbo.github.io/tag/fen-bu-shi-cun-chu.html">分布式存储</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/logstashcha-jian.html">logstash插件</a></li>
-                     <li class="tag-1"><a href="http://bigbo.github.io/tag/ri-zhi-chu-li.html">日志处理</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/wen-jian-jian-ting.html">文件监听</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/jian-kong.html">监控</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/hdfs.html">HDFS</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/pelican.html">pelican</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/elasticsearch-plugin.html">elasticsearch plugin</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/ri-zhi-zhuan-fa.html">日志转发</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/pelican_plugin.html">pelican_plugin</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/logstash.html">logstash</a></li>
-                     <li class="tag-1"><a href="http://bigbo.github.io/tag/moosefs.html">Moosefs</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/elasticsearch-pei-zhi.html">elasticsearch 配置</a></li>
                      <li class="tag-1"><a href="http://bigbo.github.io/tag/xiao-xi-dui-lie.html">消息队列</a></li>
+                     <li class="tag-1"><a href="http://bigbo.github.io/tag/fen-bu-shi-wen-jian-xi-tong.html">分布式文件系统</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/logstashcha-jian.html">logstash插件</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/hdfs.html">HDFS</a></li>
+                     <li class="tag-1"><a href="http://bigbo.github.io/tag/fen-bu-shi-cun-chu.html">分布式存储</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/elasticsearch-oom.html">elasticsearch oom</a></li>
                      <li class="tag-2"><a href="http://bigbo.github.io/tag/github-pages.html">github pages</a></li>
+                     <li class="tag-1"><a href="http://bigbo.github.io/tag/moosefs.html">Moosefs</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/rsyslog.html">rsyslog</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/elasticsearch-plugin.html">elasticsearch plugin</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/elasticsearch-pei-zhi.html">elasticsearch 配置</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/jian-kong.html">监控</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/ri-zhi-zhuan-fa.html">日志转发</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/wen-jian-jian-ting.html">文件监听</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/logstash.html">logstash</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/elasticsearch-diao-you.html">elasticsearch 调优</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/pelican.html">pelican</a></li>
+                     <li class="tag-1"><a href="http://bigbo.github.io/tag/kafka.html">kafka</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/pelican_plugin.html">pelican_plugin</a></li>
+                     <li class="tag-1"><a href="http://bigbo.github.io/tag/ri-zhi-chu-li.html">日志处理</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/elasticsearch-kuai-zhao.html">elasticsearch 快照</a></li>
                 </ul>
              </div>
 <!-- /.Tags -->
