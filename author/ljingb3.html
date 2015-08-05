@@ -63,13 +63,13 @@ src="http://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="F
             <div class="row-fluid">
 <div class="span9">
                 <section>
-                    <ol id="posts-list" class="hfeed" start="2">
+                    <ol id="posts-list" class="hfeed" start="5">
                     <li>
                         <article>
                             <header>
                                 <h1 class="entry-title">
-                                    <a href="http://bigbo.github.io/pages/2015/01/21/syslog_kafka/" rel="bookmark" title="Permalink to rsyslog与Kafka结合使用">
-                                       rsyslog与Kafka结合使用
+                                    <a href="http://bigbo.github.io/pages/2014/12/31/2014年终总结/" rel="bookmark" title="Permalink to 2014年终总结">
+                                       2014年终总结
                                     </a>
                                 </h1>
                             </header>
@@ -79,31 +79,26 @@ src="http://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="F
         by <a class="url fn" href="http://bigbo.github.io/author/ljingb.html">ljingb</a>
     </address>
 
-    in <a href="http://bigbo.github.io/category/technology.html">Technology</a>
+    in <a href="http://bigbo.github.io/category/gui-dang.html">归档</a>
 
-    on 2015-01-21
+    on 2014-12-31
 
-        |
-        tags:         <a href="http://bigbo.github.io/tag/kafka.html">kafka</a>
-        <a href="http://bigbo.github.io/tag/xiao-xi-dui-lie.html">消息队列</a>
-        <a href="http://bigbo.github.io/tag/rsyslog.html">rsyslog</a>
 
 
         |
-        <a href="http://bigbo.github.io/pages/2015/01/21/syslog_kafka/#disqus_thread">comments</a>
+        <a href="http://bigbo.github.io/pages/2014/12/31/2014年终总结/#disqus_thread">comments</a>
 
     
-</footer><!-- /.post-info -->                                <h2>前言</h2>
-<p>最近在折腾 <a href="http://www.rsyslog.com/">Rsyslog</a> ,传输日志,对他怎么说呢,谁用谁知道,我仅仅是了解使用的程度,对于里面的坑以及使用策略还没有那么深入,不过日后会逐步的细化了解,其实现在对于日志传输来过网上一大堆技术方案任你选.但是感觉用rsyslog传输还是最方便,最快捷的.他以不变应万变,看图说话:</p>
-<p><img alt="rsyslog" src="/pictures/rsyslog_1.png" title="u&quot;rsyslog支持图&quot;" /></p>
-<p>可见rsyslog的覆盖面是相当的广泛.奈何近几日,打算把redis替换为 <a href="http://kafka.apache.org/">kafka</a> ,本篇主要记录 <code>rsyslog</code> 与 <code>kafka</code> 的对接使用. 上了.</p>
+</footer><!-- /.post-info -->                                <p>在这2014年的结尾,陆陆续续的通过博客\微博\微信看到了好多人在对2014年做的一些总结.赶着2014的末班车,在此我也做些总结.</p>
 <hr />
-<h2>Rsyslog对kafka的支持</h2>
-<p>通过对 <a href="http://www.rsyslog.com/doc/master/configuration/modules/omkafka.html#example">rsyslog官方文档</a> 查看,得知 <code>rsyslog</code> 对 <code>kafka</code> 的支持是 <code>v8.7.0</code> 版本后才提供的支持.通过 <a href="https://github.com/rsyslog/rsyslog/blob/v8-stable/ChangeLog">ChangeLog</a> 也可以看出 <code>V8.X</code> 的版本变化.</p>
-<p>查看本机的rsyslog版本:</p>
-<div class="highlight"><pre>rsyslog.x86_64                                      7.6.3-1.el6 ...</pre></div>
+<h3>工作</h3>
+<p>其实总的来说这一年是不平凡的一年.对于一个职场小白来说,应该从老东家说起.</p>
+<p>那时还是在东三环内的23层,同事还是那么的欢乐,口味依旧那么重.工作环境是那么的轻松欢乐,以至于时间过得那么快,快得都想说句"时间都去哪了".不知不觉公司3月份搬家如期而至;与此同时,项目上遇到的问题比想象中的困难的多的多.最终不得不以结束告终.队伍重组,从而走向了人生的转折.</p>
+<p>4月份来到了@大神的团队,追随一群大神的脚步.开始了一堆高大上的工作.监控\分析\报警,井井有条.让我感到工作的责任还是如此重大.工作内容是如此神圣,虽不能光宗耀祖,但是足可以向身边人吹嘘一番.</p>
+<p>7月犹豫而又慌乱的时代.想想终究算是过去了,就让它淹没在这个时代吧.</p>
+<p>10月没想到该来的还是来了,换了工作,从网到神奇的网站.算是第一次跳槽.想想现在依旧对老东家怀念.也因此终不再犹豫.踏入一个三无地带,从此红旗自己扛,不再有上午茶,中午的安稳觉,下午的集体会;更多的是自己寻找解决方案 ...</p>
                                 <p class="readmore">
-                                    <a class="btn btn-small btn-info" href="http://bigbo.github.io/pages/2015/01/21/syslog_kafka/">Read more...</a>
+                                    <a class="btn btn-small btn-info" href="http://bigbo.github.io/pages/2014/12/31/2014年终总结/">Read more...</a>
                                 </p>
                             </div><!-- /.entry-content -->
                             <hr/>
@@ -113,8 +108,8 @@ src="http://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="F
                         <article>
                             <header>
                                 <h1 class="entry-title">
-                                    <a href="http://bigbo.github.io/pages/2015/01/17/kafka_web_console/" rel="bookmark" title="Permalink to kafka监控web端(添砖)">
-                                       kafka监控web端(添砖)
+                                    <a href="http://bigbo.github.io/pages/2014/12/28/create-blog/" rel="bookmark" title="Permalink to 用Pelican&GitHubPages搭建个人博客">
+                                       用Pelican&GitHubPages搭建个人博客
                                     </a>
                                 </h1>
                             </header>
@@ -126,113 +121,40 @@ src="http://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="F
 
     in <a href="http://bigbo.github.io/category/technology.html">Technology</a>
 
-    on 2015-01-17
+    on 2014-12-28
 
         |
-        tags:         <a href="http://bigbo.github.io/tag/kafka.html">kafka</a>
-        <a href="http://bigbo.github.io/tag/xiao-xi-dui-lie.html">消息队列</a>
-        <a href="http://bigbo.github.io/tag/jian-kong.html">监控</a>
+        tags:         <a href="http://bigbo.github.io/tag/github-pages.html">github pages</a>
+        <a href="http://bigbo.github.io/tag/pelican.html">pelican</a>
 
 
         |
-        <a href="http://bigbo.github.io/pages/2015/01/17/kafka_web_console/#disqus_thread">comments</a>
+        <a href="http://bigbo.github.io/pages/2014/12/28/create-blog/#disqus_thread">comments</a>
 
     
-</footer><!-- /.post-info -->                                <h2>前言</h2>
-<p>最近在了解消息队列,主要是之前用的是redis,redis固然非常好用,但是也有相应的使用场景.随着数据量的增长,redis已经不能满足现在的需求了.所以需要找个更好的替代品.问了一圈大牛,也google一番,锁定在<a href="http://kafka.apache.org/">kafka</a>上了.关于<strong>kafka</strong>怎么"玩",我也不知道,算是在摸索当中,想要知道安装使用等方法,请移步Google吧.虽然kafka我不会玩,但是我会玩怎么监控它.</p>
+</footer><!-- /.post-info -->                                <h3>前言</h3>
+<p>对于github.io早有认识,但是趋于各种懒,至今才动手.想把这几年的一些自己总结的东西做些记录,匆匆那些年,也应该给自己做些积累了.</p>
+<p>那么问题来了,建立github page有各种框架,例如:<a href="http://jekyllrb.com/">jekyll</a>,<a href="https://github.com/Shopify/liquid/wiki/Liquid-for-Designers">liquid</a>,<a href="http://pelican-docs-zh-cn.readthedocs.org/en/latest/">Pelican</a>等等,本文采用后者Pelican,关于Pelican不做过多介绍,想了解的就去连接到的文档看吧.</p>
 <hr />
-<h2>简介</h2>
+<h3>搭建基础</h3>
+<p>Pelican基于Python,相比Wordpress等其他框架来说,它比较轻,另外有些自己的<a href="http://docs.getpelican.com/en/3.3.0/#features">特性</a>,再配合免费的github pages,非常棒!主要是在linux下进行搭建,过程中会涉及如下技术知识,不过都是很初级的使用,即使新手也可以很容易的上手.</p>
 <blockquote>
-<p><a href="https://github.com/claudemamo/kafka-web-console">kafka-web-console</a>,是kafka自己的一个Web管理界面.开源的东西好是好,但是不知道是不是开源的大牛B们都不愿意写文档!!出来个东西,居然没有安装步骤,只是有一些简单的使用说明,甚至说明都不详细,对于此点表示很坑!</p>
+<p><a href="https://github.com">github</a></p>
+<p><a href="https://pages.github.com">github pages</a></p>
+<p><a href="http://git-scm.com/blog/2010/06/09/pro-git-zh.html">git</a></p>
+<p><a href="http://www.python.org">python</a></p>
+<p><a href="https://pypi.python.org/pypi/pip">pip</a></p>
+<p><a href="http://pelican-docs-zh-cn.readthedocs.org/en/latest">pelican</a></p>
+<p><a href="http://wowubuntu.com/markdown/">markdown</a></p>
 </blockquote>
 <hr />
-<h2>安装</h2>
+<h3>下载安装</h3>
+<p>由于是linux环境,大部分依赖是有的,没有的话可以通过yum/apt-get去安装.win的话就请参照安装.</p>
 <blockquote>
-<h5>1.先下载安装scala构建工具<a href="http://www.scala-sbt.org/0.13/tutorial/Installing-sbt-on-Linux.html">sbt</a></h5>
-</blockquote>
-<div class="highlight"><pre> #本安装环境为centos6.5
- curl https://bintray.com/sbt/rpm/rpm &gt; bintray-sbt-rpm.repo
- sudo mv ...</pre></div>
+<ol>
+<li>安装python (2.7+,低版本的不支持 ...</li></ol></blockquote>
                                 <p class="readmore">
-                                    <a class="btn btn-small btn-info" href="http://bigbo.github.io/pages/2015/01/17/kafka_web_console/">Read more...</a>
-                                </p>
-                            </div><!-- /.entry-content -->
-                            <hr/>
-                        </article>
-                    </li>
-                    <li>
-                        <article>
-                            <header>
-                                <h1 class="entry-title">
-                                    <a href="http://bigbo.github.io/pages/2015/01/16/Moosefs_three/" rel="bookmark" title="Permalink to MooseFS浅析(三)--chunk存储选择算法(搬砖)">
-                                       MooseFS浅析(三)--chunk存储选择算法(搬砖)
-                                    </a>
-                                </h1>
-                            </header>
-                            <div class="entry-content">
-<footer class="post-info">
-    <address class="vcard author">
-        by <a class="url fn" href="http://bigbo.github.io/author/ljingb.html">ljingb</a>
-    </address>
-
-    in <a href="http://bigbo.github.io/category/technology.html">Technology</a>
-
-    on 2015-01-16
-
-        |
-        tags:         <a href="http://bigbo.github.io/tag/fen-bu-shi-wen-jian-xi-tong.html">分布式文件系统</a>
-        <a href="http://bigbo.github.io/tag/moosefs.html">Moosefs</a>
-        <a href="http://bigbo.github.io/tag/fen-bu-shi-cun-chu.html">分布式存储</a>
-
-
-        |
-        <a href="http://bigbo.github.io/pages/2015/01/16/Moosefs_three/#disqus_thread">comments</a>
-
-    
-</footer><!-- /.post-info -->                                <h2>前言</h2>
-<p>如果自己设计一套chunkserver选择算法,我们要达到哪些目标呢?</p>
-<blockquote>
-<ol>
-<li>文件打散后尽量平均分布到各台chunkserver上</li>
-<li>各台chunkserver上的chunk数量尽可能的平均</li>
-<li>数据分发过程衡量系统负载，尽量把数据放在负载低的chunkserver上</li>
-<li>数据分发过程是否应该衡量各台chunkserver的可用空间?</li>
-<li>机架感应?</li>
-</ol>
-</blockquote>
-<p>回到MFS使用过程中会有一个疑问.chunkserver的选择是怎么选择的.怎么才能保证数据保存占用空间平衡甚至平均?这就是数据分布算法.也正是分布式文件系统的核心容.所以在此,转来一篇关于MFS的chunk存储选择算法的文章.</p>
-<hr />
-<h2>核心算法</h2>
-<p>还记得matocsserventry结构中的carry字段么,这个字段就是分布算法的核心.每台chunkserver会有自己的carry值,在选择chunkserver会将每台chunkserver按照carry从大到小做快速排序,优先选择carry值大的chunkserver来使用.</p>
-<p>在描述具体算法前,先介绍三个概念:</p>
-<blockquote>
-<ul>
-<li>
-<p>allcnt:mfs中可用的chunkserver的个数</p>
-</li>
-<li>
-<p>availcnt:mfs中当前可以直接存储数据的chunkserver的个数</p>
-</li>
-<li>
-<p>demand:当前文件的副本数目</p>
-</li>
-</ul>
-</blockquote>
-<p>先说allcnt,可用的chunkserver要满足下面几个条件:</p>
-<blockquote>
-<ol>
-<li>chunkserver是活着的</li>
-<li>chunkserver的总空间大于0</li>
-<li>chunkserver的可用空间(总空间-使用空间)大于1G</li>
-</ol>
-</blockquote>
-<p>availcnt指的是carry值大于1的可用chunkserver的个数.也就是在allcnt的约束条件上加一条carry值大于1.文件1.txt需要存储2个副本,但是mfs中仅仅有1台chunkserver可用,也就是<code>demand&gt;allcnt</code>的时候,mfs会自动减少文件的副本个数到allcnt,保证文件可以成功写入系统.</p>
-<p>关于carry有下面几个规则:</p>
-<blockquote>
-<ol>
-<li>仅carry值大于1的chunkserver可以存储新数据 ...</li></ol></blockquote>
-                                <p class="readmore">
-                                    <a class="btn btn-small btn-info" href="http://bigbo.github.io/pages/2015/01/16/Moosefs_three/">Read more...</a>
+                                    <a class="btn btn-small btn-info" href="http://bigbo.github.io/pages/2014/12/28/create-blog/">Read more...</a>
                                 </p>
                             </div><!-- /.entry-content -->
                             <hr/>
@@ -241,8 +163,7 @@ src="http://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="F
                     </ol><!-- /#posts-list -->
 <p class="paginator">
         <a href="http://bigbo.github.io/author/ljingb2.html">&laquo;</a>
-    Page 3 / 5
-        <a href="http://bigbo.github.io/author/ljingb4.html">&raquo;</a>
+    Page 3 / 3
 </p>
                 </section><!-- /#content -->
 </div>
@@ -279,27 +200,27 @@ src="http://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="F
             <div>
                 <h2>Tags</h2>
                 <ul id="cloud">
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/rsyslog.html">rsyslog</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/pelican_plugin.html">pelican_plugin</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/elasticsearch-diao-you.html">elasticsearch 调优</a></li>
-                     <li class="tag-2"><a href="http://bigbo.github.io/tag/github-pages.html">github pages</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/logstashcha-jian.html">logstash插件</a></li>
-                     <li class="tag-1"><a href="http://bigbo.github.io/tag/xiao-xi-dui-lie.html">消息队列</a></li>
-                     <li class="tag-1"><a href="http://bigbo.github.io/tag/ri-zhi-chu-li.html">日志处理</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/jian-kong.html">监控</a></li>
-                     <li class="tag-1"><a href="http://bigbo.github.io/tag/fen-bu-shi-cun-chu.html">分布式存储</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/elasticsearch-oom.html">elasticsearch oom</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/pelican.html">pelican</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/wen-jian-jian-ting.html">文件监听</a></li>
                      <li class="tag-4"><a href="http://bigbo.github.io/tag/elasticsearch-pei-zhi.html">elasticsearch 配置</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/pelican.html">pelican</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/logstashcha-jian.html">logstash插件</a></li>
+                     <li class="tag-2"><a href="http://bigbo.github.io/tag/github-pages.html">github pages</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/wen-jian-jian-ting.html">文件监听</a></li>
                      <li class="tag-1"><a href="http://bigbo.github.io/tag/fen-bu-shi-wen-jian-xi-tong.html">分布式文件系统</a></li>
-                     <li class="tag-1"><a href="http://bigbo.github.io/tag/moosefs.html">Moosefs</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/logstash.html">logstash</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/hdfs.html">HDFS</a></li>
-                     <li class="tag-1"><a href="http://bigbo.github.io/tag/kafka.html">kafka</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/ri-zhi-zhuan-fa.html">日志转发</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/elasticsearch-plugin.html">elasticsearch plugin</a></li>
                      <li class="tag-4"><a href="http://bigbo.github.io/tag/elasticsearch-kuai-zhao.html">elasticsearch 快照</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/elasticsearch-diao-you.html">elasticsearch 调优</a></li>
+                     <li class="tag-1"><a href="http://bigbo.github.io/tag/xiao-xi-dui-lie.html">消息队列</a></li>
+                     <li class="tag-1"><a href="http://bigbo.github.io/tag/fen-bu-shi-cun-chu.html">分布式存储</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/logstash.html">logstash</a></li>
+                     <li class="tag-1"><a href="http://bigbo.github.io/tag/moosefs.html">Moosefs</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/elasticsearch-oom.html">elasticsearch oom</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/rsyslog.html">rsyslog</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/hdfs.html">HDFS</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/jian-kong.html">监控</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/pelican_plugin.html">pelican_plugin</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/ri-zhi-zhuan-fa.html">日志转发</a></li>
+                     <li class="tag-1"><a href="http://bigbo.github.io/tag/kafka.html">kafka</a></li>
+                     <li class="tag-1"><a href="http://bigbo.github.io/tag/ri-zhi-chu-li.html">日志处理</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/elasticsearch-plugin.html">elasticsearch plugin</a></li>
                 </ul>
              </div>
 <!-- /.Tags -->
