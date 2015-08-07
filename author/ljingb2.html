@@ -68,6 +68,53 @@ src="http://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="F
                         <article>
                             <header>
                                 <h1 class="entry-title">
+                                    <a href="http://bigbo.github.io/pages/2015/01/23/logstash_kafka/" rel="bookmark" title="Permalink to logstash的kafka插件使用">
+                                       logstash的kafka插件使用
+                                    </a>
+                                </h1>
+                            </header>
+                            <div class="entry-content">
+<footer class="post-info">
+    <address class="vcard author">
+        by <a class="url fn" href="http://bigbo.github.io/author/ljingb.html">ljingb</a>
+    </address>
+
+    in <a href="http://bigbo.github.io/category/technology.html">Technology</a>
+
+    on 2015-01-23
+
+        |
+        tags:         <a href="http://bigbo.github.io/tag/kafka.html">kafka</a>
+        <a href="http://bigbo.github.io/tag/xiao-xi-dui-lie.html">消息队列</a>
+        <a href="http://bigbo.github.io/tag/logstash.html">logstash</a>
+        <a href="http://bigbo.github.io/tag/ri-zhi-chu-li.html">日志处理</a>
+
+
+        |
+        <a href="http://bigbo.github.io/pages/2015/01/23/logstash_kafka/#disqus_thread">comments</a>
+
+    
+</footer><!-- /.post-info -->                                <h2>前言</h2>
+<p>关于logstash可以产看其 <a href="http://logstash.net/">官网</a> ,对于英文有障碍的人士,或是想知道更多插件使用技巧的用户请移步 <a href="http://chenlinux.com/">@三斗室</a> 所著作 <a href="https://github.com/bigbo/logstash-best-practice-cn">logstash最佳实战</a> ,本片内容已经并入其中相关章节.</p>
+<hr />
+<h2>Logstash-kafka简介</h2>
+<p><a href="https://github.com/joekiller/logstash-kafka">https://github.com/joekiller/logstash-kafka</a></p>
+<p>插件已经正式合并进官方仓库，以下使用介绍基于<strong>logstash 1.4相关版本</strong>，1.5及以后版本的使用后续依照官方文档持续更新。</p>
+<p>插件本身内容非常简单，其主要依赖同一作者写的 <a href="https://github.com/joekiller/jruby-kafka">jruby-kafka</a> 模块。需要注意的是：<strong>该模块仅支持 Kafka－0.8 版本。如果是使用 0.7 版本 kafka 的，将无法直接使 jruby-kafka 该模块和 logstash-kafka 插件。</strong></p>
+<h2>安装</h2>
+<ul>
+<li>安装按照官方文档完全自动化的安装.或是可以通过以下方式手动自己安装插件，不过重点注意的是 <strong>kafka 的版本</strong>，上面已经指出了 ...</li></ul>
+                                <p class="readmore">
+                                    <a class="btn btn-small btn-info" href="http://bigbo.github.io/pages/2015/01/23/logstash_kafka/">Read more...</a>
+                                </p>
+                            </div><!-- /.entry-content -->
+                            <hr/>
+                        </article>
+                    </li>
+                    <li>
+                        <article>
+                            <header>
+                                <h1 class="entry-title">
                                     <a href="http://bigbo.github.io/pages/2015/01/21/syslog_kafka/" rel="bookmark" title="Permalink to rsyslog与Kafka结合使用">
                                        rsyslog与Kafka结合使用
                                     </a>
@@ -354,66 +401,6 @@ src="http://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="F
                             <hr/>
                         </article>
                     </li>
-                    <li>
-                        <article>
-                            <header>
-                                <h1 class="entry-title">
-                                    <a href="http://bigbo.github.io/pages/2015/01/05/Moosefs_one/" rel="bookmark" title="Permalink to MooseFS浅析(一)">
-                                       MooseFS浅析(一)
-                                    </a>
-                                </h1>
-                            </header>
-                            <div class="entry-content">
-<footer class="post-info">
-    <address class="vcard author">
-        by <a class="url fn" href="http://bigbo.github.io/author/ljingb.html">ljingb</a>
-    </address>
-
-    in <a href="http://bigbo.github.io/category/technology.html">Technology</a>
-
-    on 2015-01-05
-
-        |
-        tags:         <a href="http://bigbo.github.io/tag/fen-bu-shi-wen-jian-xi-tong.html">分布式文件系统</a>
-        <a href="http://bigbo.github.io/tag/moosefs.html">Moosefs</a>
-        <a href="http://bigbo.github.io/tag/fen-bu-shi-cun-chu.html">分布式存储</a>
-
-
-        |
-        <a href="http://bigbo.github.io/pages/2015/01/05/Moosefs_one/#disqus_thread">comments</a>
-
-    
-</footer><!-- /.post-info -->                                <h2>前言</h2>
-<p>之前面临大量数据存储问题,于是开始选择分布式文件系统.于是MooseFS便映入眼底.正好之前用过,所以直接拿来就用.光会用也不行,闲来之时对他进行了一些简单了解,不管是百度还是谷歌,搜到的都是零零散散的东西,更多的博客都是抄來抄去,所以打算自己做些整理,下面就我对MFS的认识进行一下总结.</p>
-<hr />
-<h2>简介</h2>
-<ul>
-<li>MooseFS优越特性如下：<blockquote>
-<ol>
-<li>高可用性(数据可以存储在多个机器上的多个副本)</li>
-<li>可动态扩展随时新增加机器或者是磁盘</li>
-<li>可回收在指定时间内删除的文件(“垃圾回收站”是一个系统级别的服务)</li>
-<li>可以对整个文件甚至在正在写入的文件创建文件的快照.</li>
-<li>使用和部署非常简单,直接mount使用</li>
-</ol>
-</blockquote>
-</li>
-</ul>
-<p>对于 <strong>Moosefs</strong> 的介绍我在此就不详细说了,更多介绍可以查看 <a href="http://www.moosefs.org/">官网</a> 以及 <a href="http://www.moosefs.com/how_to_get.html">英文版权威指南</a> 或是查看田逸所翻译总结的 <a href="https://github.com/bigbo/tools/blob/master/study/mfs/MooseFS%E6%9D%83%E5%A8%81%E6%8C%87%E5%8D%97.pdf">权威指南</a> ,以上介绍的比自己总结的可能更加详细.我后面的总结是对以上内容的补充.</p>
-<p><strong> *AD:更多资料详见<a href="https://github.com/bigbo/tools/tree/master/study/mfs">GitHub</a> </strong></p>
-<hr />
-<h2>系统结构</h2>
-<ul>
-<li>MFS文件系统结构包含4种角色:<blockquote>
-<ol>
-<li>管理服务器managing server(master):负责各个数据存储服务器的管理,文件读写调度,文件空间回收以及恢复.多节点拷贝.单个机器管理整个文件系统,用来存储记录每一个文件的Metadata(记录文件的大小 ...</li></ol></blockquote></li></ul>
-                                <p class="readmore">
-                                    <a class="btn btn-small btn-info" href="http://bigbo.github.io/pages/2015/01/05/Moosefs_one/">Read more...</a>
-                                </p>
-                            </div><!-- /.entry-content -->
-                            <hr/>
-                        </article>
-                    </li>
                     </ol><!-- /#posts-list -->
 <p class="paginator">
         <a href="http://bigbo.github.io/author/ljingb.html">&laquo;</a>
@@ -455,27 +442,28 @@ src="http://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="F
             <div>
                 <h2>Tags</h2>
                 <ul id="cloud">
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/elasticsearch-pei-zhi.html">elasticsearch 配置</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/pelican.html">pelican</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/logstashcha-jian.html">logstash插件</a></li>
-                     <li class="tag-2"><a href="http://bigbo.github.io/tag/github-pages.html">github pages</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/wen-jian-jian-ting.html">文件监听</a></li>
-                     <li class="tag-1"><a href="http://bigbo.github.io/tag/fen-bu-shi-wen-jian-xi-tong.html">分布式文件系统</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/elasticsearch-kuai-zhao.html">elasticsearch 快照</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/elasticsearch-diao-you.html">elasticsearch 调优</a></li>
-                     <li class="tag-1"><a href="http://bigbo.github.io/tag/xiao-xi-dui-lie.html">消息队列</a></li>
-                     <li class="tag-1"><a href="http://bigbo.github.io/tag/fen-bu-shi-cun-chu.html">分布式存储</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/logstash.html">logstash</a></li>
-                     <li class="tag-1"><a href="http://bigbo.github.io/tag/moosefs.html">Moosefs</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/elasticsearch-oom.html">elasticsearch oom</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/rsyslog.html">rsyslog</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/hdfs.html">HDFS</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/jian-kong.html">监控</a></li>
                      <li class="tag-4"><a href="http://bigbo.github.io/tag/pelican_plugin.html">pelican_plugin</a></li>
-                     <li class="tag-4"><a href="http://bigbo.github.io/tag/ri-zhi-zhuan-fa.html">日志转发</a></li>
-                     <li class="tag-1"><a href="http://bigbo.github.io/tag/kafka.html">kafka</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/elasticsearch-kuai-zhao.html">elasticsearch 快照</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/logstash.html">logstash</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/pelican.html">pelican</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/elasticsearch-oom.html">elasticsearch oom</a></li>
                      <li class="tag-1"><a href="http://bigbo.github.io/tag/ri-zhi-chu-li.html">日志处理</a></li>
+                     <li class="tag-1"><a href="http://bigbo.github.io/tag/xiao-xi-dui-lie.html">消息队列</a></li>
+                     <li class="tag-1"><a href="http://bigbo.github.io/tag/kafka.html">kafka</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/logstash-cha-jian.html">logstash 插件</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/hdfs.html">HDFS</a></li>
+                     <li class="tag-1"><a href="http://bigbo.github.io/tag/fen-bu-shi-cun-chu.html">分布式存储</a></li>
                      <li class="tag-4"><a href="http://bigbo.github.io/tag/elasticsearch-plugin.html">elasticsearch plugin</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/ri-zhi-zhuan-fa.html">日志转发</a></li>
+                     <li class="tag-2"><a href="http://bigbo.github.io/tag/github-pages.html">github pages</a></li>
+                     <li class="tag-1"><a href="http://bigbo.github.io/tag/moosefs.html">Moosefs</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/elasticsearch-diao-you.html">elasticsearch 调优</a></li>
+                     <li class="tag-1"><a href="http://bigbo.github.io/tag/fen-bu-shi-wen-jian-xi-tong.html">分布式文件系统</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/rsyslog.html">rsyslog</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/logstashcha-jian.html">logstash插件</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/wen-jian-jian-ting.html">文件监听</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/elasticsearch-pei-zhi.html">elasticsearch 配置</a></li>
+                     <li class="tag-4"><a href="http://bigbo.github.io/tag/jian-kong.html">监控</a></li>
                 </ul>
              </div>
 <!-- /.Tags -->
