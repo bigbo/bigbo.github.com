@@ -1174,7 +1174,9 @@ output {
 &lt;h4&gt;通过kopf插件进行设置&lt;/h4&gt;
 &lt;p&gt;&lt;a href="https://github.com/lmenezes/elasticsearch-kopf"&gt;elasticsearch-kopf&lt;/a&gt;,是一个对es集群管理综合插件,无需安装&lt;a href="http://lmenezes.com/elasticsearch-kopf/?location=http://localhost:9200"&gt;体验地址&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;备份恢复快照设置如图:&lt;/p&gt;
-&lt;p&gt;&lt;img alt="rsyslog" src="/pictures/es_hdfs.png" title="u&amp;quot;kopf设置&amp;quot;" /&gt;&lt;/p&gt;</summary><category term="elasticsearch 快照"></category><category term="elasticsearch plugin"></category><category term="HDFS"></category></entry><entry><title>logstash的kafka插件使用</title><link href="http://bigbo.github.io/pages/2015/01/23/logstash_kafka/" rel="alternate"></link><updated>2015-01-23T19:30:00+08:00</updated><author><name>ljingb</name></author><id>tag:bigbo.github.io,2015-01-23:pages/2015/01/23/logstash_kafka/</id><summary type="html">&lt;h2&gt;前言&lt;/h2&gt;
+&lt;p&gt;&lt;img alt="rsyslog" src="/pictures/es_hdfs.png" title="u&amp;quot;kopf设置&amp;quot;" /&gt;&lt;/p&gt;</summary><category term="elasticsearch 快照"></category><category term="elasticsearch plugin"></category><category term="HDFS"></category></entry><entry><title>logstash的kafka插件使用</title><link href="http://bigbo.github.io/pages/2015/01/23/logstash_kafka/" rel="alternate"></link><updated>2015-01-23T19:30:00+08:00</updated><author><name>ljingb</name></author><id>tag:bigbo.github.io,2015-01-23:pages/2015/01/23/logstash_kafka/</id><summary type="html">&lt;p&gt;&lt;strong&gt; 本篇为旧版,更新版本详见: &lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="http://bigbo.github.io/pages/2015/08/07/logstash_kafka_new/"&gt;http://bigbo.github.io/pages/2015/08/07/logstash_kafka_new/&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;前言&lt;/h2&gt;
 &lt;p&gt;关于logstash可以产看其 &lt;a href="http://logstash.net/"&gt;官网&lt;/a&gt; ,对于英文有障碍的人士,或是想知道更多插件使用技巧的用户请移步 &lt;a href="http://chenlinux.com/"&gt;@三斗室&lt;/a&gt; 所著作 &lt;a href="https://github.com/bigbo/logstash-best-practice-cn"&gt;logstash最佳实战&lt;/a&gt; ,本片内容已经并入其中相关章节.&lt;/p&gt;
 &lt;hr /&gt;
 &lt;h2&gt;Logstash-kafka简介&lt;/h2&gt;
