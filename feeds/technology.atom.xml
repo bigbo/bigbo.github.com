@@ -1369,6 +1369,9 @@ output {
 
 
 &lt;p&gt;可以清楚的查看到其实这个模块默认是不开启的.所以自己编译加入这个模块,编译好会在相应目录产生 &lt;code&gt;omkafka.so&lt;/code&gt; 这个文件,然后拷贝到 &lt;code&gt;/lib64/rsyslog/&lt;/code&gt; 目录下即可.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;更新提示: 最新V8稳定版已经提供RPM包的Rsyslog-kafka插件了,直接yum安装即可&lt;/li&gt;
+&lt;/ul&gt;
 &lt;hr /&gt;
 &lt;h2&gt;体验+设置&lt;/h2&gt;
 &lt;p&gt;使用需要在 &lt;code&gt;rsyslog.conf&lt;/code&gt; 配置文件下或是相应的配置文件中加入 &lt;code&gt;module(load="omkafka")&lt;/code&gt; 表示引入该模块.测试使用可以参照 &lt;a href="http://www.rsyslog.com/doc/master/configuration/modules/omkafka.html#example"&gt;文档中的示例&lt;/a&gt; .&lt;/p&gt;

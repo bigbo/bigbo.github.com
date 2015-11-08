@@ -120,6 +120,9 @@ src="http://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="F
 
 
 <p>可以清楚的查看到其实这个模块默认是不开启的.所以自己编译加入这个模块,编译好会在相应目录产生 <code>omkafka.so</code> 这个文件,然后拷贝到 <code>/lib64/rsyslog/</code> 目录下即可.</p>
+<ul>
+<li>更新提示: 最新V8稳定版已经提供RPM包的Rsyslog-kafka插件了,直接yum安装即可</li>
+</ul>
 <hr />
 <h2>体验+设置</h2>
 <p>使用需要在 <code>rsyslog.conf</code> 配置文件下或是相应的配置文件中加入 <code>module(load="omkafka")</code> 表示引入该模块.测试使用可以参照 <a href="http://www.rsyslog.com/doc/master/configuration/modules/omkafka.html#example">文档中的示例</a> .</p>
