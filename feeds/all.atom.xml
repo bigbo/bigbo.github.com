@@ -1,5 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>BigBo's blog</title><link href="http://bigbo.github.io/" rel="alternate"></link><link href="/feeds/all.atom.xml" rel="self"></link><id>http://bigbo.github.io/</id><updated>2016-01-01T01:42:00+08:00</updated><entry><title>2015(自嗨型)年终总结</title><link href="http://bigbo.github.io/pages/2015/12/31/2015%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/" rel="alternate"></link><updated>2016-01-01T01:42:00+08:00</updated><author><name>ljingb</name></author><id>tag:bigbo.github.io,2015-12-31:pages/2015/12/31/2015年终总结/</id><summary type="html">&lt;p&gt;算是续去年的节,今年免不了需要做个年终总结,当然是别人眼中的"自嗨".在我看来不是朋友圈的三言两语就能总结去年一年的过往,总结是需要长篇大论的扯淡的!&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>BigBo's blog</title><link href="http://bigbo.github.io/" rel="alternate"></link><link href="/feeds/all.atom.xml" rel="self"></link><id>http://bigbo.github.io/</id><updated>2016-02-28T23:30:00+08:00</updated><entry><title>elasticsearch调优之Merge</title><link href="http://bigbo.github.io/pages/2016/02/25/elasticsearch_store_config/" rel="alternate"></link><updated>2016-02-28T23:30:00+08:00</updated><author><name>ljingb</name></author><id>tag:bigbo.github.io,2016-02-25:pages/2016/02/25/elasticsearch_store_config/</id><summary type="html">&lt;h2&gt;0x01 背景&lt;/h2&gt;
+&lt;p&gt;天苍苍,野茫茫,过完春节就要忙,服务压力跟不上,用服务器数量来抗.多数人认为这个套路能简单粗暴的解决问题,当然我也不例外.&lt;/p&gt;
+&lt;p&gt;春节刚过,我司流量跟着上来了,作为基础的日志处理服务,需要保障流量上涨后的性能和稳定.重头就在es集群性能.于是着手对集群整体进行硬件上的资源扩充.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;提高服务器配置和数量
+从原来的8台机器扩充到11台机器(这里指的是data node),从原来的 &lt;code&gt;24 core/128g mem/4T * 12 data&lt;/code&gt; 扩充到 &lt;code&gt;32 core/128g mem/1T * 24 data&lt;/code&gt;.(不要羡慕我司的土豪,有钱就是任性!).&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;增加消费者(index端)
+ 部分日志处理从 logstash 换成 &lt;a href="https://github.com/childe/hangout"&gt;hangout&lt;/a&gt; ( java实现的类Logstash几个常用input/filter/output,在效率上面有很大提升,感谢@携程同学的开源)
+ 并调优相关写入策率: &lt;code&gt;flush_interval&lt;/code&gt; , &lt;code&gt;bulk_size&lt;/code&gt; 等调整&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;性能预估
+原来集群的配置可以抗住每天的20亿条的日志写入,峰值能到6w--8w条/s,读取性能每天pv在10w+左右,当然以上数据还不是集群的瓶颈点,扩展后的集群感觉怎么也能在原来的基础上写入和读取性能翻翻了.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;根据以上的部署调整,心想万事大吉,只欠大流量的东风.&lt;/p&gt;
+&lt;h2&gt;0x02 实践出真知&lt;/h2&gt;
+&lt;p&gt;随着流量上涨,日志量的上涨后,上述服务跑几天后,发现事实却没有想想的那么完美.前端展示时常刷不出统计监控数据,具体表现为集群的写入数据跟不上,查看监控发现,写入情况实时监控出现经常发生写入性能陡降:
+zb陡降图
+&lt;img alt="zabbix_write" src="/pictures/zabbix_es_write.png" title="u&amp;quot;es_write&amp;quot;" /&gt;&lt;/p&gt;
+&lt;p&gt;看到上面的问题后,心中犹如飘过无数个草泥马,非常的不友好了.....
+于是赶紧通过bigdesk排查下是什么原因.
+bigdesk中表现出集群中有一两台服务器的bulk队列出现拥堵,从而阻塞整个集群的写入性能:&lt;/p&gt;
+&lt;p&gt;bulk拥堵图
+&lt;img alt="bulk_quene" src="/pictures/bulk_queue.png" title="u&amp;quot;es_store_bulk&amp;quot;" /&gt;&lt;/p&gt;
+&lt;p&gt;似乎有点头目了,继续追查,马上去bulk拥堵的data节点上去翻日志查看,出现大量info提示:
+info图
+&lt;img alt="info" src="/pictures/log_info.png" title="u&amp;quot;es_log_info&amp;quot;" /&gt;&lt;/p&gt;
+&lt;p&gt;感觉发现了问题所在,google了下上面的日志,得出的结论是,es集群的磁盘有瓶颈,写入的速度跟不上数据刷新到磁盘的速度了,造成了写阻塞.有人建议用ssd,就说我司比较土豪,但是还不至于土豪到随便就来10台ssd的机器让我把玩吧.
+开始怀疑人生了,难道这么NB配置的服务器还不能满足现在的需求吗?于是开始登陆到相应服务器上看看各项性能负载情况,什么cpu load阿,iostat阿,都查了一圈,结果整台机器的负载连10%都不到,不是机器负载的问题阿.开始有点蒙圈了.&lt;/p&gt;
+&lt;p&gt;自己整不明白请外援,请教了下 @wood 叔叔,@wood 叔叔授人以渔,发来一篇官方文档:&lt;a href="https://www.elastic.co/guide/en/elasticsearch/reference/1.7/index-modules-store.html"&gt;Elasticsearch Reference [1.7] » Index Modules » Store&lt;/a&gt;,其中 &lt;code&gt;Store Level Throttlingedit&lt;/code&gt; 段已经指出相应问题所在.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;官方文档解读
+ 萨打扫打扫得&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;此问题其实包含es的1.x版本.看文档中2.x版本没有相关内容的阐述(手头也没测试过2.x版).&lt;/p&gt;
+&lt;h2&gt;0x03 调优设置&lt;/h2&gt;
+&lt;p&gt;进行对集群的 &lt;code&gt;Store Level Throttlingedit&lt;/code&gt; 相关参数进行调整设置,设置前提是io没有瓶颈,当然调整后最好监控看下io负载.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;curl
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;0x04 其他相关&lt;/h2&gt;
+&lt;p&gt;最后要说的一点是ES的版本迭代很快，对于Recovery的机制也在不断的优化中。 其中有一些版本甚至引入了一些bug，比如在ES1.4.x有严重的translog recovery bug，导致大的索引trans log recovery几乎无法完成 （issue #9226）  。因此实际使用中如果遇到问题，最好在Github的issue list里搜索一下，看是否使用的版本有其他人反映同样的问题。&lt;/p&gt;</summary><category term="elasticsearch 调优"></category><category term="elasticsearch merge"></category><category term="elasticsearch store 设置"></category></entry><entry><title>2015(自嗨型)年终总结</title><link href="http://bigbo.github.io/pages/2015/12/31/2015%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/" rel="alternate"></link><updated>2016-01-01T01:42:00+08:00</updated><author><name>ljingb</name></author><id>tag:bigbo.github.io,2015-12-31:pages/2015/12/31/2015年终总结/</id><summary type="html">&lt;p&gt;算是续去年的节,今年免不了需要做个年终总结,当然是别人眼中的"自嗨".在我看来不是朋友圈的三言两语就能总结去年一年的过往,总结是需要长篇大论的扯淡的!&lt;/p&gt;
 &lt;hr /&gt;
 &lt;h3&gt;0X01 工作&lt;/h3&gt;
 &lt;p&gt;从2014年就开始注定,一年的工作都放在了搞日志分析上&lt;/p&gt;

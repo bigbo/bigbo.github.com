@@ -68,6 +68,54 @@ src="http://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="F
                         <article>
                             <header>
                                 <h1 class="entry-title">
+                                    <a href="http://bigbo.github.io/pages/2016/02/25/elasticsearch_store_config/" rel="bookmark" title="Permalink to elasticsearch调优之Merge">
+                                       elasticsearch调优之Merge
+                                    </a>
+                                </h1>
+                            </header>
+                            <div class="entry-content">
+<footer class="post-info">
+    <address class="vcard author">
+        by <a class="url fn" href="http://bigbo.github.io/author/ljingb.html">ljingb</a>
+    </address>
+
+    in <a href="http://bigbo.github.io/category/technology.html">Technology</a>
+
+    on 2016-02-25
+
+        |
+        tags:         <a href="http://bigbo.github.io/tag/elasticsearch-diao-you.html">elasticsearch 调优</a>
+        <a href="http://bigbo.github.io/tag/elasticsearch-merge.html">elasticsearch merge</a>
+        <a href="http://bigbo.github.io/tag/elasticsearch-store-she-zhi.html">elasticsearch store 设置</a>
+
+
+        |
+        <a href="http://bigbo.github.io/pages/2016/02/25/elasticsearch_store_config/#disqus_thread">comments</a>
+
+    
+</footer><!-- /.post-info -->                                <h2>0x01 背景</h2>
+<p>天苍苍,野茫茫,过完春节就要忙,服务压力跟不上,用服务器数量来抗.多数人认为这个套路能简单粗暴的解决问题,当然我也不例外.</p>
+<p>春节刚过,我司流量跟着上来了,作为基础的日志处理服务,需要保障流量上涨后的性能和稳定.重头就在es集群性能.于是着手对集群整体进行硬件上的资源扩充.</p>
+<ul>
+<li>
+<p>提高服务器配置和数量
+从原来的8台机器扩充到11台机器(这里指的是data node),从原来的 <code>24 core/128g mem/4T * 12 data</code> 扩充到 <code>32 core/128g mem/1T * 24 data</code>.(不要羡慕我司的土豪,有钱就是任性!).</p>
+</li>
+<li>
+<p>增加消费者(index端)
+ 部分日志处理从 logstash 换成 <a href="https://github.com/childe/hangout">hangout</a> ( java实现的类Logstash几个常用input/filter/output,在效率上面有很大提升,感谢@携程同学的开源)
+ 并调优相关写入策率 ...</p></li></ul>
+                                <p class="readmore">
+                                    <a class="btn btn-small btn-info" href="http://bigbo.github.io/pages/2016/02/25/elasticsearch_store_config/">Read more...</a>
+                                </p>
+                            </div><!-- /.entry-content -->
+                            <hr/>
+                        </article>
+                    </li>
+                    <li>
+                        <article>
+                            <header>
+                                <h1 class="entry-title">
                                     <a href="http://bigbo.github.io/pages/2015/12/31/2015年终总结/" rel="bookmark" title="Permalink to 2015(自嗨型)年终总结">
                                        2015(自嗨型)年终总结
                                     </a>
@@ -290,76 +338,6 @@ ES_HEAP_SIZE=32g
 # max direct memory ...</pre></div>
                                 <p class="readmore">
                                     <a class="btn btn-small btn-info" href="http://bigbo.github.io/pages/2015/04/10/elasticsearch_config/">Read more...</a>
-                                </p>
-                            </div><!-- /.entry-content -->
-                            <hr/>
-                        </article>
-                    </li>
-                    <li>
-                        <article>
-                            <header>
-                                <h1 class="entry-title">
-                                    <a href="http://bigbo.github.io/pages/2015/03/26/logstash_performance/" rel="bookmark" title="Permalink to logstash-input-file以及logstash-output-kafka插件性能测试">
-                                       logstash-input-file以及logstash-output-kafka插件性能测试
-                                    </a>
-                                </h1>
-                            </header>
-                            <div class="entry-content">
-<footer class="post-info">
-    <address class="vcard author">
-        by <a class="url fn" href="http://bigbo.github.io/author/ljingb.html">ljingb</a>
-    </address>
-
-    in <a href="http://bigbo.github.io/category/technology.html">Technology</a>
-
-    on 2015-03-26
-
-        |
-        tags:         <a href="http://bigbo.github.io/tag/kafka.html">kafka</a>
-        <a href="http://bigbo.github.io/tag/xiao-xi-dui-lie.html">消息队列</a>
-        <a href="http://bigbo.github.io/tag/logstashcha-jian.html">logstash插件</a>
-        <a href="http://bigbo.github.io/tag/ri-zhi-chu-li.html">日志处理</a>
-
-
-        |
-        <a href="http://bigbo.github.io/pages/2015/03/26/logstash_performance/#disqus_thread">comments</a>
-
-    
-</footer><!-- /.post-info -->                                <p>最近项目需求,要了解下logstash的一些性能,根据现有的技术方案,主要是针对 <code>logstash-input-file</code> 插件以及 <code>logstash-output-kafka</code> 插件进行测试,不过最近关注 logstash 的人应该清楚,目前处于新老版本迭代期,老版本<a href="https://download.elasticsearch.org/logstash/logstash/logstash-1.4.2.tar.gz">1.4.2版本</a> 和新版本 <a href="http://download.elasticsearch.org/logstash/logstash/logstash-1.5.0.rc2.tar.gz">1.5.0RC2版本</a> ,<a href="http://chenlinux.com/2015/02/10/logstash-outputs-elasticsearch-http-memory-leak/">1.4.2版本内存泄露</a> 问题在1.5版本后得到改进,但是1.5还没出正式版本.以下是根据1.5RC2版本来进行测试对比.</p>
-<p>硬件环境:</p>
-<table>
-<thead>
-<tr>
-<th>CPU</th>
-<th>硬盘</th>
-<th>内存</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Intel CorporationXeonE5 v2/Core i7</td>
-<td>2TX1</td>
-<td>128G</td>
-</tr>
-</tbody>
-</table>
-<blockquote></blockquote>
-<p>软件环境:</p>
-<table>
-<thead>
-<tr>
-<th>系统</th>
-<th align="center">java_jdk</th>
-<th align="center">JVM</th>
-<th align="center">Kafka Configuration</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>centos6.5</td>
-<td align="center">1.7 ...</td></tr></tbody></table>
-                                <p class="readmore">
-                                    <a class="btn btn-small btn-info" href="http://bigbo.github.io/pages/2015/03/26/logstash_performance/">Read more...</a>
                                 </p>
                             </div><!-- /.entry-content -->
                             <hr/>

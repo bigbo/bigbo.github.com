@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="author" content="ljingb" />
+    <meta name="robots" content="index, follow"/>
+
+    <meta property="og:title" content="elasticsearch调优之Merge"/>
+    <meta property="og:url" content="http://bigbo.github.io/pages/2016/02/25/elasticsearch_store_config/"/>
+    <meta property="og:site_name" content="BigBo's blog"/>
+    <meta property="og:type" content="article"/>
+
+    <link rel="canonical" href="http://bigbo.github.io/pages/2016/02/25/elasticsearch_store_config/" />
+
+    <title>elasticsearch调优之Merge | BigBo's blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" type="text/css" href="//libs.baidu.com/fontawesome/4.0.3/css/font-awesome.css" />
+    <link rel="stylesheet" type="text/css" href="//libs.baidu.com/bootstrap/2.3.2/css/bootstrap.min.css" />
+
+    <link rel="stylesheet" type="text/css" href="http://bigbo.github.io/theme/css/main.css" />
+    <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="BigBo's blog Atom Feed" />
+
+    <script type="text/javascript">var switchTo5x=true;</script>
+    <script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
+    <script type="text/javascript">
+        stLight.options({
+            publisher: "",
+            doNotHash: false,
+            doNotCopy: false,
+            hashAddressBar: false
+        });
+    </script>
+</head>
+
+<body id="index">
+<a class="hidden-phone" href="https://github.com/bigbo">
+<img style="position: absolute; top: 0; right: 0; border: 0;"
+src="http://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Follow me on GitHub" />
+</a>
+    <div class="row-fluid">
+        <div class="span10 offset1">
+            <header id="banner" >
+                <h1>
+                    <a href="http://bigbo.github.io/">BigBo's blog </a>
+                </h1>
+                <nav class="navbar">
+                    <div class="navbar-inner">
+                        <ul class="nav">
+                            <li ><a href="http://bigbo.github.io/pages/about/">About</a></li>
+                            <li ><a href="http://bigbo.github.io/category/gui-dang.html">归档</a></li>
+                            <li class="active"><a href="http://bigbo.github.io/category/technology.html">Technology</a></li>
+                        </ul>
+
+                    </div>
+                </nav>
+            </header><!-- /#banner -->
+        </div>
+    </div>
+
+    <div class="row-fluid">
+        <div class="span10 offset1">
+            <div class="row-fluid">
+<div class="span10 offset1">
+  <section>
+    <article>
+      <header>
+        <h1 class="entry-title">
+          <a href="http://bigbo.github.io/pages/2016/02/25/elasticsearch_store_config/" rel="bookmark"
+             title="Permalink to elasticsearch调优之Merge">elasticsearch调优之Merge</a></h1>
+      </header>
+      <div class="entry-content">
+<footer class="post-info">
+    <address class="vcard author">
+        by <a class="url fn" href="http://bigbo.github.io/author/ljingb.html">ljingb</a>
+    </address>
+
+    in <a href="http://bigbo.github.io/category/technology.html">Technology</a>
+
+    on 2016-02-25
+
+        |
+        tags:         <a href="http://bigbo.github.io/tag/elasticsearch-diao-you.html">elasticsearch 调优</a>
+        <a href="http://bigbo.github.io/tag/elasticsearch-merge.html">elasticsearch merge</a>
+        <a href="http://bigbo.github.io/tag/elasticsearch-store-she-zhi.html">elasticsearch store 设置</a>
+
+
+        |
+        <a href="http://bigbo.github.io/pages/2016/02/25/elasticsearch_store_config/#disqus_thread">comments</a>
+
+    
+</footer><!-- /.post-info -->
+
+        <h2>0x01 背景</h2>
+<p>天苍苍,野茫茫,过完春节就要忙,服务压力跟不上,用服务器数量来抗.多数人认为这个套路能简单粗暴的解决问题,当然我也不例外.</p>
+<p>春节刚过,我司流量跟着上来了,作为基础的日志处理服务,需要保障流量上涨后的性能和稳定.重头就在es集群性能.于是着手对集群整体进行硬件上的资源扩充.</p>
+<ul>
+<li>
+<p>提高服务器配置和数量
+从原来的8台机器扩充到11台机器(这里指的是data node),从原来的 <code>24 core/128g mem/4T * 12 data</code> 扩充到 <code>32 core/128g mem/1T * 24 data</code>.(不要羡慕我司的土豪,有钱就是任性!).</p>
+</li>
+<li>
+<p>增加消费者(index端)
+ 部分日志处理从 logstash 换成 <a href="https://github.com/childe/hangout">hangout</a> ( java实现的类Logstash几个常用input/filter/output,在效率上面有很大提升,感谢@携程同学的开源)
+ 并调优相关写入策率: <code>flush_interval</code> , <code>bulk_size</code> 等调整</p>
+</li>
+<li>
+<p>性能预估
+原来集群的配置可以抗住每天的20亿条的日志写入,峰值能到6w--8w条/s,读取性能每天pv在10w+左右,当然以上数据还不是集群的瓶颈点,扩展后的集群感觉怎么也能在原来的基础上写入和读取性能翻翻了.</p>
+</li>
+</ul>
+<p>根据以上的部署调整,心想万事大吉,只欠大流量的东风.</p>
+<h2>0x02 实践出真知</h2>
+<p>随着流量上涨,日志量的上涨后,上述服务跑几天后,发现事实却没有想想的那么完美.前端展示时常刷不出统计监控数据,具体表现为集群的写入数据跟不上,查看监控发现,写入情况实时监控出现经常发生写入性能陡降:
+zb陡降图
+<img alt="zabbix_write" src="/pictures/zabbix_es_write.png" title="u&quot;es_write&quot;" /></p>
+<p>看到上面的问题后,心中犹如飘过无数个草泥马,非常的不友好了.....
+于是赶紧通过bigdesk排查下是什么原因.
+bigdesk中表现出集群中有一两台服务器的bulk队列出现拥堵,从而阻塞整个集群的写入性能:</p>
+<p>bulk拥堵图
+<img alt="bulk_quene" src="/pictures/bulk_queue.png" title="u&quot;es_store_bulk&quot;" /></p>
+<p>似乎有点头目了,继续追查,马上去bulk拥堵的data节点上去翻日志查看,出现大量info提示:
+info图
+<img alt="info" src="/pictures/log_info.png" title="u&quot;es_log_info&quot;" /></p>
+<p>感觉发现了问题所在,google了下上面的日志,得出的结论是,es集群的磁盘有瓶颈,写入的速度跟不上数据刷新到磁盘的速度了,造成了写阻塞.有人建议用ssd,就说我司比较土豪,但是还不至于土豪到随便就来10台ssd的机器让我把玩吧.
+开始怀疑人生了,难道这么NB配置的服务器还不能满足现在的需求吗?于是开始登陆到相应服务器上看看各项性能负载情况,什么cpu load阿,iostat阿,都查了一圈,结果整台机器的负载连10%都不到,不是机器负载的问题阿.开始有点蒙圈了.</p>
+<p>自己整不明白请外援,请教了下 @wood 叔叔,@wood 叔叔授人以渔,发来一篇官方文档:<a href="https://www.elastic.co/guide/en/elasticsearch/reference/1.7/index-modules-store.html">Elasticsearch Reference [1.7] » Index Modules » Store</a>,其中 <code>Store Level Throttlingedit</code> 段已经指出相应问题所在.</p>
+<ul>
+<li>官方文档解读
+ 萨打扫打扫得</li>
+</ul>
+<p>此问题其实包含es的1.x版本.看文档中2.x版本没有相关内容的阐述(手头也没测试过2.x版).</p>
+<h2>0x03 调优设置</h2>
+<p>进行对集群的 <code>Store Level Throttlingedit</code> 相关参数进行调整设置,设置前提是io没有瓶颈,当然调整后最好监控看下io负载.</p>
+<div class="highlight"><pre>curl
+</pre></div>
+
+
+<h2>0x04 其他相关</h2>
+<p>最后要说的一点是ES的版本迭代很快，对于Recovery的机制也在不断的优化中。 其中有一些版本甚至引入了一些bug，比如在ES1.4.x有严重的translog recovery bug，导致大的索引trans log recovery几乎无法完成 （issue #9226）  。因此实际使用中如果遇到问题，最好在Github的issue list里搜索一下，看是否使用的版本有其他人反映同样的问题。</p>
+
+      </div><!-- /.entry-content -->
+
+        <div class="comments">
+                <h2>Comments !</h2>
+                    <!-- Duoshuo Comment BEGIN -->
+                        <div class="ds-thread"></div>
+                            <script type="text/javascript">
+        var duoshuoQuery = {short_name:"bigbo"};
+  (function() {
+      var ds = document.createElement('script');
+         ds.type = 'text/javascript';ds.async = true;
+            ds.src = 'http://static.duoshuo.com/embed.js';
+               ds.charset = 'UTF-8';
+                  (document.getElementsByTagName('head')[0]
+                       || document.getElementsByTagName('body')[0]).appendChild(ds);
+
+                     })();
+  </script>
+    <noscript>Please enable JavaScript to view the comments.</noscript>
+    <!-- Duoshuo Comment END -->
+
+
+    </article>
+  </section>
+</div>
+            </div>
+        </div>
+    </div>
+
+    <footer id="site-footer">
+        <div class="row-fluid">
+            <div class="span10 offset1">
+                <address>
+                    <p>
+                    Copyright 2014-2015 by <a href="http://bigbo.github.io/">ljingb</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                    </p>
+                    <p>
+                    Powered by <a href="http://getpelican.com/">Pelican</a>,<a href="http://github.com/jsliang/pelican-fresh/">Fresh</a> is a responsive theme designed by <a href="http://jsliang.com/">jsliang</a> and <a href="https://github.com/jsliang/pelican-fresh/graphs/contributors">contributors</a>.
+                    </p>
+                </address>
+            </div>
+        </div>
+    </footer>
+
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-58118410-1']);
+    _gaq.push(['_trackPageview']);
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+    <script src="//libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+    <script src="//libs.baidu.com/bootstrap/2.3.2/css/bootstrap.min.css"></script>
+</body>
+</html>
