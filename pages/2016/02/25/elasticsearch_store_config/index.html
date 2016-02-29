@@ -113,31 +113,50 @@ src="http://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="F
 <h2>0x02 实践出真知</h2>
 <p>随着流量上涨,日志量的上涨后,上述服务跑几天后,发现事实却没有想想的那么完美.前端展示时常刷不出统计监控数据,具体表现为集群的写入数据跟不上,查看监控发现,写入情况实时监控出现经常发生写入性能陡降:
 zb陡降图
-<img alt="zabbix_write" src="/pictures/zabbix_es_write.png" title="u&quot;es_write&quot;" /></p>
+<img alt="zabbix_write" src="/pictures/zabbix_es_write1.png" title="u&quot;es_write&quot;" /></p>
 <p>看到上面的问题后,心中犹如飘过无数个草泥马,非常的不友好了.....
 于是赶紧通过bigdesk排查下是什么原因.
-bigdesk中表现出集群中有一两台服务器的bulk队列出现拥堵,从而阻塞整个集群的写入性能:</p>
+bigdesk中表现出集群中有一两台服务器的bulk队列出现bulk的count数居高不下,时间一长随之而来bulk的queue也随之增大,从而阻塞整个集群的写入性能:</p>
 <p>bulk拥堵图
 <img alt="bulk_quene" src="/pictures/bulk_queue.png" title="u&quot;es_store_bulk&quot;" /></p>
+<p>当然也可通过命令查看各个节点的详细信息:</p>
+<div class="highlight"><pre>curl -sXGET &quot;http://localhost:9200/_cat/thread_pool?v&quot;
+</pre></div>
+
+
 <p>似乎有点头目了,继续追查,马上去bulk拥堵的data节点上去翻日志查看,出现大量info提示:
 info图
 <img alt="info" src="/pictures/log_info.png" title="u&quot;es_log_info&quot;" /></p>
-<p>感觉发现了问题所在,google了下上面的日志,得出的结论是,es集群的磁盘有瓶颈,写入的速度跟不上数据刷新到磁盘的速度了,造成了写阻塞.有人建议用ssd,就说我司比较土豪,但是还不至于土豪到随便就来10台ssd的机器让我把玩吧.
+<p>感觉发现了问题所在,google了下上面的日志,得出的结论是,es集群的磁盘有瓶颈,是因为merge速率跟不上数据进来的速率了,造成了写阻塞.有人建议用ssd,就说我司比较土豪,但是还不至于土豪到随便就来10台ssd的机器让我把玩吧.
 开始怀疑人生了,难道这么NB配置的服务器还不能满足现在的需求吗?于是开始登陆到相应服务器上看看各项性能负载情况,什么cpu load阿,iostat阿,都查了一圈,结果整台机器的负载连10%都不到,不是机器负载的问题阿.开始有点蒙圈了.</p>
 <p>自己整不明白请外援,请教了下 @wood 叔叔,@wood 叔叔授人以渔,发来一篇官方文档:<a href="https://www.elastic.co/guide/en/elasticsearch/reference/1.7/index-modules-store.html">Elasticsearch Reference [1.7] » Index Modules » Store</a>,其中 <code>Store Level Throttlingedit</code> 段已经指出相应问题所在.</p>
 <ul>
 <li>官方文档解读
- 萨打扫打扫得</li>
+ es的merge process是一个异步方式合并数据,而减少对索引/搜索速度影响,但是在一些性能比较低(IO)的服务器上,数据的merge相对于系统资源来说是比较昂贵的,主要占用是IO资源,当IO出现瓶颈的话,就会对索引/搜索产生影响。
+ 存储模块可以对merge的速度进行动态的设置限制调整, 当然调整的越大就会对磁盘IO资源消耗越多,即:</li>
 </ul>
-<p>此问题其实包含es的1.x版本.看文档中2.x版本没有相关内容的阐述(手头也没测试过2.x版).</p>
-<h2>0x03 调优设置</h2>
-<p>进行对集群的 <code>Store Level Throttlingedit</code> 相关参数进行调整设置,设置前提是io没有瓶颈,当然调整后最好监控看下io负载.</p>
-<div class="highlight"><pre>curl
+<div class="highlight"><pre>indices.store.throttle.type: &quot;merge&quot; （默认为merge）
+indices.store.throttle.max_bytes_per_sec: &quot;20mb&quot; (默认20mb)
 </pre></div>
 
 
+<p>当然以上参数可以针对某个index进行调整,也可以针对整个集群做上述参数的调整,增加这个参数的前提条件是,磁盘io目前并没有压力,如果IO uitil%已经很高,CPU 的IO wait很高,那么就说明磁盘IO有瓶颈了,增加这个参数也没有用。
+此问题其实包含es的1.x版本.看文档中2.x版本没有相关内容的阐述(手头也没测试过2.x版).</p>
+<h2>0x03 调优设置</h2>
+<p>进行对集群的 <code>Store Level Throttlingedit</code> 相关参数进行调整设置,设置前提是io没有瓶颈,当然调整后最好监控看下io负载.</p>
+<div class="highlight"><pre>curl -XPUT http://localhost:9200/_cluster/settings -d &#39;{
+    &quot;persistent&quot;: {
+                &quot;indices.store.throttle.type&quot;: &quot;merge&quot;,
+                &quot;indices.store.throttle.max_bytes_per_sec&quot;: &quot;100mb&quot;
+    }
+}&#39;
+</pre></div>
+
+
+<p>调整之后看下集群的写入性能监控,性能猛增,bulk等队列也很平稳正常:
+<img alt="zabbix_write" src="/pictures/zabbix_es_write2.png" title="u&quot;es_write2&quot;" /></p>
 <h2>0x04 其他相关</h2>
-<p>最后要说的一点是ES的版本迭代很快，对于Recovery的机制也在不断的优化中。 其中有一些版本甚至引入了一些bug，比如在ES1.4.x有严重的translog recovery bug，导致大的索引trans log recovery几乎无法完成 （issue #9226）  。因此实际使用中如果遇到问题，最好在Github的issue list里搜索一下，看是否使用的版本有其他人反映同样的问题。</p>
+<p>ES的版本迭代非常快, 相信一些性能优化问题后续版本也越好越好,越来越强大。对于性能方面调整首先需要做的就是监控,强大的的监控,对es的各个细节进行各个维度的监控,这样才能有迹可查。另外其实官方文档写的已经非常详细了,多半问题或是配置相关的调优官方文档都给了相关解释,如果出现问题可以先从官方文档下手,或是结合在Github的issue list里搜索一下,看是否使用的版本有其他人反映同样的问题,多半能解决问题.</p>
 
       </div><!-- /.entry-content -->
 
