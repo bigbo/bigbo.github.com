@@ -1,5 +1,134 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>BigBo's blog</title><link href="http://bigbo.github.io/" rel="alternate"></link><link href="/feeds/all.atom.xml" rel="self"></link><id>http://bigbo.github.io/</id><updated>2016-02-29T15:40:00+08:00</updated><entry><title>elasticsearch调优之Merge</title><link href="http://bigbo.github.io/pages/2016/02/25/elasticsearch_store_config/" rel="alternate"></link><updated>2016-02-29T15:40:00+08:00</updated><author><name>ljingb</name></author><id>tag:bigbo.github.io,2016-02-25:pages/2016/02/25/elasticsearch_store_config/</id><summary type="html">&lt;h2&gt;0x01 背景&lt;/h2&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>BigBo's blog</title><link href="http://bigbo.github.io/" rel="alternate"></link><link href="/feeds/all.atom.xml" rel="self"></link><id>http://bigbo.github.io/</id><updated>2016-05-14T23:00:00+08:00</updated><entry><title>django之基于Class-View定制统一API</title><link href="http://bigbo.github.io/pages/2016/04/18/django_class_view/" rel="alternate"></link><updated>2016-05-14T23:00:00+08:00</updated><author><name>ljingb</name></author><id>tag:bigbo.github.io,2016-04-18:pages/2016/04/18/django_class_view/</id><summary type="html">&lt;p&gt;近期部门启动了一个"朝阳"项目,从项目规划选型到完成初版披荆斩棘,今仅对项目中用到的知识点作总结,如果项目发展顺利,后期再继续分享我们的"朝阳"项目更多细节.&lt;/p&gt;
+&lt;h2&gt;0x01 Django框架&lt;/h2&gt;
+&lt;p&gt;django用来开发内部的运维系统和支持系统个人认为是个不错的选择.你有权力说其他语言,其他框架,我也有权利保持沉默,暂且不挑起语言之争(其实php是世界上最好的语言.^_^).
+Django严格来说是一个MTV框架,结构与传统MVC架构没有太大的区别.它的核心包含以下几部分:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Model层,一个对象关系映射,作为数据模型和关系型数据库的媒介,对数据的封装简直太友好了&lt;/li&gt;
+&lt;li&gt;URL(Controller)层.一个基于正则表达式的URL分发器&lt;/li&gt;
+&lt;li&gt;View层,一个用于处理HTTP请求的系统和web模版渲染系统&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;另外Django的一个好处就是模块化设计,每一个模块在内部都称之为APP,在每个APP里面都有自己的三层结构.如图:
+&lt;img alt="django_app_arch" src="/pictures/django_app_arch.jpg" title="u&amp;quot;django_app_arch&amp;quot;" /&gt;&lt;/p&gt;
+&lt;p&gt;模块化后,不仅可以在开发的时候更容易理解系统,而且因为每个APP都是独立的应用,可以尽量的减少系统的耦合,便于系统后续的扩展和维护.&lt;/p&gt;
+&lt;p&gt;ps: 个人认为脚本语言+框架开发是映射现在互联网风的,快速迭代,小步快跑,为快不破,对于臃肿的语言+自己写框架来说更胜一筹. &lt;/p&gt;
+&lt;h2&gt;0x02 Class-View&lt;/h2&gt;
+&lt;p&gt;之前使用django开发系统都是使用 &lt;code&gt;func-view&lt;/code&gt;, &lt;code&gt;func-view&lt;/code&gt; 在小规模系统或是一个人开发的时候使用还是可以,但是到中大型项目中,多人协作开发后很容易出现标准和开发风格不统一的问题(当然还有其他问题).
+Django 还有一种视图 &lt;code&gt;class-view&lt;/code&gt;,用类是为了抽象,抽象出通用的,将可变的暴露出来,这样可以提高代码的复用.对比 &lt;code&gt;func-view&lt;/code&gt; 的优势:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;对HTTP方法的(GET/POST等)扩展,以及其他HTTP方法,请求不通过if判断解决&lt;/li&gt;
+&lt;li&gt;可以通过继承内建通用视图,覆盖其中的方法,属性等,实现自己想要的功能,抽象通用功能&lt;/li&gt;
+&lt;li&gt;在项目中可以统一调用API底层规范,更加灵活扩展&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Django 的URL解析器是将请求映射到指定的函数而不是一个类,所有XXXView类(ListView/DetailView)有一个共同的父类: &lt;code&gt;View&lt;/code&gt; ,在这个父类中,向外暴露了一个方法: &lt;code&gt;as_view()&lt;/code&gt;,用来作为类的可调用入口.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.conf.urls&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;patterns&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.views.generic&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;TemplateView&lt;/span&gt;
+
+&lt;span class="n"&gt;urlpatterns&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;patterns&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;r&amp;#39;^about/&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;TemplateView&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;as_view&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;template_name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;about.html&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)),&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;code&gt;as_view()&lt;/code&gt; 创建类的实例并调用 &lt;code&gt;dispatch()&lt;/code&gt; 方法来查看请求是 &lt;code&gt;GET&lt;/code&gt; 还是 &lt;code&gt;POST&lt;/code&gt; 以及其他什么请求,并将请求转发到对应的方法,&lt;/p&gt;
+&lt;h2&gt;0x03 封装API统一入口&lt;/h2&gt;
+&lt;p&gt;对于一个工程来讲,API需要有统一的认证,统一的数据格式返回,可以利用Class-View来自己封装一个所有API接口的基础类&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&amp;quot;所有API接口的基础类&amp;quot;
+class CoreView(JSONResponse, View):
+    &amp;#39;&amp;#39;&amp;#39;
+    所有API基类
+    &amp;#39;&amp;#39;&amp;#39;
+    def parameters(self, key):
+        &amp;#39;&amp;#39;&amp;#39;
+        获取POST或者GET中的参数
+        &amp;#39;&amp;#39;&amp;#39;
+        if self.request.method == &amp;#39;GET&amp;#39;:
+            return self.request.GET.get(key)
+        if self.request.method == &amp;#39;POST&amp;#39;:
+            if key in json.loads(self.request.body.decode(&amp;#39;utf-8&amp;#39;)):
+                return json.loads(self.request.body.decode(&amp;#39;utf-8&amp;#39;)).get(key)
+            else:
+                return &amp;#39;&amp;#39;
+
+    def get(self, request, *args, **kwargs):
+        &amp;#39;&amp;#39;&amp;#39;
+        收到GET请求后的处理
+        &amp;#39;&amp;#39;&amp;#39;
+        if &amp;#39;action&amp;#39; not in kwargs:
+            return JSONResponse.invalid(self)
+
+        action = &amp;#39;get_%s&amp;#39; % kwargs[&amp;#39;action&amp;#39;].lower()
+        return self.run(action, request)
+
+    def post(self, request, *args, **kwargs):
+        &amp;#39;&amp;#39;&amp;#39;
+        收到POST请求后的处理
+        &amp;#39;&amp;#39;&amp;#39;
+        if &amp;#39;action&amp;#39; not in kwargs:
+            return JSONResponse.invalid(self)
+
+        action = &amp;#39;post_%s&amp;#39; % kwargs[&amp;#39;action&amp;#39;].lower()
+
+        return self.run(action, request)
+
+    def run(self, action, request):
+        &amp;#39;&amp;#39;&amp;#39;
+        执行相应的逻辑
+        &amp;#39;&amp;#39;&amp;#39;
+        self.request = request
+
+        try:
+            func = getattr(self, action)
+        except:
+            return JSONResponse.invalid(self)
+
+        try:
+            context = func()
+        except APIError, e:
+            return JSONResponse.fail(self, e.code, e.message)
+
+        return JSONResponse.success(self, context)
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;View 调用:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;Class Search(CoreView):
+    def get_byid(self):
+        do something ....
+        return data
+
+    def post_update(self):
+        do something ....
+        return data
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;URL 解析&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.conf.urls&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;patterns&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;include&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;url&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;views&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.views.decorators.csrf&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;csrf_exempt&lt;/span&gt;
+
+&lt;span class="n"&gt;urlpatterns&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;patterns&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;api&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="n"&gt;url&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;r&amp;#39;^(?i)api/search/(?P&amp;lt;action&amp;gt;\w+)/$&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;csrf_exempt&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;views&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Search&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;as_view&lt;/span&gt;&lt;span class="p"&gt;())),&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;API 请求:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;GET http://127.0.0.1:8000/api/search/byid/
+
+POST http://127.0.0.1:8000/api/serarch/update/
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;当然,想做到统一,还需要在 &lt;code&gt;CoreView&lt;/code&gt; 中封装好统一的返回 &lt;code&gt;code&lt;/code&gt; 以及 &lt;code&gt;message&lt;/code&gt; 和 &lt;code&gt;data&lt;/code&gt; 格式来做统一API响应规范.作为后续扩展,还可以继续添加公共方法,以做抽象.&lt;/p&gt;
+&lt;h2&gt;0x04 关于视图&lt;/h2&gt;
+&lt;p&gt;视图的扩展和解析还涉及到很多内容,但是大致思想和基类基本一致,更多内容可以参考:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;http://blog.csdn.net/hackerain/article/details/40919789&lt;/li&gt;
+&lt;li&gt;http://pylixm.cc/posts/2016-03-24-Django-class-Views.html&lt;/li&gt;
+&lt;li&gt;http://python.usyiyi.cn/django_182/index.html&lt;/li&gt;
+&lt;/ul&gt;</summary><category term="python"></category><category term="django"></category><category term="django view"></category></entry><entry><title>elasticsearch调优之Merge</title><link href="http://bigbo.github.io/pages/2016/02/25/elasticsearch_store_config/" rel="alternate"></link><updated>2016-02-29T15:40:00+08:00</updated><author><name>ljingb</name></author><id>tag:bigbo.github.io,2016-02-25:pages/2016/02/25/elasticsearch_store_config/</id><summary type="html">&lt;h2&gt;0x01 背景&lt;/h2&gt;
 &lt;p&gt;天苍苍,野茫茫,过完春节就要忙,服务压力跟不上,用服务器数量来抗.多数人认为这个套路能简单粗暴的解决问题,当然我也不例外.&lt;/p&gt;
 &lt;p&gt;春节刚过,我司流量跟着上来了,作为基础的日志处理服务,需要保障流量上涨后的性能和稳定.重头就在es集群性能.于是着手对集群整体进行硬件上的资源扩充.&lt;/p&gt;
 &lt;ul&gt;
