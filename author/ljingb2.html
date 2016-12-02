@@ -68,6 +68,51 @@ src="http://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="F
                         <article>
                             <header>
                                 <h1 class="entry-title">
+                                    <a href="http://bigbo.github.io/pages/2015/05/23/mozilla_heka/" rel="bookmark" title="Permalink to Mozilla Heka使用">
+                                       Mozilla Heka使用
+                                    </a>
+                                </h1>
+                            </header>
+                            <div class="entry-content">
+<footer class="post-info">
+    <address class="vcard author">
+        by <a class="url fn" href="http://bigbo.github.io/author/ljingb.html">ljingb</a>
+    </address>
+
+    in <a href="http://bigbo.github.io/category/technology.html">Technology</a>
+
+    on 2015-05-23
+
+        |
+        tags:         <a href="http://bigbo.github.io/tag/wen-jian-jian-ting.html">文件监听</a>
+        <a href="http://bigbo.github.io/tag/ri-zhi-chu-li.html">日志处理</a>
+        <a href="http://bigbo.github.io/tag/ri-zhi-zhuan-fa.html">日志转发</a>
+
+
+        |
+        <a href="http://bigbo.github.io/pages/2015/05/23/mozilla_heka/#disqus_thread">comments</a>
+
+    
+</footer><!-- /.post-info -->                                <p>监控中时常需要对重要日志进行实时收集分析,之前一直使用 <code>logstash</code> 來做agent,由于 <code>logstash</code> 对系统强依赖 <code>Java_JDK</code> ,从而使用起来需要受系统环境限制.
+作为对日志转发工具,对系统环境有限制的情况下可以有两个选择:</p>
+<ol>
+<li><a href="https://github.com/bloonix/awesant">awesant</a> :基于perl写的轻量级logstash</li>
+<li><a href="https://github.com/mozilla-services/heka">heka</a> :基于go语言开发,无系统依赖,高并发</li>
+</ol>
+<hr />
+<h2>0x01 Heka简介</h2>
+<p>Heka 是 Mozilla 公司仿造 logstash 设计,用 Golang 重写的一个开源项目.采用了类 logstash 的 input -&gt; splitters -&gt; decoder -&gt; filter -&gt; encoder -&gt; output 的流程概念.其特点在于,在中间的 decoder/filter/encoder 部分,设计了 sandbox 概念,可以采用内嵌 lua 脚本做这一部分的工作 ...</p>
+                                <p class="readmore">
+                                    <a class="btn btn-small btn-info" href="http://bigbo.github.io/pages/2015/05/23/mozilla_heka/">Read more...</a>
+                                </p>
+                            </div><!-- /.entry-content -->
+                            <hr/>
+                        </article>
+                    </li>
+                    <li>
+                        <article>
+                            <header>
+                                <h1 class="entry-title">
                                     <a href="http://bigbo.github.io/pages/2015/04/10/elasticsearch_config/" rel="bookmark" title="Permalink to elasticsearch配置小记">
                                        elasticsearch配置小记
                                     </a>
@@ -315,61 +360,10 @@ ES_HEAP_SIZE=32g
                             <hr/>
                         </article>
                     </li>
-                    <li>
-                        <article>
-                            <header>
-                                <h1 class="entry-title">
-                                    <a href="http://bigbo.github.io/pages/2015/01/17/kafka_web_console/" rel="bookmark" title="Permalink to kafka监控web端(添砖)">
-                                       kafka监控web端(添砖)
-                                    </a>
-                                </h1>
-                            </header>
-                            <div class="entry-content">
-<footer class="post-info">
-    <address class="vcard author">
-        by <a class="url fn" href="http://bigbo.github.io/author/ljingb.html">ljingb</a>
-    </address>
-
-    in <a href="http://bigbo.github.io/category/technology.html">Technology</a>
-
-    on 2015-01-17
-
-        |
-        tags:         <a href="http://bigbo.github.io/tag/kafka.html">kafka</a>
-        <a href="http://bigbo.github.io/tag/xiao-xi-dui-lie.html">消息队列</a>
-        <a href="http://bigbo.github.io/tag/jian-kong.html">监控</a>
-
-
-        |
-        <a href="http://bigbo.github.io/pages/2015/01/17/kafka_web_console/#disqus_thread">comments</a>
-
-    
-</footer><!-- /.post-info -->                                <h2>前言</h2>
-<p>最近在了解消息队列,主要是之前用的是redis,redis固然非常好用,但是也有相应的使用场景.随着数据量的增长,redis已经不能满足现在的需求了.所以需要找个更好的替代品.问了一圈大牛,也google一番,锁定在<a href="http://kafka.apache.org/">kafka</a>上了.关于<strong>kafka</strong>怎么"玩",我也不知道,算是在摸索当中,想要知道安装使用等方法,请移步Google吧.虽然kafka我不会玩,但是我会玩怎么监控它.</p>
-<hr />
-<h2>简介</h2>
-<blockquote>
-<p><a href="https://github.com/claudemamo/kafka-web-console">kafka-web-console</a>,是kafka自己的一个Web管理界面.开源的东西好是好,但是不知道是不是开源的大牛B们都不愿意写文档!!出来个东西,居然没有安装步骤,只是有一些简单的使用说明,甚至说明都不详细,对于此点表示很坑!</p>
-</blockquote>
-<hr />
-<h2>安装</h2>
-<blockquote>
-<h5>1.先下载安装scala构建工具<a href="http://www.scala-sbt.org/0.13/tutorial/Installing-sbt-on-Linux.html">sbt</a></h5>
-</blockquote>
-<div class="highlight"><pre> #本安装环境为centos6.5
- curl https://bintray.com/sbt/rpm/rpm &gt; bintray-sbt-rpm.repo
- sudo mv ...</pre></div>
-                                <p class="readmore">
-                                    <a class="btn btn-small btn-info" href="http://bigbo.github.io/pages/2015/01/17/kafka_web_console/">Read more...</a>
-                                </p>
-                            </div><!-- /.entry-content -->
-                            <hr/>
-                        </article>
-                    </li>
                     </ol><!-- /#posts-list -->
 <p class="paginator">
         <a href="http://bigbo.github.io/author/ljingb.html">&laquo;</a>
-    Page 2 / 3
+    Page 2 / 4
         <a href="http://bigbo.github.io/author/ljingb3.html">&raquo;</a>
 </p>
                 </section><!-- /#content -->
