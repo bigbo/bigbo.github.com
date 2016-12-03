@@ -92,29 +92,10 @@ src="http://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="F
         <p>近段时间,由于公司报警系统结构调整,由小米开源的 <a href="http://open-falcon.org/">Open-Falcon</a> 替换了原有的 Zabbix 监控系统,使得一些原自定义监控不可用,于是便着手在新监控系统下完善了 Elasticsearch 服务的监控.</p>
 <h2>0x01 Elasticsearch 服务架构</h2>
 <p>只谈监控不谈架构那如同耍流氓,监控可以追溯历史,查故障原因,分析瓶颈点,作为服务来说需要全面监控.</p>
-<div class="highlight"><pre>st1=&gt;start: Logs(Nginx等)
-e=&gt;end: Client(Kibana/script等)
-
-op1=&gt;operation: 基础监控(报警)
-op2=&gt;operation: Elasticsearch 集群
-
-cond1=&gt;condition: 独立缓冲区(kafka)
-cond2=&gt;condition: Nginx
-cond3=&gt;condition: 数据消费端(logstash/hangout等)
-
-st1-&gt;cond1
-cond1(yes)-&gt;cond3
-cond1(no)-&gt;op1
-cond3(yes)-&gt;cond2
-cond3(no)-&gt;op1
-cond2(yes)-&gt;op2
-cond2(no)-&gt;e
-</pre></div>
-
-
+<p><img alt="es_monitor" src="/pictures/es_monitor.png" title="u&quot;es监控&quot;" /></p>
 <p><strong>注:</strong> 
-1.elasticsearch 我们是按角色部署,前面顶了个nginx,可以控制相关访问以及负载.
-2.整个服务监控指的是系统的各个组件,图中有直接关联基础监控部分,也有没有关联的基础监控</p>
+1.elasticsearch 我们是按角色部署,前面顶了个nginx,可以控制相关访问以及负载.</p>
+<p>2.整个服务监控指的是系统的各个组件,图中有直接关联基础监控部分,也有没有关联的基础监控</p>
 <hr />
 <h2>0x02 可监控项</h2>
 <h3>0x02.1 基础监控</h3>
@@ -122,14 +103,14 @@ cond2(no)-&gt;e
 <h3>0x02.2 Nginx 日志监控</h3>
 <p>监控到用户的访问量,一些非法请求或是不正常请求情况.</p>
 <h3>0x02.3 Elasticsearch 日志监控</h3>
-<p>1.Elasticsearch 慢查询日志监控(需要开启慢查询日志记录)
-2.服务本身日志监控,产生ERROR等异常时监控</p>
+<p>1.Elasticsearch 慢查询日志监控(需要开启慢查询日志记录)</p>
+<p>2.服务本身日志监控,产生ERROR等异常时监控</p>
 <h3>0x02.4 Elasticsearch 服务指标监控</h3>
 <p>Elasticsearch 本身提供了非常完善的,由浅及深的各种性能数据接口.和数据读写检索接口一样,采用 RESTful 风格.我们可以直接使用 curl 来获取数据,编写监控程序,也可以使用一些现成的监控方案.通常这些方案也是通过接口读取数据,解析 JSON,渲染界面。</p>
 <p>例如我之前使用的是Zabbix现成的监控也是通过restful api来获取的数据: https://github.com/Wprosdocimo/Elasticsearch-zabbix</p>
 <p>Elasticsearch 细分为集群/节点/index级别的三个层次监控.</p>
-<p>1.集群级别的监控
-命令示例:</p>
+<p>1.集群级别的监控</p>
+<p>命令示例:</p>
 <div class="highlight"><pre># curl -XGET 127.0.0.1:9200/_cluster/health?pretty
 {
   &quot;cluster_name&quot; : &quot;es1003&quot;,
@@ -158,8 +139,8 @@ cond2(no)-&gt;e
 <li>red 红灯,有主分片缺失。这部分数据完全不可用.</li>
 </ul>
 <p>所以报警规则应该设置为非绿则报警.</p>
-<p>2.Node 级别监控
-通过如下命令获取节点状态:</p>
+<p>2.Node 级别监控</p>
+<p>通过如下命令获取节点状态:</p>
 <div class="highlight"><pre># curl -XGET 127.0.0.1:9200/_nodes/stats
 </pre></div>
 
@@ -194,19 +175,19 @@ cond2(no)-&gt;e
 </blockquote>
 </li>
 </ul>
-<p>3.Index 级别监控
-索引状态监控接口的输出信息和节点状态监控接口非常类似,一般情况下,这个接口单独监控起来的意义并不大.
+<p>3.Index 级别监控</p>
+<p>索引状态监控接口的输出信息和节点状态监控接口非常类似,一般情况下,这个接口单独监控起来的意义并不大.
 通过如下命令获取节点状态:</p>
 <div class="highlight"><pre># curl -XGET 127.0.0.1:9200/index_name/stats
 </pre></div>
 
 
-<p>4.ES集群 服务级别监控
-对于集群来说我们的关注指标往往是集群整体的性能,例如集群的整体写入性能,查询效率,并发能力等,这些指标可以直接通过每台Node节点指标叠加获取到.</p>
+<p>4.ES集群 服务级别监控</p>
+<p>对于集群来说我们的关注指标往往是集群整体的性能,例如集群的整体写入性能,查询效率,并发能力等,这些指标可以直接通过每台Node节点指标叠加获取到.</p>
 <hr />
 <h2>0x03 总结</h2>
 <p>对于Elasticsearch来说,搭建起来用很容易,但是想用好,并调整到最优状态并不是一时可以搞定的,所以需要监控各项指标,从各个点综合考虑调优.</p>
-<p>结合以上的分析,编写出基于Open-Falcon监控下的ES服务监控:https://github.com/bigbo/Elasticsearch-Falcon ,目前只是完成基础监控,还有待完善其他监控指标.使用有问题希望给我发issues.</p>
+<p>结合以上的分析,编写出基于Open-Falcon监控下的ES服务监控: https://github.com/bigbo/Elasticsearch-Falcon ,目前只是完成基础监控,还有待完善其他监控指标.使用有问题希望给我发issues.</p>
 <p>相关参考连接:
 * http://kibana.logstash.es/</p>
 

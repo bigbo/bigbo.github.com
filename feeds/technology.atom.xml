@@ -2,29 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom"><title>BigBo's blog</title><link href="http://bigbo.github.io/" rel="alternate"></link><link href="/feeds/technology.atom.xml" rel="self"></link><id>http://bigbo.github.io/</id><updated>2016-11-16T16:30:00+08:00</updated><entry><title>elasticsearch 服务的监控与报警</title><link href="http://bigbo.github.io/pages/2016/10/20/elasticsearch_monitor/" rel="alternate"></link><updated>2016-11-16T16:30:00+08:00</updated><author><name>ljingb</name></author><id>tag:bigbo.github.io,2016-10-20:pages/2016/10/20/elasticsearch_monitor/</id><summary type="html">&lt;p&gt;近段时间,由于公司报警系统结构调整,由小米开源的 &lt;a href="http://open-falcon.org/"&gt;Open-Falcon&lt;/a&gt; 替换了原有的 Zabbix 监控系统,使得一些原自定义监控不可用,于是便着手在新监控系统下完善了 Elasticsearch 服务的监控.&lt;/p&gt;
 &lt;h2&gt;0x01 Elasticsearch 服务架构&lt;/h2&gt;
 &lt;p&gt;只谈监控不谈架构那如同耍流氓,监控可以追溯历史,查故障原因,分析瓶颈点,作为服务来说需要全面监控.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;st1=&amp;gt;start: Logs(Nginx等)
-e=&amp;gt;end: Client(Kibana/script等)
-
-op1=&amp;gt;operation: 基础监控(报警)
-op2=&amp;gt;operation: Elasticsearch 集群
-
-cond1=&amp;gt;condition: 独立缓冲区(kafka)
-cond2=&amp;gt;condition: Nginx
-cond3=&amp;gt;condition: 数据消费端(logstash/hangout等)
-
-st1-&amp;gt;cond1
-cond1(yes)-&amp;gt;cond3
-cond1(no)-&amp;gt;op1
-cond3(yes)-&amp;gt;cond2
-cond3(no)-&amp;gt;op1
-cond2(yes)-&amp;gt;op2
-cond2(no)-&amp;gt;e
-&lt;/pre&gt;&lt;/div&gt;
-
-
+&lt;p&gt;&lt;img alt="es_monitor" src="/pictures/es_monitor.png" title="u&amp;quot;es监控&amp;quot;" /&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;注:&lt;/strong&gt; 
-1.elasticsearch 我们是按角色部署,前面顶了个nginx,可以控制相关访问以及负载.
-2.整个服务监控指的是系统的各个组件,图中有直接关联基础监控部分,也有没有关联的基础监控&lt;/p&gt;
+1.elasticsearch 我们是按角色部署,前面顶了个nginx,可以控制相关访问以及负载.&lt;/p&gt;
+&lt;p&gt;2.整个服务监控指的是系统的各个组件,图中有直接关联基础监控部分,也有没有关联的基础监控&lt;/p&gt;
 &lt;hr /&gt;
 &lt;h2&gt;0x02 可监控项&lt;/h2&gt;
 &lt;h3&gt;0x02.1 基础监控&lt;/h3&gt;
@@ -32,14 +13,14 @@ cond2(no)-&amp;gt;e
 &lt;h3&gt;0x02.2 Nginx 日志监控&lt;/h3&gt;
 &lt;p&gt;监控到用户的访问量,一些非法请求或是不正常请求情况.&lt;/p&gt;
 &lt;h3&gt;0x02.3 Elasticsearch 日志监控&lt;/h3&gt;
-&lt;p&gt;1.Elasticsearch 慢查询日志监控(需要开启慢查询日志记录)
-2.服务本身日志监控,产生ERROR等异常时监控&lt;/p&gt;
+&lt;p&gt;1.Elasticsearch 慢查询日志监控(需要开启慢查询日志记录)&lt;/p&gt;
+&lt;p&gt;2.服务本身日志监控,产生ERROR等异常时监控&lt;/p&gt;
 &lt;h3&gt;0x02.4 Elasticsearch 服务指标监控&lt;/h3&gt;
 &lt;p&gt;Elasticsearch 本身提供了非常完善的,由浅及深的各种性能数据接口.和数据读写检索接口一样,采用 RESTful 风格.我们可以直接使用 curl 来获取数据,编写监控程序,也可以使用一些现成的监控方案.通常这些方案也是通过接口读取数据,解析 JSON,渲染界面。&lt;/p&gt;
 &lt;p&gt;例如我之前使用的是Zabbix现成的监控也是通过restful api来获取的数据: https://github.com/Wprosdocimo/Elasticsearch-zabbix&lt;/p&gt;
 &lt;p&gt;Elasticsearch 细分为集群/节点/index级别的三个层次监控.&lt;/p&gt;
-&lt;p&gt;1.集群级别的监控
-命令示例:&lt;/p&gt;
+&lt;p&gt;1.集群级别的监控&lt;/p&gt;
+&lt;p&gt;命令示例:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;# curl -XGET 127.0.0.1:9200/_cluster/health?pretty
 {
   &amp;quot;cluster_name&amp;quot; : &amp;quot;es1003&amp;quot;,
@@ -68,8 +49,8 @@ cond2(no)-&amp;gt;e
 &lt;li&gt;red 红灯,有主分片缺失。这部分数据完全不可用.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;所以报警规则应该设置为非绿则报警.&lt;/p&gt;
-&lt;p&gt;2.Node 级别监控
-通过如下命令获取节点状态:&lt;/p&gt;
+&lt;p&gt;2.Node 级别监控&lt;/p&gt;
+&lt;p&gt;通过如下命令获取节点状态:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;# curl -XGET 127.0.0.1:9200/_nodes/stats
 &lt;/pre&gt;&lt;/div&gt;
 
@@ -104,19 +85,19 @@ cond2(no)-&amp;gt;e
 &lt;/blockquote&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;3.Index 级别监控
-索引状态监控接口的输出信息和节点状态监控接口非常类似,一般情况下,这个接口单独监控起来的意义并不大.
+&lt;p&gt;3.Index 级别监控&lt;/p&gt;
+&lt;p&gt;索引状态监控接口的输出信息和节点状态监控接口非常类似,一般情况下,这个接口单独监控起来的意义并不大.
 通过如下命令获取节点状态:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;# curl -XGET 127.0.0.1:9200/index_name/stats
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;4.ES集群 服务级别监控
-对于集群来说我们的关注指标往往是集群整体的性能,例如集群的整体写入性能,查询效率,并发能力等,这些指标可以直接通过每台Node节点指标叠加获取到.&lt;/p&gt;
+&lt;p&gt;4.ES集群 服务级别监控&lt;/p&gt;
+&lt;p&gt;对于集群来说我们的关注指标往往是集群整体的性能,例如集群的整体写入性能,查询效率,并发能力等,这些指标可以直接通过每台Node节点指标叠加获取到.&lt;/p&gt;
 &lt;hr /&gt;
 &lt;h2&gt;0x03 总结&lt;/h2&gt;
 &lt;p&gt;对于Elasticsearch来说,搭建起来用很容易,但是想用好,并调整到最优状态并不是一时可以搞定的,所以需要监控各项指标,从各个点综合考虑调优.&lt;/p&gt;
-&lt;p&gt;结合以上的分析,编写出基于Open-Falcon监控下的ES服务监控:https://github.com/bigbo/Elasticsearch-Falcon ,目前只是完成基础监控,还有待完善其他监控指标.使用有问题希望给我发issues.&lt;/p&gt;
+&lt;p&gt;结合以上的分析,编写出基于Open-Falcon监控下的ES服务监控: https://github.com/bigbo/Elasticsearch-Falcon ,目前只是完成基础监控,还有待完善其他监控指标.使用有问题希望给我发issues.&lt;/p&gt;
 &lt;p&gt;相关参考连接:
 * http://kibana.logstash.es/&lt;/p&gt;</summary><category term="elasticsearch 监控&amp;报警"></category></entry><entry><title>django之基于Class-View定制统一API</title><link href="http://bigbo.github.io/pages/2016/04/18/django_class_view/" rel="alternate"></link><updated>2016-05-14T23:00:00+08:00</updated><author><name>ljingb</name></author><id>tag:bigbo.github.io,2016-04-18:pages/2016/04/18/django_class_view/</id><summary type="html">&lt;p&gt;近期部门启动了一个"朝阳"项目,从项目规划选型到完成初版披荆斩棘,今仅对项目中用到的知识点作总结,如果项目发展顺利,后期再继续分享我们的"朝阳"项目更多细节.&lt;/p&gt;
 &lt;h2&gt;0x01 Django框架&lt;/h2&gt;
