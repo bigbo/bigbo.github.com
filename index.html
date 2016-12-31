@@ -68,6 +68,46 @@ src="http://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="F
                         <article>
                             <header>
                                 <h1 class="entry-title">
+                                    <a href="http://bigbo.github.io/pages/2016/12/31/2016年终总结/" rel="bookmark" title="Permalink to 2016年终总结">
+                                       2016年终总结
+                                    </a>
+                                </h1>
+                            </header>
+                            <div class="entry-content">
+<footer class="post-info">
+    <address class="vcard author">
+        by <a class="url fn" href="http://bigbo.github.io/author/ljingb.html">ljingb</a>
+    </address>
+
+    in <a href="http://bigbo.github.io/category/gui-dang.html">归档</a>
+
+    on 2016-12-31
+
+
+
+        |
+        <a href="http://bigbo.github.io/pages/2016/12/31/2016年终总结/#disqus_thread">comments</a>
+
+    
+</footer><!-- /.post-info -->                                <p>又到了年终总结的时刻了,回首过去,已经继续了两年,对于我这种不是很勤奋的人来说,真不知道能把每年最后一天的几个小时留给年终时刻会坚持到什么时候.当心里开始有对写年终总结的时候,那说明2016过的如此苍白和无力.</p>
+<hr />
+<h3>0X01 工作</h3>
+<p>从年初开始,有机会去鹅厂开眼,毕竟鹅厂之前技术相对比较封闭,最近几年才开始慢慢走向开放的.交流从开始的兴奋到后面的失落.就像人心中想象看到了东升的太阳,而实际却看到了落日的余辉.主要是自以为技术有一定积淀,看到人家所做所想,自愧不如,犹如闭门造车,小打小闹.</p>
+<p>交流完毕回来痛定思痛,于是开启本年度最悲伤的项目BDMC,此项目的杀伤力很大,从开始到现在,从最初的6/7个人,剩下了2个人（我把他们都耗走了！）.有如此大杀伤力的项目我想流出专门一篇来写,在此就不细述了.</p>
+<p>当然人是理性和现实的,工作中也不例外,年中开始,经历的人的悲欢离合曲终人散,老大带有一部分人去创业了,另外的同事也都找到了自己的理想工作,只有我还在此挣扎发挥最后的余热.</p>
+<p>技术博客也被托的零零散散,刚看了下,只有三篇产出,平时不是没有技术问题或是技术积累,只是自己的小放纵,导致仅仅有三篇,不过幸好在年低的几天,有了几个开源产出:</p>
+<p>1.https://github.com ...</p>
+                                <p class="readmore">
+                                    <a class="btn btn-small btn-info" href="http://bigbo.github.io/pages/2016/12/31/2016年终总结/">Read more...</a>
+                                </p>
+                            </div><!-- /.entry-content -->
+                            <hr/>
+                        </article>
+                    </li>
+                    <li>
+                        <article>
+                            <header>
+                                <h1 class="entry-title">
                                     <a href="http://bigbo.github.io/pages/2016/10/20/elasticsearch_monitor/" rel="bookmark" title="Permalink to elasticsearch 服务的监控与报警">
                                        elasticsearch 服务的监控与报警
                                     </a>
@@ -295,54 +335,6 @@ Django严格来说是一个MTV框架,结构与传统MVC架构没有太大的区�
 <li>Partition ...</li></ul>
                                 <p class="readmore">
                                     <a class="btn btn-small btn-info" href="http://bigbo.github.io/pages/2015/08/07/logstash_kafka_new/">Read more...</a>
-                                </p>
-                            </div><!-- /.entry-content -->
-                            <hr/>
-                        </article>
-                    </li>
-                    <li>
-                        <article>
-                            <header>
-                                <h1 class="entry-title">
-                                    <a href="http://bigbo.github.io/pages/2015/07/20/elasticsearch_oom/" rel="bookmark" title="Permalink to 引发Elasticsearch OOM之type">
-                                       引发Elasticsearch OOM之type
-                                    </a>
-                                </h1>
-                            </header>
-                            <div class="entry-content">
-<footer class="post-info">
-    <address class="vcard author">
-        by <a class="url fn" href="http://bigbo.github.io/author/ljingb.html">ljingb</a>
-    </address>
-
-    in <a href="http://bigbo.github.io/category/technology.html">Technology</a>
-
-    on 2015-07-20
-
-        |
-        tags:         <a href="http://bigbo.github.io/tag/elasticsearch-oom.html">elasticsearch oom</a>
-        <a href="http://bigbo.github.io/tag/elasticsearch-diao-you.html">elasticsearch 调优</a>
-
-
-        |
-        <a href="http://bigbo.github.io/pages/2015/07/20/elasticsearch_oom/#disqus_thread">comments</a>
-
-    
-</footer><!-- /.post-info -->                                <p>开源日志处理哪家强?当数 <a href="https://www.elastic.co/">ELKstack</a> ,但搭起来容易用起来难,尤其是ES,小脾气那叫一个多,不好好调教下时不时的就会给你来点颜色,什么脑裂,内存不足 <code>OOM</code>,要不就是索引过慢,性能跟不上;应有尽有,自从用起来,一把心酸.</p>
-<p>最近又出问题了,之前好好的集群(已经正常运行3个多月了),当新接入了一个服务(大部分只有写),变得频繁罢工,一周就要重启4次左右,搞得身心疲惫,终于发现故障的原因,故记之,警示后人.</p>
-<hr />
-<h2>0x01 ES 几个基本概念</h2>
-<h3>集群</h3>
-<ul>
-<li>
-<p>cluster (集群)
-代表一个集群,集群中有多个节点,其中有一个为主节点,这个主节点是可以通过选举产生的(可以设定主节点角色),主从节点是对于集群内部来说的.es的一个概念就是去中心化,字面上理解就是无中心节点,这是对于集群外部来说的,因为从外部来看es集群,在逻辑上是个整体,你与任何一个节点的通信和与整个es集群通信是等价的.</p>
-</li>
-<li>
-<p>shards (分片)
-代表索引分片,es可以把一个完整的索引分成多个分片,这样的好处是可以把一个大的索引拆分成多个,分布到不同的节点上 ...</p></li></ul>
-                                <p class="readmore">
-                                    <a class="btn btn-small btn-info" href="http://bigbo.github.io/pages/2015/07/20/elasticsearch_oom/">Read more...</a>
                                 </p>
                             </div><!-- /.entry-content -->
                             <hr/>

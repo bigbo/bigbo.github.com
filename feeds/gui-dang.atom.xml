@@ -1,5 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>BigBo's blog</title><link href="http://bigbo.github.io/" rel="alternate"></link><link href="/feeds/gui-dang.atom.xml" rel="self"></link><id>http://bigbo.github.io/</id><updated>2016-01-01T01:42:00+08:00</updated><entry><title>2015(自嗨型)年终总结</title><link href="http://bigbo.github.io/pages/2015/12/31/2015%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/" rel="alternate"></link><updated>2016-01-01T01:42:00+08:00</updated><author><name>ljingb</name></author><id>tag:bigbo.github.io,2015-12-31:pages/2015/12/31/2015年终总结/</id><summary type="html">&lt;p&gt;算是续去年的节,今年免不了需要做个年终总结,当然是别人眼中的"自嗨".在我看来不是朋友圈的三言两语就能总结去年一年的过往,总结是需要长篇大论的扯淡的!&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>BigBo's blog</title><link href="http://bigbo.github.io/" rel="alternate"></link><link href="/feeds/gui-dang.atom.xml" rel="self"></link><id>http://bigbo.github.io/</id><updated>2016-12-31T20:42:00+08:00</updated><entry><title>2016年终总结</title><link href="http://bigbo.github.io/pages/2016/12/31/2016%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/" rel="alternate"></link><updated>2016-12-31T20:42:00+08:00</updated><author><name>ljingb</name></author><id>tag:bigbo.github.io,2016-12-31:pages/2016/12/31/2016年终总结/</id><summary type="html">&lt;p&gt;又到了年终总结的时刻了,回首过去,已经继续了两年,对于我这种不是很勤奋的人来说,真不知道能把每年最后一天的几个小时留给年终时刻会坚持到什么时候.当心里开始有对写年终总结的时候,那说明2016过的如此苍白和无力.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;h3&gt;0X01 工作&lt;/h3&gt;
+&lt;p&gt;从年初开始,有机会去鹅厂开眼,毕竟鹅厂之前技术相对比较封闭,最近几年才开始慢慢走向开放的.交流从开始的兴奋到后面的失落.就像人心中想象看到了东升的太阳,而实际却看到了落日的余辉.主要是自以为技术有一定积淀,看到人家所做所想,自愧不如,犹如闭门造车,小打小闹.&lt;/p&gt;
+&lt;p&gt;交流完毕回来痛定思痛,于是开启本年度最悲伤的项目BDMC,此项目的杀伤力很大,从开始到现在,从最初的6/7个人,剩下了2个人（我把他们都耗走了！）.有如此大杀伤力的项目我想流出专门一篇来写,在此就不细述了.&lt;/p&gt;
+&lt;p&gt;当然人是理性和现实的,工作中也不例外,年中开始,经历的人的悲欢离合曲终人散,老大带有一部分人去创业了,另外的同事也都找到了自己的理想工作,只有我还在此挣扎发挥最后的余热.&lt;/p&gt;
+&lt;p&gt;技术博客也被托的零零散散,刚看了下,只有三篇产出,平时不是没有技术问题或是技术积累,只是自己的小放纵,导致仅仅有三篇,不过幸好在年低的几天,有了几个开源产出:&lt;/p&gt;
+&lt;p&gt;1.https://github.com/bigbo/Elasticsearch-Falcon&lt;/p&gt;
+&lt;p&gt;2.https://github.com/bigbo/vectormap&lt;/p&gt;
+&lt;p&gt;为什么工作内容仅仅总结出这么点东西,是有原因的.在此感谢领导@HW&lt;/p&gt;
+&lt;hr /&gt;
+&lt;h3&gt;0X02 生活&lt;/h3&gt;
+&lt;p&gt;人是百变无偿的,珍惜生命,珍惜健康,珍惜身边的每一个人&lt;/p&gt;
+&lt;p&gt;感受到了身体的健康的重要,任何的努力和奋斗都离不开自己的健康,相对生活,要用宽容的心对它,最起码让自己的世界变得更美好.&lt;/p&gt;
+&lt;p&gt;感谢生命中一个重要的人,一起来场旅行,感谢身边为我付出的人.&lt;/p&gt;
+&lt;p&gt;失去了两个生命中重要的人,一个是生与死的离别,一个是整整4年共处的别离,更多的是无力与无奈.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;h3&gt;0X03 遗憾&lt;/h3&gt;
+&lt;p&gt;去年的遗憾还是依然存在,要坚决今年改掉.时刻自醒.&lt;/p&gt;
+&lt;p&gt;书没有去年读的多&lt;/p&gt;
+&lt;p&gt;希望2017年能让自己多运动,多锻炼&lt;/p&gt;
+&lt;p&gt;我怎么越发的觉得年终总结越不好写呢,主要是一年中自己过的太不充实了.谨记共勉!&lt;/p&gt;</summary></entry><entry><title>2015(自嗨型)年终总结</title><link href="http://bigbo.github.io/pages/2015/12/31/2015%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/" rel="alternate"></link><updated>2016-01-01T01:42:00+08:00</updated><author><name>ljingb</name></author><id>tag:bigbo.github.io,2015-12-31:pages/2015/12/31/2015年终总结/</id><summary type="html">&lt;p&gt;算是续去年的节,今年免不了需要做个年终总结,当然是别人眼中的"自嗨".在我看来不是朋友圈的三言两语就能总结去年一年的过往,总结是需要长篇大论的扯淡的!&lt;/p&gt;
 &lt;hr /&gt;
 &lt;h3&gt;0X01 工作&lt;/h3&gt;
 &lt;p&gt;从2014年就开始注定,一年的工作都放在了搞日志分析上&lt;/p&gt;

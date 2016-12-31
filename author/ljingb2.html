@@ -68,6 +68,54 @@ src="http://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="F
                         <article>
                             <header>
                                 <h1 class="entry-title">
+                                    <a href="http://bigbo.github.io/pages/2015/07/20/elasticsearch_oom/" rel="bookmark" title="Permalink to 引发Elasticsearch OOM之type">
+                                       引发Elasticsearch OOM之type
+                                    </a>
+                                </h1>
+                            </header>
+                            <div class="entry-content">
+<footer class="post-info">
+    <address class="vcard author">
+        by <a class="url fn" href="http://bigbo.github.io/author/ljingb.html">ljingb</a>
+    </address>
+
+    in <a href="http://bigbo.github.io/category/technology.html">Technology</a>
+
+    on 2015-07-20
+
+        |
+        tags:         <a href="http://bigbo.github.io/tag/elasticsearch-oom.html">elasticsearch oom</a>
+        <a href="http://bigbo.github.io/tag/elasticsearch-diao-you.html">elasticsearch 调优</a>
+
+
+        |
+        <a href="http://bigbo.github.io/pages/2015/07/20/elasticsearch_oom/#disqus_thread">comments</a>
+
+    
+</footer><!-- /.post-info -->                                <p>开源日志处理哪家强?当数 <a href="https://www.elastic.co/">ELKstack</a> ,但搭起来容易用起来难,尤其是ES,小脾气那叫一个多,不好好调教下时不时的就会给你来点颜色,什么脑裂,内存不足 <code>OOM</code>,要不就是索引过慢,性能跟不上;应有尽有,自从用起来,一把心酸.</p>
+<p>最近又出问题了,之前好好的集群(已经正常运行3个多月了),当新接入了一个服务(大部分只有写),变得频繁罢工,一周就要重启4次左右,搞得身心疲惫,终于发现故障的原因,故记之,警示后人.</p>
+<hr />
+<h2>0x01 ES 几个基本概念</h2>
+<h3>集群</h3>
+<ul>
+<li>
+<p>cluster (集群)
+代表一个集群,集群中有多个节点,其中有一个为主节点,这个主节点是可以通过选举产生的(可以设定主节点角色),主从节点是对于集群内部来说的.es的一个概念就是去中心化,字面上理解就是无中心节点,这是对于集群外部来说的,因为从外部来看es集群,在逻辑上是个整体,你与任何一个节点的通信和与整个es集群通信是等价的.</p>
+</li>
+<li>
+<p>shards (分片)
+代表索引分片,es可以把一个完整的索引分成多个分片,这样的好处是可以把一个大的索引拆分成多个,分布到不同的节点上 ...</p></li></ul>
+                                <p class="readmore">
+                                    <a class="btn btn-small btn-info" href="http://bigbo.github.io/pages/2015/07/20/elasticsearch_oom/">Read more...</a>
+                                </p>
+                            </div><!-- /.entry-content -->
+                            <hr/>
+                        </article>
+                    </li>
+                    <li>
+                        <article>
+                            <header>
+                                <h1 class="entry-title">
                                     <a href="http://bigbo.github.io/pages/2015/05/23/mozilla_heka/" rel="bookmark" title="Permalink to Mozilla Heka使用">
                                        Mozilla Heka使用
                                     </a>
@@ -310,51 +358,6 @@ ES_HEAP_SIZE=32g
 <p>插件本身内容非常简单，其主要依赖同一作者写的 <a href="https://github.com/joekiller/jruby-kafka">jruby-kafka</a> 模块。需要注意的是：<strong>该模块仅支持 Kafka－0.8 版本。如果是使用 0.7 版本 kafka 的，将无法直接使 ...</strong></p>
                                 <p class="readmore">
                                     <a class="btn btn-small btn-info" href="http://bigbo.github.io/pages/2015/01/23/logstash_kafka/">Read more...</a>
-                                </p>
-                            </div><!-- /.entry-content -->
-                            <hr/>
-                        </article>
-                    </li>
-                    <li>
-                        <article>
-                            <header>
-                                <h1 class="entry-title">
-                                    <a href="http://bigbo.github.io/pages/2015/01/21/syslog_kafka/" rel="bookmark" title="Permalink to rsyslog与Kafka结合使用">
-                                       rsyslog与Kafka结合使用
-                                    </a>
-                                </h1>
-                            </header>
-                            <div class="entry-content">
-<footer class="post-info">
-    <address class="vcard author">
-        by <a class="url fn" href="http://bigbo.github.io/author/ljingb.html">ljingb</a>
-    </address>
-
-    in <a href="http://bigbo.github.io/category/technology.html">Technology</a>
-
-    on 2015-01-21
-
-        |
-        tags:         <a href="http://bigbo.github.io/tag/kafka.html">kafka</a>
-        <a href="http://bigbo.github.io/tag/xiao-xi-dui-lie.html">消息队列</a>
-        <a href="http://bigbo.github.io/tag/rsyslog.html">rsyslog</a>
-
-
-        |
-        <a href="http://bigbo.github.io/pages/2015/01/21/syslog_kafka/#disqus_thread">comments</a>
-
-    
-</footer><!-- /.post-info -->                                <h2>前言</h2>
-<p>最近在折腾 <a href="http://www.rsyslog.com/">Rsyslog</a> ,传输日志,对他怎么说呢,谁用谁知道,我仅仅是了解使用的程度,对于里面的坑以及使用策略还没有那么深入,不过日后会逐步的细化了解,其实现在对于日志传输来过网上一大堆技术方案任你选.但是感觉用rsyslog传输还是最方便,最快捷的.他以不变应万变,看图说话:</p>
-<p><img alt="rsyslog" src="/pictures/rsyslog_1.png" title="u&quot;rsyslog支持图&quot;" /></p>
-<p>可见rsyslog的覆盖面是相当的广泛.奈何近几日,打算把redis替换为 <a href="http://kafka.apache.org/">kafka</a> ,本篇主要记录 <code>rsyslog</code> 与 <code>kafka</code> 的对接使用. 上了.</p>
-<hr />
-<h2>Rsyslog对kafka的支持</h2>
-<p>通过对 <a href="http://www.rsyslog.com/doc/master/configuration/modules/omkafka.html#example">rsyslog官方文档</a> 查看,得知 <code>rsyslog</code> 对 <code>kafka</code> 的支持是 <code>v8.7.0</code> 版本后才提供的支持.通过 <a href="https://github.com/rsyslog/rsyslog/blob/v8-stable/ChangeLog">ChangeLog</a> 也可以看出 <code>V8.X</code> 的版本变化.</p>
-<p>查看本机的rsyslog版本:</p>
-<div class="highlight"><pre>rsyslog.x86_64                                      7.6.3-1.el6 ...</pre></div>
-                                <p class="readmore">
-                                    <a class="btn btn-small btn-info" href="http://bigbo.github.io/pages/2015/01/21/syslog_kafka/">Read more...</a>
                                 </p>
                             </div><!-- /.entry-content -->
                             <hr/>
